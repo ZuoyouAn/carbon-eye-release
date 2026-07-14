@@ -5,6 +5,9 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # Public production API endpoint. Local Vite development continues to use its
+  # localhost fallback when this Netlify-only configuration is not present.
+  VITE_API_BASE = "https://personal-website-carbon-eye-api.onrender.com"
 
 [[redirects]]
   from = "/*"
