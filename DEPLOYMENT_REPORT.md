@@ -8,7 +8,7 @@
 
 ## 已完成的部署准备
 
-- `render.yaml`：后端根目录为 `backend`，构建命令为 `pip install -r requirements.txt`，启动命令为 `uvicorn main:app --host 0.0.0.0 --port $PORT`，健康检查为 `/healthz`。
+- `render.yaml`：后端根目录为 `backend`，构建命令为 `pip install -r requirements.txt`，启动命令为 `uvicorn main:app --host 0.0.0.0 --port $PORT`，健康检查为 `/healthz`，并在服务关联分支提交时自动部署。
 - `netlify.toml`：前端根目录为 `frontend`，构建命令为 `npm ci && npm run build`，发布目录为 `dist`，已包含 SPA 路由重定向。
 - 后端从 `CORS_ORIGINS` 读取跨域来源；前端从 `VITE_API_BASE` 读取 API 地址。
 - 碳眼静态接口不依赖数据库；数据文件缺失时返回可读 503。
