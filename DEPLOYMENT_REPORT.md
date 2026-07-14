@@ -2,6 +2,7 @@
 
 - 生成日期：2026-07-14
 - 分支：`feature/carbon-eye-final-data-upgrade`
+- Git 提交：`f27cff6`
 - 本地服务验证：通过。
 - 线上发布状态：尚未执行。
 
