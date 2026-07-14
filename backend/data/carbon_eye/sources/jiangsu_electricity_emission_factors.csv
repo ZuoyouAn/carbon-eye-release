@@ -1,0 +1,4 @@
+﻿factor_year,region,factor_kgco2_per_kwh,factor_type,recommended_use,source_url
+2021,江苏省,0.6451,省级电力平均二氧化碳排放因子,核算购电间接排放的地理位置法参考,https://www.mee.gov.cn/xxgk2018/xxgk/xxgk01/202404/W020240412827267102800.pdf
+2022,江苏省,0.5978,省级电力平均二氧化碳排放因子,核算购电间接排放的地理位置法参考,https://www.mee.gov.cn/xxgk2018/xxgk/xxgk01/202412/t20241226_1099413.html
+2023,江苏省,0.5827,省级电力平均二氧化碳排放因子,核算购电间接排放的地理位置法参考,https://www.mee.gov.cn/xxgk2018/xxgk/xxgk01/202512/W020251231726284332528.pdf

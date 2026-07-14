@@ -1,0 +1,168 @@
+{
+  "official_industry_basis": "苏州工业园区“623”产业体系六大重点产业集群",
+  "official_source_urls": [
+    "https://www.sipac.gov.cn/szgyyq/mtjj/202601/803e21c03c3140569f9e811c28039ef2.shtml",
+    "https://www.suzhou.gov.cn/szsrmzf/zfwj/202405/3df5e68dcc1a4bf79947e6cbb4524968.shtml"
+  ],
+  "profiles": [
+    {
+      "industry_id": "I01",
+      "industry_name": "新一代信息技术",
+      "official_system": "623产业体系",
+      "profile_type": "专家规则模板",
+      "energy_carbon_characteristics": [
+        "高用电占比",
+        "洁净室、工艺冷却与空压系统能耗",
+        "购电间接排放通常是重点"
+      ],
+      "environmental_indicators": [
+        "NOx/颗粒物区域背景",
+        "VOCs视具体工艺而定"
+      ],
+      "priority_kpis": [
+        "单位产值用电量",
+        "绿电比例",
+        "洁净室系统能效",
+        "空压系统比功率"
+      ],
+      "governance_actions": [
+        "推进绿电采购和分布式光伏",
+        "优化洁净室压差与温湿度控制",
+        "高效冷站和空压系统改造"
+      ],
+      "evidence_boundary": "行业通用治理模板，非园区企业真实排放清单"
+    },
+    {
+      "industry_id": "I02",
+      "industry_name": "高端装备制造",
+      "official_system": "623产业体系",
+      "profile_type": "专家规则模板",
+      "energy_carbon_characteristics": [
+        "电力与燃气并用",
+        "电机、热处理、焊接和涂装环节可能为重点"
+      ],
+      "environmental_indicators": [
+        "颗粒物",
+        "NOx",
+        "VOCs视工艺而定"
+      ],
+      "priority_kpis": [
+        "单位产品综合能耗",
+        "电机系统效率",
+        "热处理能效",
+        "VOCs收集效率"
+      ],
+      "governance_actions": [
+        "电机系统节能与电气化替代",
+        "热处理余热回收",
+        "涂装VOCs全过程管控"
+      ],
+      "evidence_boundary": "行业通用治理模板，非园区企业真实排放清单"
+    },
+    {
+      "industry_id": "I03",
+      "industry_name": "生物医药及大健康",
+      "official_system": "623产业体系",
+      "profile_type": "专家规则模板",
+      "energy_carbon_characteristics": [
+        "洁净空调、蒸汽、冷冻和冷链能耗",
+        "连续运行负荷明显"
+      ],
+      "environmental_indicators": [
+        "VOCs与异味视工艺而定",
+        "锅炉燃烧相关NOx"
+      ],
+      "priority_kpis": [
+        "洁净空调单位面积能耗",
+        "蒸汽单耗",
+        "冷站COP",
+        "热回收率"
+      ],
+      "governance_actions": [
+        "洁净空调分区分时控制",
+        "蒸汽冷凝水和余热回收",
+        "冷链与冷站高效运行"
+      ],
+      "evidence_boundary": "行业通用治理模板，非园区企业真实排放清单"
+    },
+    {
+      "industry_id": "I04",
+      "industry_name": "纳米技术应用及新材料",
+      "official_system": "623产业体系",
+      "profile_type": "专家规则模板",
+      "energy_carbon_characteristics": [
+        "工艺热、电力及特种气体需求",
+        "部分工序具备高温或高洁净要求"
+      ],
+      "environmental_indicators": [
+        "VOCs",
+        "酸碱废气",
+        "颗粒物",
+        "含氮/含硫燃烧活动指示"
+      ],
+      "priority_kpis": [
+        "单位产品能耗",
+        "工艺气体利用率",
+        "废气收集效率",
+        "清洁能源比例"
+      ],
+      "governance_actions": [
+        "工艺参数优化与能量梯级利用",
+        "废气分类收集治理",
+        "绿色电力和低碳原料替代"
+      ],
+      "evidence_boundary": "行业通用治理模板，非园区企业真实排放清单"
+    },
+    {
+      "industry_id": "I05",
+      "industry_name": "人工智能及数字产业",
+      "official_system": "623产业体系",
+      "profile_type": "专家规则模板",
+      "energy_carbon_characteristics": [
+        "数据中心和算力设施以电力间接排放为主",
+        "制冷系统是关键能耗环节"
+      ],
+      "environmental_indicators": [
+        "本地常规污染排放较低，关注电力系统间接影响"
+      ],
+      "priority_kpis": [
+        "PUE",
+        "绿电比例",
+        "算力碳效率",
+        "服务器利用率"
+      ],
+      "governance_actions": [
+        "提升PUE和服务器利用率",
+        "绿电采购",
+        "液冷或自然冷却适用性评估"
+      ],
+      "evidence_boundary": "行业通用治理模板，非园区企业真实排放清单"
+    },
+    {
+      "industry_id": "I06",
+      "industry_name": "新能源及绿色产业",
+      "official_system": "623产业体系",
+      "profile_type": "专家规则模板",
+      "energy_carbon_characteristics": [
+        "产品具有减碳属性但制造环节仍有电力和材料隐含碳",
+        "需关注全生命周期"
+      ],
+      "environmental_indicators": [
+        "工艺废气与颗粒物视产品环节而定"
+      ],
+      "priority_kpis": [
+        "单位产品能耗",
+        "再生材料比例",
+        "产品碳足迹",
+        "回收利用率"
+      ],
+      "governance_actions": [
+        "开展产品碳足迹核算",
+        "提高再生材料和绿电使用",
+        "构建电池/组件回收闭环"
+      ],
+      "evidence_boundary": "行业通用治理模板，非园区企业真实排放清单"
+    }
+  ],
+  "warning": "行业名称来自官方；能碳特征、指标和建议为项目专家规则模板，须在页面明确标注。"
+}

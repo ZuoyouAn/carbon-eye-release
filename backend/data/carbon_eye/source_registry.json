@@ -1,0 +1,122 @@
+[
+  {
+    "source_id": "S01",
+    "dataset": "现有空气质量月/日数据分析报告",
+    "publisher": "用户现有项目",
+    "url_or_path": "00_sources/园区碳眼_现有数据分析报告.md",
+    "access": "本地文件",
+    "registration": "否",
+    "used_for": "已有152条月度、602条日级分析及局限性基线",
+    "status": "已提供"
+  },
+  {
+    "source_id": "S02",
+    "dataset": "苏州工业园区主要经济指标-2019年12月",
+    "publisher": "苏州工业园区管委会",
+    "url_or_path": "https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf",
+    "access": "公开PDF",
+    "registration": "否",
+    "used_for": "2019全年用电量",
+    "status": "已下载"
+  },
+  {
+    "source_id": "S03",
+    "dataset": "苏州工业园区主要经济统计指标-2023年12月",
+    "publisher": "苏州工业园区管委会",
+    "url_or_path": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712",
+    "access": "公开网页",
+    "registration": "否",
+    "used_for": "2023全年用电量",
+    "status": "已整理"
+  },
+  {
+    "source_id": "S04",
+    "dataset": "苏州工业园区主要经济统计指标-2024年12月",
+    "publisher": "苏州工业园区管委会",
+    "url_or_path": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395",
+    "access": "公开网页",
+    "registration": "否",
+    "used_for": "2024全年用电量",
+    "status": "已整理"
+  },
+  {
+    "source_id": "S05",
+    "dataset": "苏州工业园区主要经济统计指标-2025年12月",
+    "publisher": "苏州工业园区管委会",
+    "url_or_path": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715",
+    "access": "公开网页",
+    "registration": "否",
+    "used_for": "2025全年用电量",
+    "status": "已整理"
+  },
+  {
+    "source_id": "S06",
+    "dataset": "2021/2022/2023省级电力平均CO2排放因子",
+    "publisher": "生态环境部、国家统计局",
+    "url_or_path": "https://www.mee.gov.cn/xxgk2018/xxgk/xxgk01/202512/t20251231_1139517.html",
+    "access": "公开网页/PDF",
+    "registration": "否",
+    "used_for": "江苏购电间接排放位置法因子",
+    "status": "已整理"
+  },
+  {
+    "source_id": "S07",
+    "dataset": "2026年苏州工业园区区域环境质量状况（特征因子）报告",
+    "publisher": "苏州工业园区生态环境局",
+    "url_or_path": "https://www.sipac.gov.cn/gthbj/tzgg/202607/811e7861a2654de0915d0fb1514de9cc/files/1a981b7a7cec4237aa8a4259050606ab.pdf",
+    "access": "公开PDF",
+    "registration": "否",
+    "used_for": "六点位、14项特征因子短期监测快照",
+    "status": "已下载并结构化"
+  },
+  {
+    "source_id": "S08",
+    "dataset": "Open-Meteo Historical Weather API / ERA5",
+    "publisher": "Open-Meteo/ECMWF再分析",
+    "url_or_path": "https://open-meteo.com/en/docs/historical-weather-api",
+    "access": "公开API",
+    "registration": "否（非商业用途无需API Key）",
+    "used_for": "2013-12起园区六点位长期气象",
+    "status": "已提供自动下载脚本，需联网运行"
+  },
+  {
+    "source_id": "S09",
+    "dataset": "苏州工业园区623产业体系",
+    "publisher": "苏州工业园区管委会",
+    "url_or_path": "https://www.sipac.gov.cn/szgyyq/mtjj/202601/803e21c03c3140569f9e811c28039ef2.shtml",
+    "access": "公开网页",
+    "registration": "否",
+    "used_for": "六类产业画像官方分类",
+    "status": "已结构化"
+  },
+  {
+    "source_id": "S10",
+    "dataset": "国家碳达峰试点（苏州工业园区）实施方案",
+    "publisher": "苏州市人民政府",
+    "url_or_path": "https://www.suzhou.gov.cn/szsrmzf/zfwj/202405/3df5e68dcc1a4bf79947e6cbb4524968.shtml",
+    "access": "公开网页",
+    "registration": "否",
+    "used_for": "产业与治理建议政策映射",
+    "status": "已纳入说明"
+  },
+  {
+    "source_id": "S11",
+    "dataset": "中国290个城市碳排放清单",
+    "publisher": "CEADs",
+    "url_or_path": "https://www.ceads.net.cn/data/carbon-inventory/",
+    "access": "部分下载需注册",
+    "registration": "可能需要",
+    "used_for": "苏州市年度CO2背景；不得当作园区排放",
+    "status": "沿用现有项目数据，包内未重复下载"
+  },
+  {
+    "source_id": "S12",
+    "dataset": "WAQI/AQICN实时空气质量API",
+    "publisher": "World Air Quality Index Project",
+    "url_or_path": "https://aqicn.org/data-platform/token/",
+    "access": "Token API",
+    "registration": "需要申请Token",
+    "used_for": "实时AQI卡片（可选）",
+    "status": "需要用户本人申请Token，不能放入代码包"
+  }
+]

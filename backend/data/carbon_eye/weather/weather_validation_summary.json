@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "daily_rows": 27570,
+  "monthly_rows": 151,
+  "expected_sites": 6,
+  "missing_value_count": 0,
+  "missing_value_pct": 0.0,
+  "incomplete_months": [],
+  "first_month": "2013-12",
+  "last_month": "2026-06",
+  "generated_at": "2026-07-14T14:06:10.359688+08:00"
+}

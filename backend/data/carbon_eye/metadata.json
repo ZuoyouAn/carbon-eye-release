@@ -1,0 +1,16 @@
+{
+  "system_version": "2.0.0",
+  "build_time": "2026-07-14T15:01:28+08:00",
+  "air_quality_range": "2013-12 至 2026-07",
+  "weather_range": "2013-12-01 至 2026-06-30",
+  "monthly_air_scale": "苏州市级空气质量背景",
+  "park_snapshot_scale": "苏州工业园区六点位官方短期监测快照",
+  "carbon_scope": "园区购电间接排放位置法代理估算",
+  "aqi_standard_note": "跨2026年3月的AQI序列须注意HJ 633标准版本变化；本系统按原始数据源口径展示，不将跨期差异解释为单一环境变化。",
+  "partial_month": {
+    "date": "2026-07",
+    "is_partial": true,
+    "excluded_from_annual_statistics": true,
+    "observation_days": null
+  }
+}

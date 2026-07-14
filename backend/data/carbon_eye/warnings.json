@@ -1,0 +1,252 @@
+[
+  {
+    "date": "2024-08",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "aqi(91.0>86.0)",
+      "o3(148.0>135.4)"
+    ],
+    "exceeded_items": "aqi(91.0>86.0)；o3(148.0>135.4)",
+    "exceeded_count": 2,
+    "max_ratio": 1.093,
+    "absolute_risk_score": 23.8,
+    "absolute_risk_level": "低风险",
+    "risk_score": 23.8,
+    "risk_level": "低风险",
+    "main_contributor": "O3",
+    "main_risk_type": "臭氧光化学风险型",
+    "governance_advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2025-11",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "pm10(89.0>85.2)",
+      "o3(82.0>75.0)"
+    ],
+    "exceeded_items": "pm10(89.0>85.2)；o3(82.0>75.0)",
+    "exceeded_count": 2,
+    "max_ratio": 1.093,
+    "absolute_risk_score": 28.7,
+    "absolute_risk_level": "低风险",
+    "risk_score": 28.7,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "臭氧-多污染物复合风险型",
+    "governance_advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2023-06",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "aqi(91.0>88.0)",
+      "o3(145.0>138.0)"
+    ],
+    "exceeded_items": "aqi(91.0>88.0)；o3(145.0>138.0)",
+    "exceeded_count": 2,
+    "max_ratio": 1.051,
+    "absolute_risk_score": 26.0,
+    "absolute_risk_level": "低风险",
+    "risk_score": 26.0,
+    "risk_level": "低风险",
+    "main_contributor": "O3",
+    "main_risk_type": "臭氧光化学风险型",
+    "governance_advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2025-01",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(81.0>63.0)"
+    ],
+    "exceeded_items": "o3(81.0>63.0)",
+    "exceeded_count": 1,
+    "max_ratio": 1.286,
+    "absolute_risk_score": 32.8,
+    "absolute_risk_level": "低风险",
+    "risk_score": 32.8,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "含氮燃烧活动指示型",
+    "governance_advice": "建议优先排查含氮燃烧活动和交通活动，不能仅依据该指标确定具体排放源。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2023-01",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(80.0>63.0)"
+    ],
+    "exceeded_items": "o3(80.0>63.0)",
+    "exceeded_count": 1,
+    "max_ratio": 1.27,
+    "absolute_risk_score": 24.9,
+    "absolute_risk_level": "低风险",
+    "risk_score": 24.9,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "含氮燃烧活动指示型",
+    "governance_advice": "建议优先排查含氮燃烧活动和交通活动，不能仅依据该指标确定具体排放源。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2025-12",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(68.0>58.6)"
+    ],
+    "exceeded_items": "o3(68.0>58.6)",
+    "exceeded_count": 1,
+    "max_ratio": 1.16,
+    "absolute_risk_score": 28.0,
+    "absolute_risk_level": "低风险",
+    "risk_score": 28.0,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "含氮燃烧活动指示型",
+    "governance_advice": "建议优先排查含氮燃烧活动和交通活动，不能仅依据该指标确定具体排放源。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2023-10",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(128.0>112.8)"
+    ],
+    "exceeded_items": "o3(128.0>112.8)",
+    "exceeded_count": 1,
+    "max_ratio": 1.135,
+    "absolute_risk_score": 31.7,
+    "absolute_risk_level": "低风险",
+    "risk_score": 31.7,
+    "risk_level": "低风险",
+    "main_contributor": "O3",
+    "main_risk_type": "臭氧-多污染物复合风险型",
+    "governance_advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2023-11",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(84.0>75.0)"
+    ],
+    "exceeded_items": "o3(84.0>75.0)",
+    "exceeded_count": 1,
+    "max_ratio": 1.12,
+    "absolute_risk_score": 31.3,
+    "absolute_risk_level": "低风险",
+    "risk_score": 31.3,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "含氮燃烧活动指示型",
+    "governance_advice": "建议优先排查含氮燃烧活动和交通活动，不能仅依据该指标确定具体排放源。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2026-01",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(70.0>63.0)"
+    ],
+    "exceeded_items": "o3(70.0>63.0)",
+    "exceeded_count": 1,
+    "max_ratio": 1.111,
+    "absolute_risk_score": 29.5,
+    "absolute_risk_level": "低风险",
+    "risk_score": 29.5,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "含氮燃烧活动指示型",
+    "governance_advice": "建议优先排查含氮燃烧活动和交通活动，不能仅依据该指标确定具体排放源。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2024-11",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(81.0>75.0)"
+    ],
+    "exceeded_items": "o3(81.0>75.0)",
+    "exceeded_count": 1,
+    "max_ratio": 1.08,
+    "absolute_risk_score": 21.3,
+    "absolute_risk_level": "低风险",
+    "risk_score": 21.3,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "臭氧-多污染物复合风险型",
+    "governance_advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2024-12",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(62.0>58.6)"
+    ],
+    "exceeded_items": "o3(62.0>58.6)",
+    "exceeded_count": 1,
+    "max_ratio": 1.058,
+    "absolute_risk_score": 32.9,
+    "absolute_risk_level": "低风险",
+    "risk_score": 32.9,
+    "risk_level": "低风险",
+    "main_contributor": "NO2",
+    "main_risk_type": "含氮燃烧活动指示型",
+    "governance_advice": "建议优先排查含氮燃烧活动和交通活动，不能仅依据该指标确定具体排放源。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2025-04",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "o3(146.0>139.8)"
+    ],
+    "exceeded_items": "o3(146.0>139.8)",
+    "exceeded_count": 1,
+    "max_ratio": 1.044,
+    "absolute_risk_score": 27.9,
+    "absolute_risk_level": "低风险",
+    "risk_score": 27.9,
+    "risk_level": "低风险",
+    "main_contributor": "O3",
+    "main_risk_type": "臭氧-多污染物复合风险型",
+    "governance_advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  },
+  {
+    "date": "2023-04",
+    "relative_anomaly": true,
+    "anomaly_items": [
+      "pm10(86.0>84.8)"
+    ],
+    "exceeded_items": "pm10(86.0>84.8)",
+    "exceeded_count": 1,
+    "max_ratio": 1.014,
+    "absolute_risk_score": 24.5,
+    "absolute_risk_level": "低风险",
+    "risk_score": 24.5,
+    "risk_level": "低风险",
+    "main_contributor": "O3",
+    "main_risk_type": "臭氧光化学风险型",
+    "governance_advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "time_scale": "月度",
+    "data_scope": "苏州市级空气质量背景"
+  }
+]

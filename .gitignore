@@ -1,0 +1,49 @@
+# 忽略前端依赖目录
+frontend/node_modules/
+
+# 忽略前端构建产物
+frontend/dist/
+
+# 忽略 Python 虚拟环境
+backend/.venv/
+
+# 忽略 Python 缓存文件
+backend/__pycache__/
+
+# 忽略本地真实环境变量
+backend/.env
+backend/carbon_eye_demo.db
+
+# 忽略 Netlify 匿名部署认领令牌
+netlify-deploy-info.txt
+
+# Generated local reports and raw API cache; curated source files live under backend/data/carbon_eye/sources.
+outputs/
+logs/
+backend/data/carbon_eye/weather/raw_open_meteo/
+backend/data/carbon_eye/weather/weather_fetch_error.log
+
+# Local notes and deploy helpers are not part of the public release.
+deploy-netlify.bat
+restart-dev.bat
+start-dev.bat
+novel1数据库对接说明.txt
+基础学习命令.txt
+完善与部署方案.md
+
+# Local tooling and deployment state
+.npm-cache/
+.netlify/
+.idea/
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+*.db
+*.sqlite*
+deployment-inputs.local.yaml
+netlify-current-site.txt
+netlify-deploy-info.txt

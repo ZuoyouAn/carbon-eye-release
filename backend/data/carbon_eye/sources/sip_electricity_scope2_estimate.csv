@@ -1,0 +1,5 @@
+﻿year,period,total_electricity_100m_kwh,industrial_electricity_100m_kwh,factor_reference_year,factor_kgco2_per_kwh,total_purchased_electricity_scope2_10k_tco2,industrial_electricity_scope2_10k_tco2,method,data_quality,source_url
+2019,全年,137.8063,92.8687,2023,0.5827,802.997,541.146,用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景,官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子,https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf
+2023,全年,154.7894,92.3556,2023,0.5827,901.958,538.156,用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景,官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712
+2024,全年,170.493,102.0132,2023,0.5827,993.463,594.431,用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景,官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395
+2025,全年,179.4286,107.4379,2023,0.5827,1045.53,626.041,用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景,官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715

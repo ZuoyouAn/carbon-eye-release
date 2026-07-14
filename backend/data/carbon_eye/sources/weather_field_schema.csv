@@ -1,0 +1,12 @@
+﻿field,unit,aggregation,purpose
+month,YYYY-MM,月份主键,与空气质量月表关联
+avg_temp_c,°C,六点日均温度的月平均,臭氧光化学与颗粒物解释
+relative_humidity_pct,%,六点日均湿度的月平均,二次气溶胶/湿沉降背景
+precipitation_mm,mm,各点月累计降水后取六点均值,湿清除解释
+sunshine_hours,h,日照秒数月累计后换算小时并取六点均值,臭氧光化学条件
+shortwave_radiation_mj_m2,MJ/m²,日短波辐射月累计后取六点均值,光化学反应能量代理
+avg_wind_speed_kmh,km/h,六点日均风速的月平均,扩散条件
+dominant_wind_direction_deg,°,圆形向量平均,主导风向背景
+pressure_msl_hpa,hPa,六点日均海平面气压的月平均,天气形势背景
+site_count,个,有效点位数,质量控制
+days_observed,天,当月有效日期数,完整性检查

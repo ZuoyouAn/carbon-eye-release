@@ -1,0 +1,5 @@
+﻿year,period,total_electricity_100m_kwh,industrial_electricity_100m_kwh,total_yoy_pct,industrial_yoy_pct,statistical_boundary,source_title,source_url,verification_status,notes
+2019,全年,137.8063,92.8687,-2.2,-3.8,2019年官方统计表口径；原表未标注“不含苏相”,2019年12月苏州工业园区主要经济指标,https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf,已核验原始PDF,原表单位为万千瓦时，已换算为亿千瓦时；全社会1378063万kWh，工业928687万kWh。
+2023,全年,154.7894,92.3556,0.4,-2.8,园区官方数据开放页面口径；上线前应保留页面原注释,2023年12月苏州工业园区主要经济统计指标,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712,已核验官方页面检索结果,原页面单位为万千瓦时，已换算为亿千瓦时；不填补2020-2022缺失年份。
+2024,全年,170.493,102.0132,8.6,8.0,园区官方数据开放页面口径；页面其他月份曾标注“不含苏相”,2024年12月苏州工业园区主要经济统计指标,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395,已核验官方页面检索结果,原页面单位为万千瓦时，已换算为亿千瓦时。
+2025,全年,179.4286,107.4379,5.2,5.3,园区官方数据开放页面口径；上线前应保留页面原注释,2025年12月苏州工业园区主要经济统计指标,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715,已核验官方页面检索结果,原页面单位为万千瓦时，已换算为亿千瓦时。

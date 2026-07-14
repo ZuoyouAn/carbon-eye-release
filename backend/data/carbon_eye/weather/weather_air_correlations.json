@@ -1,0 +1,636 @@
+{
+  "metadata": {
+    "generated_at": "2026-07-14T15:02:35.130858+08:00",
+    "air_source_file": "backend\\data\\carbon_eye\\monthly_trends.json",
+    "weather_source_file": "backend\\data\\carbon_eye\\weather\\weather_park_monthly.csv",
+    "overlap_months": 151,
+    "first_month": "2013-12",
+    "last_month": "2026-06",
+    "methods": [
+      "Pearson",
+      "Spearman",
+      "按月份去季节均值后的Pearson"
+    ],
+    "warning": "所有结果仅为描述性相关，相关不等于因果；不得写成气象因素造成污染变化。"
+  },
+  "priority_descriptive_associations": [
+    {
+      "pollutant": "o3",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": 0.8402,
+      "spearman_rho": 0.853,
+      "season_adjusted_pearson_r": 0.5184,
+      "strength_by_season_adjusted": "中等相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": 0.5319,
+      "spearman_rho": 0.5449,
+      "season_adjusted_pearson_r": 0.5009,
+      "strength_by_season_adjusted": "中等相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": 0.1756,
+      "spearman_rho": 0.1435,
+      "season_adjusted_pearson_r": -0.4775,
+      "strength_by_season_adjusted": "中等相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.597,
+      "spearman_rho": -0.5992,
+      "season_adjusted_pearson_r": -0.3977,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.6292,
+      "spearman_rho": -0.6762,
+      "season_adjusted_pearson_r": -0.3301,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.668,
+      "spearman_rho": -0.7349,
+      "season_adjusted_pearson_r": -0.3178,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": -0.1005,
+      "spearman_rho": -0.0915,
+      "season_adjusted_pearson_r": -0.3017,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": 0.4345,
+      "spearman_rho": 0.5117,
+      "season_adjusted_pearson_r": -0.2931,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.5244,
+      "spearman_rho": -0.5069,
+      "season_adjusted_pearson_r": -0.2852,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.3006,
+      "spearman_rho": -0.2991,
+      "season_adjusted_pearson_r": -0.261,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": -0.359,
+      "spearman_rho": -0.3865,
+      "season_adjusted_pearson_r": -0.2352,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": 0.8024,
+      "spearman_rho": 0.7686,
+      "season_adjusted_pearson_r": 0.2347,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    }
+  ],
+  "correlations": [
+    {
+      "pollutant": "aqi",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.1862,
+      "spearman_rho": -0.1171,
+      "season_adjusted_pearson_r": -0.1659,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "aqi",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": -0.2265,
+      "spearman_rho": -0.1798,
+      "season_adjusted_pearson_r": -0.1109,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "aqi",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": -0.0865,
+      "spearman_rho": -0.0214,
+      "season_adjusted_pearson_r": -0.0987,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "aqi",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": 0.1087,
+      "spearman_rho": 0.1367,
+      "season_adjusted_pearson_r": 0.1442,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "aqi",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": 0.0459,
+      "spearman_rho": 0.133,
+      "season_adjusted_pearson_r": 0.1798,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "aqi",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": -0.1572,
+      "spearman_rho": -0.1504,
+      "season_adjusted_pearson_r": -0.2146,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "aqi",
+      "weather_variable": "pressure_msl_hpa",
+      "n": 151,
+      "pearson_r": 0.1029,
+      "spearman_rho": 0.0595,
+      "season_adjusted_pearson_r": 0.0088,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.668,
+      "spearman_rho": -0.7349,
+      "season_adjusted_pearson_r": -0.3178,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": -0.3093,
+      "spearman_rho": -0.3228,
+      "season_adjusted_pearson_r": 0.0464,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": -0.3359,
+      "spearman_rho": -0.4221,
+      "season_adjusted_pearson_r": 0.0166,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": -0.2973,
+      "spearman_rho": -0.3595,
+      "season_adjusted_pearson_r": -0.0394,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": -0.4408,
+      "spearman_rho": -0.4817,
+      "season_adjusted_pearson_r": -0.0201,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": 0.01,
+      "spearman_rho": 0.0342,
+      "season_adjusted_pearson_r": -0.1143,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm25",
+      "weather_variable": "pressure_msl_hpa",
+      "n": 151,
+      "pearson_r": 0.5928,
+      "spearman_rho": 0.6592,
+      "season_adjusted_pearson_r": -0.0212,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.6292,
+      "spearman_rho": -0.6762,
+      "season_adjusted_pearson_r": -0.3301,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": -0.4375,
+      "spearman_rho": -0.4322,
+      "season_adjusted_pearson_r": -0.1307,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": -0.3825,
+      "spearman_rho": -0.4782,
+      "season_adjusted_pearson_r": -0.0427,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": -0.2012,
+      "spearman_rho": -0.2308,
+      "season_adjusted_pearson_r": 0.0786,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": -0.35,
+      "spearman_rho": -0.3787,
+      "season_adjusted_pearson_r": 0.0945,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": 0.0475,
+      "spearman_rho": 0.0782,
+      "season_adjusted_pearson_r": -0.0977,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "pm10",
+      "weather_variable": "pressure_msl_hpa",
+      "n": 151,
+      "pearson_r": 0.5669,
+      "spearman_rho": 0.6078,
+      "season_adjusted_pearson_r": -0.0273,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.5244,
+      "spearman_rho": -0.5069,
+      "season_adjusted_pearson_r": -0.2852,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": -0.1139,
+      "spearman_rho": -0.0718,
+      "season_adjusted_pearson_r": 0.1803,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": -0.2285,
+      "spearman_rho": -0.2513,
+      "season_adjusted_pearson_r": 0.1533,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": -0.359,
+      "spearman_rho": -0.3865,
+      "season_adjusted_pearson_r": -0.2352,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": -0.5192,
+      "spearman_rho": -0.5223,
+      "season_adjusted_pearson_r": -0.2217,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": -0.0974,
+      "spearman_rho": -0.0299,
+      "season_adjusted_pearson_r": -0.1086,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "co",
+      "weather_variable": "pressure_msl_hpa",
+      "n": 151,
+      "pearson_r": 0.5059,
+      "spearman_rho": 0.4985,
+      "season_adjusted_pearson_r": -0.0316,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.597,
+      "spearman_rho": -0.5992,
+      "season_adjusted_pearson_r": -0.3977,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": -0.2448,
+      "spearman_rho": -0.2422,
+      "season_adjusted_pearson_r": 0.1028,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": -0.3758,
+      "spearman_rho": -0.4523,
+      "season_adjusted_pearson_r": 0.0234,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": -0.3081,
+      "spearman_rho": -0.2953,
+      "season_adjusted_pearson_r": -0.1067,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": -0.4931,
+      "spearman_rho": -0.489,
+      "season_adjusted_pearson_r": -0.0624,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": -0.0653,
+      "spearman_rho": -0.0345,
+      "season_adjusted_pearson_r": -0.1587,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "no2",
+      "weather_variable": "pressure_msl_hpa",
+      "n": 151,
+      "pearson_r": 0.5985,
+      "spearman_rho": 0.597,
+      "season_adjusted_pearson_r": 0.0511,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": -0.3006,
+      "spearman_rho": -0.2991,
+      "season_adjusted_pearson_r": -0.261,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": -0.1762,
+      "spearman_rho": -0.2019,
+      "season_adjusted_pearson_r": -0.0403,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": -0.1766,
+      "spearman_rho": -0.2425,
+      "season_adjusted_pearson_r": 0.0042,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": -0.1074,
+      "spearman_rho": -0.1205,
+      "season_adjusted_pearson_r": 0.0024,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": -0.2154,
+      "spearman_rho": -0.2073,
+      "season_adjusted_pearson_r": 0.0146,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": -0.0098,
+      "spearman_rho": 0.0094,
+      "season_adjusted_pearson_r": -0.0228,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "so2",
+      "weather_variable": "pressure_msl_hpa",
+      "n": 151,
+      "pearson_r": 0.2785,
+      "spearman_rho": 0.2789,
+      "season_adjusted_pearson_r": 0.0015,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "avg_temp_c",
+      "n": 151,
+      "pearson_r": 0.8024,
+      "spearman_rho": 0.7686,
+      "season_adjusted_pearson_r": 0.2347,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "relative_humidity_pct",
+      "n": 151,
+      "pearson_r": 0.1756,
+      "spearman_rho": 0.1435,
+      "season_adjusted_pearson_r": -0.4775,
+      "strength_by_season_adjusted": "中等相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "precipitation_mm",
+      "n": 151,
+      "pearson_r": 0.4345,
+      "spearman_rho": 0.5117,
+      "season_adjusted_pearson_r": -0.2931,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "sunshine_hours",
+      "n": 151,
+      "pearson_r": 0.5319,
+      "spearman_rho": 0.5449,
+      "season_adjusted_pearson_r": 0.5009,
+      "strength_by_season_adjusted": "中等相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "shortwave_radiation_mj_m2",
+      "n": 151,
+      "pearson_r": 0.8402,
+      "spearman_rho": 0.853,
+      "season_adjusted_pearson_r": 0.5184,
+      "strength_by_season_adjusted": "中等相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "avg_wind_speed_kmh",
+      "n": 151,
+      "pearson_r": -0.1005,
+      "spearman_rho": -0.0915,
+      "season_adjusted_pearson_r": -0.3017,
+      "strength_by_season_adjusted": "弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    },
+    {
+      "pollutant": "o3",
+      "weather_variable": "pressure_msl_hpa",
+      "n": 151,
+      "pearson_r": -0.8299,
+      "spearman_rho": -0.8121,
+      "season_adjusted_pearson_r": 0.047,
+      "strength_by_season_adjusted": "很弱相关",
+      "interpretation": "描述性关联；相关不等于因果。"
+    }
+  ],
+  "interpretation_rules": {
+    "absolute_r_ge_0_7": "强相关",
+    "absolute_r_ge_0_4": "中等相关",
+    "absolute_r_ge_0_2": "弱相关",
+    "otherwise": "很弱相关"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "规则驱动的治理建议解释",
+  "method": "专家规则模板；不调用大模型，不替代现场审计。",
+  "latest_context": {
+    "date": "2026-06",
+    "trigger": [
+      "O3",
+      "臭氧光化学风险型"
+    ],
+    "advice": "在高温或强辐射条件下，建议开展VOCs与NOx协同控制和涉VOCs工序错峰复核；结论为治理优先级建议，不构成源解析。",
+    "data_gap": "缺少企业级用电、燃料、VOCs、排放清单和现场工况。"
+  },
+  "rules": [
+    {
+      "trigger_basis": "O3较高且气温、日照或短波辐射处于相对较高条件",
+      "applicable_industries": "涉VOCs相关产业场景",
+      "action": "开展VOCs与NOx协同控制和涉VOCs工序错峰复核。",
+      "data_gap": "无企业VOCs排放和工序时段数据。"
+    },
+    {
+      "trigger_basis": "PM2.5较高且风速较低或降水较少的描述性条件",
+      "applicable_industries": "建设、物流、制造及园区公共管理场景",
+      "action": "复核颗粒物、施工扬尘和燃烧活动管理。",
+      "data_gap": "无实时扬尘与燃料燃烧清单。"
+    },
+    {
+      "trigger_basis": "NO2贡献较高",
+      "applicable_industries": "含氮燃烧和交通活动相关场景",
+      "action": "优先复核含氮燃烧和交通活动，避免直接定性为单一来源。",
+      "data_gap": "无源解析和交通流量数据。"
+    },
+    {
+      "trigger_basis": "SO2或硫酸雾特征较高",
+      "applicable_industries": "可能涉及含硫燃料或酸雾治理的场景",
+      "action": "核查含硫燃料、酸雾收集与治理设施。",
+      "data_gap": "无企业设施运行台账。"
+    },
+    {
+      "trigger_basis": "购电强度代理较高",
+      "applicable_industries": "高电力使用产业和园区公共设施",
+      "action": "评估绿电、冷站、空压、洁净室和电机系统优化。",
+      "data_gap": "无分行业和企业级负荷曲线。"
+    }
+  ],
+  "boundary": "建议按触发依据匹配治理方向，不识别具体污染企业，也不替代现场审计。"
+}

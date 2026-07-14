@@ -1,0 +1,23 @@
+{
+  "bundle_version": "1.0.0",
+  "created_on": "2026-07-13",
+  "purpose": "园区碳眼项目数据补齐、专业升级和Codex实施",
+  "verified_static_datasets": {
+    "electricity_records": 4,
+    "electricity_factor_records": 3,
+    "monitoring_sites": 6,
+    "characteristic_air_records": 84,
+    "industry_profiles": 6
+  },
+  "dynamic_datasets": {
+    "weather": "需联网运行一键脚本；不需要API Key",
+    "realtime_aqi": "需用户申请AQICN_TOKEN；不在本包中保存密钥"
+  },
+  "scientific_boundaries": [
+    "城市级空气质量不等于园区内部连续监测。",
+    "园区特征因子数据是7天官方短期快照。",
+    "购电间接排放估算不等于园区总碳排放。",
+    "气象相关性不等于因果关系。",
+    "缺失年份不插值、不伪造。"
+  ]
+}

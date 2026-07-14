@@ -1,0 +1,122 @@
+[
+  {
+    "year": 2000,
+    "co2_emission": 40.38,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2001,
+    "co2_emission": 46.21,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2002,
+    "co2_emission": 39.94,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2003,
+    "co2_emission": 58.14,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2004,
+    "co2_emission": 73.23,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2005,
+    "co2_emission": 103.4,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2006,
+    "co2_emission": 127.55,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2007,
+    "co2_emission": 147.7,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2008,
+    "co2_emission": 150.06,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2009,
+    "co2_emission": 167.4,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2010,
+    "co2_emission": 184.61,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2011,
+    "co2_emission": 202.11,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2012,
+    "co2_emission": 207.79,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2013,
+    "co2_emission": 218.38,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2014,
+    "co2_emission": 221.49,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2015,
+    "co2_emission": 236.49,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2016,
+    "co2_emission": 211.96,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2017,
+    "co2_emission": 206.9,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2018,
+    "co2_emission": 213.41,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  },
+  {
+    "year": 2019,
+    "co2_emission": 231.19,
+    "unit": "百万吨 CO2",
+    "source": "中国290个城市碳排放清单"
+  }
+]
