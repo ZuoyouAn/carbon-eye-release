@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import math
 from collections import defaultdict
@@ -40,6 +41,98 @@ def write_json(name: str, payload: Any) -> None:
     (DATA_DIR / name).write_text(
         json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def normalize_park_electricity_payload(park_payload: dict[str, Any]) -> dict[str, Any]:
+    """Keep verified annual records separate from intentionally missing years."""
+    limitations = park_payload.get("limitations", [])
+    scope = park_payload.get("scope")
+    available_records = []
+    for source_record in park_payload.get("records", []):
+        if source_record.get("total_electricity_100m_kwh") is None:
+            continue
+        record = dict(source_record)
+        record["record_status"] = "available"
+        record.setdefault("source_period", "全年")
+        record.setdefault("missing_reason", None)
+        record.setdefault("scope", scope)
+        record.setdefault("limitations", limitations)
+        available_records.append(record)
+
+    available_records.sort(key=lambda item: item["year"])
+    by_year = {int(item["year"]): item for item in available_records}
+    missing_years = [int(year) for year in park_payload.get("missing_years", [])]
+    year_slots = []
+    for year in range(2019, 2026):
+        if year in by_year:
+            year_slots.append(by_year[year])
+            continue
+        year_slots.append(
+            {
+                "year": year,
+                "period": "全年",
+                "source_period": "全年",
+                "record_status": "missing",
+                "total_electricity_100m_kwh": None,
+                "industrial_electricity_100m_kwh": None,
+                "total_purchased_electricity_scope2_10k_tco2": None,
+                "industrial_electricity_scope2_10k_tco2": None,
+                "factor_reference_year": 2023,
+                "factor_kgco2_per_kwh": 0.5827,
+                "source_url": None,
+                "data_quality": "未写入主数据",
+                "missing_reason": "未找到同时包含全社会用电量和工业用电量、且口径明确为全年并可访问复核的官方公开记录。",
+                "method": "缺失年份不插值、不倒推、不参与购电代理、强度、EAI、CEI 或 CDCI 计算。",
+                "scope": scope,
+                "limitations": limitations,
+            }
+        )
+
+    park_payload["records"] = available_records
+    park_payload["year_slots"] = year_slots
+    park_payload["missing_years"] = missing_years
+    park_payload["record_policy"] = {
+        "main_chart_records": "仅 record_status=available 的官方全年成对用电记录",
+        "missing_year_representation": "year_slots 返回显式 null，前端绘制断点，不以零值代替。",
+    }
+    return park_payload
+
+
+def build_economic_intensity_payload(park_payload: dict[str, Any]) -> dict[str, Any]:
+    records = []
+    for item in park_payload.get("records", []):
+        intensity = dict(item.get("economic_intensity", {}))
+        intensity.update(
+            {
+                "record_status": "available",
+                "source_period": item.get("source_period", "全年"),
+                "source_url": item.get("source_url"),
+                "data_quality": item.get("data_quality"),
+                "factor_reference_year": item.get("factor_reference_year"),
+                "method": item.get("method"),
+                "scope": item.get("scope"),
+                "limitations": item.get("limitations"),
+                "missing_reason": None,
+            }
+        )
+        records.append(intensity)
+    return {
+        "metric_name": "园区购电间接排放及经济强度代理",
+        "records": records,
+        "missing_years": park_payload.get("missing_years", []),
+        "missing_year_policy": park_payload.get("missing_year_policy"),
+        "scope": park_payload.get("scope"),
+        "limitations": park_payload.get("limitations", []),
+        "warning": "GDP 和规上工业总产值为宏观分母，仅用于趋势比较，不是企业或产品碳强度。",
+    }
 
 
 def as_float(value: Any, default: float | None = None) -> float | None:
@@ -272,7 +365,14 @@ def load_electricity_yoy() -> dict[int, float]:
 
 
 def build_annual_dimensions(park_payload: dict[str, Any]) -> list[dict[str, Any]]:
-    records = sorted(park_payload.get("records", []), key=lambda item: item["year"])
+    records = sorted(
+        (
+            item
+            for item in park_payload.get("records", [])
+            if item.get("record_status", "available") == "available"
+        ),
+        key=lambda item: item["year"],
+    )
     yoy_by_year = load_electricity_yoy()
     electricity = [float(item["total_electricity_100m_kwh"]) for item in records]
     yoy = [float(yoy_by_year.get(int(item["year"]), 0.0)) for item in records]
@@ -525,6 +625,66 @@ def build_data_quality(monthly: list[dict[str, Any]], daily_cases: list[dict[str
     }
 
 
+def build_provenance_registry(source_registry: list[dict[str, Any]]) -> dict[str, Any]:
+    source_context = {
+        "S01": {
+            "temporal_coverage": "monthly 2013-12 to 2026-07; daily 2013-12-02 to 2015-07-31",
+            "spatial_scale": "Suzhou city background",
+            "field_units": "AQI; PM2.5, PM10, CO, NO2, SO2, O3; see data_dictionary.md",
+            "license_or_terms": "unknown; original platform, download date and reuse terms require confirmation",
+            "provenance_status": "pending_original_source_confirmation",
+            "processing_script": "scripts/build_carbon_report.py; scripts/build_carbon_eye_data.py",
+        },
+        "S02": {"temporal_coverage": "2019 annual", "spatial_scale": "Suzhou Industrial Park", "field_units": "electricity in 100m kWh; GDP/output in 100m CNY", "license_or_terms": "official public PDF", "provenance_status": "verified", "processing_script": "scripts/build_carbon_eye_data.py"},
+        "S03": {"temporal_coverage": "2023 annual", "spatial_scale": "Suzhou Industrial Park", "field_units": "electricity in 100m kWh; GDP/output in 100m CNY", "license_or_terms": "official public page", "provenance_status": "verified", "processing_script": "scripts/build_carbon_eye_data.py"},
+        "S04": {"temporal_coverage": "2024 annual", "spatial_scale": "Suzhou Industrial Park", "field_units": "electricity in 100m kWh; GDP/output in 100m CNY", "license_or_terms": "official public page", "provenance_status": "verified", "processing_script": "scripts/build_carbon_eye_data.py"},
+        "S05": {"temporal_coverage": "2025 annual", "spatial_scale": "Suzhou Industrial Park", "field_units": "electricity in 100m kWh; GDP/output in 100m CNY", "license_or_terms": "official public page", "provenance_status": "verified", "processing_script": "scripts/build_carbon_eye_data.py"},
+        "S06": {"temporal_coverage": "factor reference year 2023", "spatial_scale": "Jiangsu Province", "field_units": "kgCO2/kWh", "license_or_terms": "official public document", "provenance_status": "verified", "processing_script": "scripts/build_carbon_eye_data.py"},
+        "S07": {"temporal_coverage": "2026-06, 7 days", "spatial_scale": "six Suzhou Industrial Park sites", "field_units": "14 characteristic factors; see snapshot source data", "license_or_terms": "official public PDF", "provenance_status": "verified", "processing_script": "scripts/import_carbon_eye_bundle.py"},
+        "S08": {"temporal_coverage": "2013-12 to 2026-06, complete months only", "spatial_scale": "six-site spatial mean", "field_units": "temperature, precipitation, sunshine, humidity, wind and radiation; see weather_field_schema.csv", "license_or_terms": "Open-Meteo Historical API / ERA5 attribution required", "provenance_status": "validated", "processing_script": "scripts/fetch_sip_weather.py; scripts/analyze_weather_air.py"},
+        "S09": {"temporal_coverage": "policy-era classification", "spatial_scale": "Suzhou Industrial Park", "field_units": "six industry categories", "license_or_terms": "official public page", "provenance_status": "verified", "processing_script": "scripts/import_carbon_eye_bundle.py"},
+        "S10": {"temporal_coverage": "policy document", "spatial_scale": "Suzhou Industrial Park", "field_units": "policy text", "license_or_terms": "official public page", "provenance_status": "verified", "processing_script": "documentation only"},
+        "S11": {"temporal_coverage": "annual city background through 2019", "spatial_scale": "Suzhou city", "field_units": "CO2 inventory", "license_or_terms": "see CEADs access terms", "provenance_status": "reused_project_data", "processing_script": "scripts/build_carbon_eye_data.py"},
+        "S12": {"temporal_coverage": "current station status only", "spatial_scale": "Suzhou Industrial Park station", "field_units": "AQI and pollutant concentrations", "license_or_terms": "Token and attribution required; no historical redistribution", "provenance_status": "optional_not_configured", "processing_script": "backend/main.py"},
+    }
+    tracked_paths = [
+        "sources/monthly_risk_index.csv", "sources/monthly_anomalies_2023_2026.csv", "sources/daily_cleaned_risk_sample.csv",
+        "sources/sip_electricity_official.csv", "sources/sip_electricity_missing_years_template.csv", "sources/jiangsu_electricity_emission_factors.csv",
+        "sources/sip_economic_activity_official.csv", "sources/sip_characteristic_air_snapshot.csv", "sources/industry_profile.csv",
+        "monthly_trends.json", "daily_cases.json", "park_electricity_emissions.json", "sip_economic_carbon_intensity.json",
+        "park_environment_snapshot.json", "carbon_emissions.json", "cdci.json", "weather/weather_park_monthly.csv", "weather/weather_validation_summary.json",
+    ]
+    file_manifest = []
+    for relative_path in tracked_paths:
+        path = DATA_DIR / relative_path
+        if path.exists():
+            file_manifest.append(
+                {
+                    "path": relative_path.replace("\\", "/"),
+                    "sha256": sha256_file(path),
+                    "bytes": path.stat().st_size,
+                    "generated_or_checked_at": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
+                }
+            )
+    sources = []
+    for source in source_registry:
+        item = dict(source)
+        item.update(source_context.get(item.get("source_id"), {}))
+        item["download_date"] = "not recorded in the historic bundle" if item.get("source_id") == "S01" else "not recorded; source page retained for audit"
+        sources.append(item)
+    return {
+        "schema_version": "1.0.0",
+        "audit_date": datetime.now(timezone.utc).astimezone().date().isoformat(),
+        "purpose": "Trace source, scale, processing route and SHA-256 checksums for Carbon Eye competition evidence.",
+        "sources": sources,
+        "file_manifest": file_manifest,
+        "known_gaps": {
+            "electricity_2020_2022": "No verified official annual paired total and industrial electricity values; kept as explicit missing years.",
+            "air_quality_original_platform": "Original platform, download date and licence for S01 remain pending confirmation.",
+        },
+    }
+
+
 def main() -> None:
     for path in (MONTHLY_RISK_CSV, MONTHLY_ANOMALIES_CSV, DAILY_RISK_CSV):
         if not path.exists():
@@ -538,14 +698,18 @@ def main() -> None:
     daily_cases = load_daily_cases()
     weather_meta, weather_records = load_weather()
     weather_current_year = weather_2024(weather_records)
-    park = read_json(DATA_DIR / "park_electricity_emissions.json")
+    park = normalize_park_electricity_payload(
+        read_json(DATA_DIR / "park_electricity_emissions.json")
+    )
     snapshot = read_json(DATA_DIR / "park_environment_snapshot.json")
+    source_registry = read_json(DATA_DIR / "source_registry.json")
     annual_dimensions = build_annual_dimensions(park)
     cdci, sensitivity = build_cdci(monthly, annual_dimensions)
     governance = build_governance_explanation(monthly)
     methodology = build_methodology()
     metadata = build_metadata(weather_meta, monthly)
     data_quality = build_data_quality(monthly, daily_cases, weather_records, park, snapshot)
+    data_quality["electricity_year_slots"] = len(park.get("year_slots", []))
     city_carbon = read_json(DATA_DIR / "carbon_emissions.json")
     latest_complete = next(item for item in reversed(monthly) if not item["is_partial"])
     overview = {
@@ -574,6 +738,7 @@ def main() -> None:
         "warnings_count": len(warnings),
         "daily_cases_count": len(daily_cases),
         "park_electricity_record_count": len(park.get("records", [])),
+        "park_electricity_year_slots": len(park.get("year_slots", [])),
         "cdci_record_count": len(cdci.get("records", [])),
         "checks": {
             "monthly_records_expected_152": len(monthly) == 152,
@@ -596,6 +761,9 @@ def main() -> None:
     write_json("metadata.json", metadata)
     write_json("data_quality.json", data_quality)
     write_json("validation_summary.json", validation)
+    write_json("park_electricity_emissions.json", park)
+    write_json("sip_economic_carbon_intensity.json", build_economic_intensity_payload(park))
+    write_json("data_provenance_registry.json", build_provenance_registry(source_registry))
     print(f"Carbon Eye data rebuilt in {DATA_DIR}")
     print(json.dumps(validation, ensure_ascii=False, indent=2))
 

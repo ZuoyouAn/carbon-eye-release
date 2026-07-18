@@ -351,9 +351,23 @@
               <li>{{ methodology?.weather_rule }}</li>
             </ul>
             <div class="source-list">
-              <a v-for="source in sources.slice(0, 5)" :key="source.source_id" :href="source.url_or_path" target="_blank" rel="noreferrer">
-                {{ source.dataset }} · {{ source.publisher }}
-              </a>
+              <template v-for="source in sources.slice(0, 5)" :key="source.source_id">
+                <a v-if="sourceHref(source)" :href="sourceHref(source)" target="_blank" rel="noreferrer">
+                  {{ source.source_id }} · {{ source.dataset }} · {{ source.publisher }}
+                </a>
+                <span v-else>{{ source.source_id }} · {{ source.dataset }} · {{ source.publisher }}（项目本地原始数据，待补原始平台信息）</span>
+              </template>
+              <details v-if="sources.length > 5" class="source-details">
+                <summary>展开全部 {{ sources.length }} 项数据来源</summary>
+                <div class="source-list source-list-expanded">
+                  <template v-for="source in sources.slice(5)" :key="source.source_id">
+                    <a v-if="sourceHref(source)" :href="sourceHref(source)" target="_blank" rel="noreferrer">
+                      {{ source.source_id }} · {{ source.dataset }} · {{ source.publisher }}
+                    </a>
+                    <span v-else>{{ source.source_id }} · {{ source.dataset }} · {{ source.publisher }}（项目本地原始数据，待补原始平台信息）</span>
+                  </template>
+                </div>
+              </details>
             </div>
           </article>
         </section>
@@ -438,7 +452,7 @@ const latestParkProxy = computed(() => overview.value?.latestParkElectricityProx
 const latestAnnualDimension = computed(() => cdci.value?.annual_dimensions?.at(-1) || null)
 const weatherRecords = computed(() => weatherLongTerm.value?.records || [])
 const weatherCorrelations = computed(() => weatherCorrelationPayload.value?.correlations || [])
-const parkElectricityRecords = computed(() => parkElectricity.value?.records || [])
+const parkElectricityRecords = computed(() => parkElectricity.value?.year_slots || parkElectricity.value?.records || [])
 const economicIntensityRecords = computed(() => economicIntensity.value?.records || [])
 const cdciRecords = computed(() => cdci.value?.records || [])
 const industryProfiles = computed(() => industryProfile.value?.profiles || industryProfile.value?.industries || [])
@@ -450,6 +464,11 @@ const realtimeStatus = computed(() => {
   if (realtimeAqi.value.status === 'stale') return '接口刷新失败，展示最近缓存'
   return realtimeAqi.value.message || '实时数据暂不可用'
 })
+
+function sourceHref(source) {
+  const href = source?.url_or_path || ''
+  return /^https?:\/\//.test(href) ? href : ''
+}
 
 onMounted(async () => {
   await loadData()
@@ -780,7 +799,11 @@ h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
 .governance-list small { color: #879eb3; }
 .method-list li, .boundary-list li { color: #b8cadd; line-height: 1.6; }
 .source-list { display: grid; gap: 8px; margin-top: 16px; }
-.source-list a { color: #7dd3fc; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.source-list a, .source-list span { color: #7dd3fc; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.source-list span { color: #a7b8c9; }
+.source-details { margin-top: 4px; }
+.source-details summary { color: #d9e7f5; cursor: pointer; font-size: 13px; }
+.source-list-expanded { margin-top: 10px; }
 .boundary-section { border-color: #4c5966; }
 .carbon-footer { padding: 15px 0 4px; color: #9fb3c8; font-size: 13px; text-align: center; }
 

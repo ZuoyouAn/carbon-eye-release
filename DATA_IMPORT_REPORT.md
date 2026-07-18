@@ -36,3 +36,15 @@ The files below were copied from the approved data bundle without value changes.
 ## Import Boundary
 
 This import preserves the supplied values. It does not fill the 2020-2022 electricity-data gap or create any new emissions observations.
+
+## 2026-07-18 Evidence-Chain Addendum
+
+The following files were regenerated or metadata-updated during the data-professional upgrade. No 2020-2022 electricity value was added. `data_provenance_registry.json` is the current machine-readable checksum registry; it supersedes older derived-file checksums above.
+
+| File | SHA-256 | Change |
+| --- | --- | --- |
+| `backend/data/carbon_eye/sources/source_registry.csv` | `9254c2f1e7aada47db112f5695a130c94426f1e406f51a7f9421b1fd5a9fbc0a` | S01 provenance status clarified; S08 marked validated |
+| `backend/data/carbon_eye/source_registry.json` | `9600f430e69db32e4a96cbd5c6029b628b3fc6dc81890f135f26889ce3e49f71` | Same source-status update for API output |
+| `backend/data/carbon_eye/park_electricity_emissions.json` | `c4cf7efc16b845296d169bc3194695073550c4f91e37f05eb708d67676da8f69` | Explicit annual slots; 2020-2022 retained as null gaps |
+| `backend/data/carbon_eye/sip_economic_carbon_intensity.json` | `ed99e4c367dd2ff33342f60f71299891b5c53d6ae1a8b138bb50a3ceadbbdb1f` | Derived fields now retain source, scope and uncertainty metadata |
+| `backend/data/carbon_eye/data_provenance_registry.json` | `5623dab5e00f0a7abc8cf608576d16e9120908bc902920923ac9cd664465c3a6` | New source, scale, processing and checksum registry |

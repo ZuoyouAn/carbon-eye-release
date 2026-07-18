@@ -67,5 +67,6 @@
   "monitoring_sites": 6,
   "snapshot_records": 84,
   "snapshot_monitoring_days": 7,
-  "data_boundary": "质量检查描述数据覆盖和处理状态，不将代理估算扩展为正式核算。"
+  "data_boundary": "质量检查描述数据覆盖和处理状态，不将代理估算扩展为正式核算。",
+  "electricity_year_slots": 7
 }

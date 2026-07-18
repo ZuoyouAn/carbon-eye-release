@@ -1,12 +1,12 @@
 ﻿source_id,dataset,publisher,url_or_path,access,registration,used_for,status
-S01,现有空气质量月/日数据分析报告,用户现有项目,00_sources/园区碳眼_现有数据分析报告.md,本地文件,否,已有152条月度、602条日级分析及局限性基线,已提供
+S01,现有空气质量月/日数据分析报告,用户现有项目,00_sources/园区碳眼_现有数据分析报告.md,本地文件,否,已有152条月度、602条日级分析及局限性基线,原始分析文件已提供；原始平台、下载日期和许可待补
 S02,苏州工业园区主要经济指标-2019年12月,苏州工业园区管委会,https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf,公开PDF,否,2019全年用电量,已下载
 S03,苏州工业园区主要经济统计指标-2023年12月,苏州工业园区管委会,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712,公开网页,否,2023全年用电量,已整理
 S04,苏州工业园区主要经济统计指标-2024年12月,苏州工业园区管委会,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395,公开网页,否,2024全年用电量,已整理
 S05,苏州工业园区主要经济统计指标-2025年12月,苏州工业园区管委会,https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715,公开网页,否,2025全年用电量,已整理
 S06,2021/2022/2023省级电力平均CO2排放因子,生态环境部、国家统计局,https://www.mee.gov.cn/xxgk2018/xxgk/xxgk01/202512/t20251231_1139517.html,公开网页/PDF,否,江苏购电间接排放位置法因子,已整理
 S07,2026年苏州工业园区区域环境质量状况（特征因子）报告,苏州工业园区生态环境局,https://www.sipac.gov.cn/gthbj/tzgg/202607/811e7861a2654de0915d0fb1514de9cc/files/1a981b7a7cec4237aa8a4259050606ab.pdf,公开PDF,否,六点位、14项特征因子短期监测快照,已下载并结构化
-S08,Open-Meteo Historical Weather API / ERA5,Open-Meteo/ECMWF再分析,https://open-meteo.com/en/docs/historical-weather-api,公开API,否（非商业用途无需API Key）,2013-12起园区六点位长期气象,已提供自动下载脚本，需联网运行
+S08,Open-Meteo Historical Weather API / ERA5,Open-Meteo/ECMWF再分析,https://open-meteo.com/en/docs/historical-weather-api,公开API,否（非商业用途无需API Key）,2013-12起园区六点位长期气象,已下载并通过校验：151个完整月份、六点位空间平均、无大面积缺失
 S09,苏州工业园区623产业体系,苏州工业园区管委会,https://www.sipac.gov.cn/szgyyq/mtjj/202601/803e21c03c3140569f9e811c28039ef2.shtml,公开网页,否,六类产业画像官方分类,已结构化
 S10,国家碳达峰试点（苏州工业园区）实施方案,苏州市人民政府,https://www.suzhou.gov.cn/szsrmzf/zfwj/202405/3df5e68dcc1a4bf79947e6cbb4524968.shtml,公开网页,否,产业与治理建议政策映射,已纳入说明
 S11,中国290个城市碳排放清单,CEADs,https://www.ceads.net.cn/data/carbon-inventory/,部分下载需注册,可能需要,苏州市年度CO2背景；不得当作园区排放,沿用现有项目数据，包内未重复下载

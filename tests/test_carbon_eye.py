@@ -33,6 +33,11 @@ def test_release_data_boundaries_and_counts():
     assert july["excluded_from_annual_statistics"] is True
     assert electricity["missing_years"] == [2020, 2021, 2022]
     assert len(electricity["records"]) == 4
+    assert [item["year"] for item in electricity["year_slots"]] == list(range(2019, 2026))
+    missing_slots = [item for item in electricity["year_slots"] if item["record_status"] == "missing"]
+    assert [item["year"] for item in missing_slots] == [2020, 2021, 2022]
+    assert all(item["total_electricity_100m_kwh"] is None for item in missing_slots)
+    assert all(item["missing_reason"] for item in missing_slots)
     assert len(snapshot["sites"]) == 6
     assert len(snapshot["records"]) == 84
     assert len(industry["profiles"]) == 6
@@ -43,6 +48,16 @@ def test_electricity_proxy_formula_is_reproducible():
     for item in data["records"]:
         expected = item["total_electricity_100m_kwh"] * 10 * item["factor_kgco2_per_kwh"]
         assert abs(expected - item["total_purchased_electricity_scope2_10k_tco2"]) <= 0.0011
+        for key in ("source_url", "source_period", "data_quality", "factor_reference_year", "method", "scope", "limitations", "missing_reason"):
+            assert key in item
+
+
+def test_provenance_registry_has_sources_and_checksums():
+    registry = read_json("data_provenance_registry.json")
+    assert len(registry["sources"]) == 12
+    assert registry["known_gaps"]["electricity_2020_2022"]
+    assert registry["known_gaps"]["air_quality_original_platform"]
+    assert all(len(item["sha256"]) == 64 for item in registry["file_manifest"])
 
 
 def test_weather_and_cdci_limits():

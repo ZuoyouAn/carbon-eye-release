@@ -39,7 +39,17 @@
         "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
         "economic_source_url": "https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf",
         "electricity_source_url": "https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf"
-      }
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
     },
     {
       "year": 2023,
@@ -69,7 +79,17 @@
         "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
         "economic_source_url": "https://www.sipac.gov.cn/szgyyq/yqmtjj/202411/11a6d9ecca854cd4b0cd0019b88610da.shtml",
         "electricity_source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712"
-      }
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
     },
     {
       "year": 2024,
@@ -99,7 +119,17 @@
         "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
         "economic_source_url": "https://www.sipac.gov.cn/szgyyq/dthg202502/202502/ac7479bd3b804df1b9ce26a30ade97d5.shtml",
         "electricity_source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395"
-      }
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
     },
     {
       "year": 2025,
@@ -129,7 +159,17 @@
         "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
         "economic_source_url": "https://www.sipac.gov.cn/szgyyq/yqjjfz/parkProfile.shtml",
         "electricity_source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715"
-      }
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
     }
   ],
   "missing_years": [
@@ -147,5 +187,240 @@
   "intensity_metrics": {
     "total_scope2_tco2_per_10k_gdp": "总购电间接排放代理/园区GDP",
     "industrial_scope2_tco2_per_10k_output": "工业用电间接排放代理/规上工业总产值"
+  },
+  "year_slots": [
+    {
+      "year": 2019,
+      "period": "全年",
+      "total_electricity_100m_kwh": 137.8063,
+      "industrial_electricity_100m_kwh": 92.8687,
+      "factor_reference_year": 2023,
+      "factor_kgco2_per_kwh": 0.5827,
+      "total_purchased_electricity_scope2_10k_tco2": 802.997,
+      "industrial_electricity_scope2_10k_tco2": 541.146,
+      "method": "用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景",
+      "data_quality": "官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子",
+      "source_url": "https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf",
+      "economic_intensity": {
+        "year": 2019,
+        "gdp_100m_cny": 2743.36,
+        "above_scale_industrial_output_100m_cny": 4801.93,
+        "total_electricity_100m_kwh": 137.8063,
+        "industrial_electricity_100m_kwh": 92.8687,
+        "total_electricity_kwh_per_10k_gdp": 502.327,
+        "industrial_electricity_kwh_per_10k_output": 193.399,
+        "total_scope2_tco2_per_10k_gdp": 0.2927,
+        "industrial_scope2_tco2_per_10k_output": 0.1127,
+        "factor_reference_year": 2023,
+        "factor_kgco2_per_kwh": 0.5827,
+        "method": "统一2023江苏电力因子位置法代理；强度分母为园区GDP或规上工业总产值",
+        "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
+        "economic_source_url": "https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf",
+        "electricity_source_url": "https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf"
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
+    },
+    {
+      "year": 2020,
+      "period": "全年",
+      "source_period": "全年",
+      "record_status": "missing",
+      "total_electricity_100m_kwh": null,
+      "industrial_electricity_100m_kwh": null,
+      "total_purchased_electricity_scope2_10k_tco2": null,
+      "industrial_electricity_scope2_10k_tco2": null,
+      "factor_reference_year": 2023,
+      "factor_kgco2_per_kwh": 0.5827,
+      "source_url": null,
+      "data_quality": "未写入主数据",
+      "missing_reason": "未找到同时包含全社会用电量和工业用电量、且口径明确为全年并可访问复核的官方公开记录。",
+      "method": "缺失年份不插值、不倒推、不参与购电代理、强度、EAI、CEI 或 CDCI 计算。",
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
+    },
+    {
+      "year": 2021,
+      "period": "全年",
+      "source_period": "全年",
+      "record_status": "missing",
+      "total_electricity_100m_kwh": null,
+      "industrial_electricity_100m_kwh": null,
+      "total_purchased_electricity_scope2_10k_tco2": null,
+      "industrial_electricity_scope2_10k_tco2": null,
+      "factor_reference_year": 2023,
+      "factor_kgco2_per_kwh": 0.5827,
+      "source_url": null,
+      "data_quality": "未写入主数据",
+      "missing_reason": "未找到同时包含全社会用电量和工业用电量、且口径明确为全年并可访问复核的官方公开记录。",
+      "method": "缺失年份不插值、不倒推、不参与购电代理、强度、EAI、CEI 或 CDCI 计算。",
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
+    },
+    {
+      "year": 2022,
+      "period": "全年",
+      "source_period": "全年",
+      "record_status": "missing",
+      "total_electricity_100m_kwh": null,
+      "industrial_electricity_100m_kwh": null,
+      "total_purchased_electricity_scope2_10k_tco2": null,
+      "industrial_electricity_scope2_10k_tco2": null,
+      "factor_reference_year": 2023,
+      "factor_kgco2_per_kwh": 0.5827,
+      "source_url": null,
+      "data_quality": "未写入主数据",
+      "missing_reason": "未找到同时包含全社会用电量和工业用电量、且口径明确为全年并可访问复核的官方公开记录。",
+      "method": "缺失年份不插值、不倒推、不参与购电代理、强度、EAI、CEI 或 CDCI 计算。",
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
+    },
+    {
+      "year": 2023,
+      "period": "全年",
+      "total_electricity_100m_kwh": 154.7894,
+      "industrial_electricity_100m_kwh": 92.3556,
+      "factor_reference_year": 2023,
+      "factor_kgco2_per_kwh": 0.5827,
+      "total_purchased_electricity_scope2_10k_tco2": 901.958,
+      "industrial_electricity_scope2_10k_tco2": 538.156,
+      "method": "用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景",
+      "data_quality": "官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子",
+      "source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712",
+      "economic_intensity": {
+        "year": 2023,
+        "gdp_100m_cny": 3686.0,
+        "above_scale_industrial_output_100m_cny": 6509.4,
+        "total_electricity_100m_kwh": 154.7894,
+        "industrial_electricity_100m_kwh": 92.3556,
+        "total_electricity_kwh_per_10k_gdp": 419.939,
+        "industrial_electricity_kwh_per_10k_output": 141.88,
+        "total_scope2_tco2_per_10k_gdp": 0.2447,
+        "industrial_scope2_tco2_per_10k_output": 0.0827,
+        "factor_reference_year": 2023,
+        "factor_kgco2_per_kwh": 0.5827,
+        "method": "统一2023江苏电力因子位置法代理；强度分母为园区GDP或规上工业总产值",
+        "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
+        "economic_source_url": "https://www.sipac.gov.cn/szgyyq/yqmtjj/202411/11a6d9ecca854cd4b0cd0019b88610da.shtml",
+        "electricity_source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712"
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
+    },
+    {
+      "year": 2024,
+      "period": "全年",
+      "total_electricity_100m_kwh": 170.493,
+      "industrial_electricity_100m_kwh": 102.0132,
+      "factor_reference_year": 2023,
+      "factor_kgco2_per_kwh": 0.5827,
+      "total_purchased_electricity_scope2_10k_tco2": 993.463,
+      "industrial_electricity_scope2_10k_tco2": 594.431,
+      "method": "用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景",
+      "data_quality": "官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子",
+      "source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395",
+      "economic_intensity": {
+        "year": 2024,
+        "gdp_100m_cny": 4002.43,
+        "above_scale_industrial_output_100m_cny": 6909.19,
+        "total_electricity_100m_kwh": 170.493,
+        "industrial_electricity_100m_kwh": 102.0132,
+        "total_electricity_kwh_per_10k_gdp": 425.974,
+        "industrial_electricity_kwh_per_10k_output": 147.649,
+        "total_scope2_tco2_per_10k_gdp": 0.2482,
+        "industrial_scope2_tco2_per_10k_output": 0.086,
+        "factor_reference_year": 2023,
+        "factor_kgco2_per_kwh": 0.5827,
+        "method": "统一2023江苏电力因子位置法代理；强度分母为园区GDP或规上工业总产值",
+        "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
+        "economic_source_url": "https://www.sipac.gov.cn/szgyyq/dthg202502/202502/ac7479bd3b804df1b9ce26a30ade97d5.shtml",
+        "electricity_source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395"
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
+    },
+    {
+      "year": 2025,
+      "period": "全年",
+      "total_electricity_100m_kwh": 179.4286,
+      "industrial_electricity_100m_kwh": 107.4379,
+      "factor_reference_year": 2023,
+      "factor_kgco2_per_kwh": 0.5827,
+      "total_purchased_electricity_scope2_10k_tco2": 1045.53,
+      "industrial_electricity_scope2_10k_tco2": 626.041,
+      "method": "用电量×2023江苏省电力平均CO2排放因子；统一因子横向比较情景",
+      "data_quality": "官方用电量+官方因子；非园区总碳排放，2024/2025使用最新可得2023因子",
+      "source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715",
+      "economic_intensity": {
+        "year": 2025,
+        "gdp_100m_cny": 4163.1,
+        "above_scale_industrial_output_100m_cny": 7362.0,
+        "total_electricity_100m_kwh": 179.4286,
+        "industrial_electricity_100m_kwh": 107.4379,
+        "total_electricity_kwh_per_10k_gdp": 430.998,
+        "industrial_electricity_kwh_per_10k_output": 145.936,
+        "total_scope2_tco2_per_10k_gdp": 0.2511,
+        "industrial_scope2_tco2_per_10k_output": 0.085,
+        "factor_reference_year": 2023,
+        "factor_kgco2_per_kwh": 0.5827,
+        "method": "统一2023江苏电力因子位置法代理；强度分母为园区GDP或规上工业总产值",
+        "data_boundary": "趋势和效率代理，不是正式园区碳强度核查结果",
+        "economic_source_url": "https://www.sipac.gov.cn/szgyyq/yqjjfz/parkProfile.shtml",
+        "electricity_source_url": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715"
+      },
+      "record_status": "available",
+      "source_period": "全年",
+      "missing_reason": null,
+      "scope": "仅购电相关间接CO2排放，不代表园区总排放",
+      "limitations": [
+        "不包含直接燃烧、外购热力、工业过程、交通及废弃物排放。",
+        "未扣除绿电、绿证交易，属于地理位置法代理估算。",
+        "2019、2024、2025均采用2023江苏因子做统一因子情景，适合趋势展示，不是年度正式清单。",
+        "强度分母为宏观GDP/规上工业总产值，不能替代企业产品碳强度。"
+      ]
+    }
+  ],
+  "record_policy": {
+    "main_chart_records": "仅 record_status=available 的官方全年成对用电记录",
+    "missing_year_representation": "year_slots 返回显式 null，前端绘制断点，不以零值代替。"
   }
 }

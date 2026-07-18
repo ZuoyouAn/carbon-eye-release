@@ -1,0 +1,325 @@
+{
+  "schema_version": "1.0.0",
+  "audit_date": "2026-07-18",
+  "purpose": "Trace source, scale, processing route and SHA-256 checksums for Carbon Eye competition evidence.",
+  "sources": [
+    {
+      "source_id": "S01",
+      "dataset": "现有空气质量月/日数据分析报告",
+      "publisher": "用户现有项目",
+      "url_or_path": "00_sources/园区碳眼_现有数据分析报告.md",
+      "access": "本地文件",
+      "registration": "否",
+      "used_for": "已有152条月度、602条日级分析及局限性基线",
+      "status": "原始分析文件已提供；原始平台、下载日期和许可待补",
+      "temporal_coverage": "monthly 2013-12 to 2026-07; daily 2013-12-02 to 2015-07-31",
+      "spatial_scale": "Suzhou city background",
+      "field_units": "AQI; PM2.5, PM10, CO, NO2, SO2, O3; see data_dictionary.md",
+      "license_or_terms": "unknown; original platform, download date and reuse terms require confirmation",
+      "provenance_status": "pending_original_source_confirmation",
+      "processing_script": "scripts/build_carbon_report.py; scripts/build_carbon_eye_data.py",
+      "download_date": "not recorded in the historic bundle"
+    },
+    {
+      "source_id": "S02",
+      "dataset": "苏州工业园区主要经济指标-2019年12月",
+      "publisher": "苏州工业园区管委会",
+      "url_or_path": "https://www.sipac.gov.cn/szgyyq/uploadfile/government/tjsj/202004/P020200422327298704570.pdf",
+      "access": "公开PDF",
+      "registration": "否",
+      "used_for": "2019全年用电量",
+      "status": "已下载",
+      "temporal_coverage": "2019 annual",
+      "spatial_scale": "Suzhou Industrial Park",
+      "field_units": "electricity in 100m kWh; GDP/output in 100m CNY",
+      "license_or_terms": "official public PDF",
+      "provenance_status": "verified",
+      "processing_script": "scripts/build_carbon_eye_data.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S03",
+      "dataset": "苏州工业园区主要经济统计指标-2023年12月",
+      "publisher": "苏州工业园区管委会",
+      "url_or_path": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=95712",
+      "access": "公开网页",
+      "registration": "否",
+      "used_for": "2023全年用电量",
+      "status": "已整理",
+      "temporal_coverage": "2023 annual",
+      "spatial_scale": "Suzhou Industrial Park",
+      "field_units": "electricity in 100m kWh; GDP/output in 100m CNY",
+      "license_or_terms": "official public page",
+      "provenance_status": "verified",
+      "processing_script": "scripts/build_carbon_eye_data.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S04",
+      "dataset": "苏州工业园区主要经济统计指标-2024年12月",
+      "publisher": "苏州工业园区管委会",
+      "url_or_path": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=98395",
+      "access": "公开网页",
+      "registration": "否",
+      "used_for": "2024全年用电量",
+      "status": "已整理",
+      "temporal_coverage": "2024 annual",
+      "spatial_scale": "Suzhou Industrial Park",
+      "field_units": "electricity in 100m kWh; GDP/output in 100m CNY",
+      "license_or_terms": "official public page",
+      "provenance_status": "verified",
+      "processing_script": "scripts/build_carbon_eye_data.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S05",
+      "dataset": "苏州工业园区主要经济统计指标-2025年12月",
+      "publisher": "苏州工业园区管委会",
+      "url_or_path": "https://wsdc.sipac.gov.cn/ywtk/sjkfDetailView?id=101715",
+      "access": "公开网页",
+      "registration": "否",
+      "used_for": "2025全年用电量",
+      "status": "已整理",
+      "temporal_coverage": "2025 annual",
+      "spatial_scale": "Suzhou Industrial Park",
+      "field_units": "electricity in 100m kWh; GDP/output in 100m CNY",
+      "license_or_terms": "official public page",
+      "provenance_status": "verified",
+      "processing_script": "scripts/build_carbon_eye_data.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S06",
+      "dataset": "2021/2022/2023省级电力平均CO2排放因子",
+      "publisher": "生态环境部、国家统计局",
+      "url_or_path": "https://www.mee.gov.cn/xxgk2018/xxgk/xxgk01/202512/t20251231_1139517.html",
+      "access": "公开网页/PDF",
+      "registration": "否",
+      "used_for": "江苏购电间接排放位置法因子",
+      "status": "已整理",
+      "temporal_coverage": "factor reference year 2023",
+      "spatial_scale": "Jiangsu Province",
+      "field_units": "kgCO2/kWh",
+      "license_or_terms": "official public document",
+      "provenance_status": "verified",
+      "processing_script": "scripts/build_carbon_eye_data.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S07",
+      "dataset": "2026年苏州工业园区区域环境质量状况（特征因子）报告",
+      "publisher": "苏州工业园区生态环境局",
+      "url_or_path": "https://www.sipac.gov.cn/gthbj/tzgg/202607/811e7861a2654de0915d0fb1514de9cc/files/1a981b7a7cec4237aa8a4259050606ab.pdf",
+      "access": "公开PDF",
+      "registration": "否",
+      "used_for": "六点位、14项特征因子短期监测快照",
+      "status": "已下载并结构化",
+      "temporal_coverage": "2026-06, 7 days",
+      "spatial_scale": "six Suzhou Industrial Park sites",
+      "field_units": "14 characteristic factors; see snapshot source data",
+      "license_or_terms": "official public PDF",
+      "provenance_status": "verified",
+      "processing_script": "scripts/import_carbon_eye_bundle.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S08",
+      "dataset": "Open-Meteo Historical Weather API / ERA5",
+      "publisher": "Open-Meteo/ECMWF再分析",
+      "url_or_path": "https://open-meteo.com/en/docs/historical-weather-api",
+      "access": "公开API",
+      "registration": "否（非商业用途无需API Key）",
+      "used_for": "2013-12起园区六点位长期气象",
+      "status": "已下载并通过校验：151个完整月份、六点位空间平均、无大面积缺失",
+      "temporal_coverage": "2013-12 to 2026-06, complete months only",
+      "spatial_scale": "six-site spatial mean",
+      "field_units": "temperature, precipitation, sunshine, humidity, wind and radiation; see weather_field_schema.csv",
+      "license_or_terms": "Open-Meteo Historical API / ERA5 attribution required",
+      "provenance_status": "validated",
+      "processing_script": "scripts/fetch_sip_weather.py; scripts/analyze_weather_air.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S09",
+      "dataset": "苏州工业园区623产业体系",
+      "publisher": "苏州工业园区管委会",
+      "url_or_path": "https://www.sipac.gov.cn/szgyyq/mtjj/202601/803e21c03c3140569f9e811c28039ef2.shtml",
+      "access": "公开网页",
+      "registration": "否",
+      "used_for": "六类产业画像官方分类",
+      "status": "已结构化",
+      "temporal_coverage": "policy-era classification",
+      "spatial_scale": "Suzhou Industrial Park",
+      "field_units": "six industry categories",
+      "license_or_terms": "official public page",
+      "provenance_status": "verified",
+      "processing_script": "scripts/import_carbon_eye_bundle.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S10",
+      "dataset": "国家碳达峰试点（苏州工业园区）实施方案",
+      "publisher": "苏州市人民政府",
+      "url_or_path": "https://www.suzhou.gov.cn/szsrmzf/zfwj/202405/3df5e68dcc1a4bf79947e6cbb4524968.shtml",
+      "access": "公开网页",
+      "registration": "否",
+      "used_for": "产业与治理建议政策映射",
+      "status": "已纳入说明",
+      "temporal_coverage": "policy document",
+      "spatial_scale": "Suzhou Industrial Park",
+      "field_units": "policy text",
+      "license_or_terms": "official public page",
+      "provenance_status": "verified",
+      "processing_script": "documentation only",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S11",
+      "dataset": "中国290个城市碳排放清单",
+      "publisher": "CEADs",
+      "url_or_path": "https://www.ceads.net.cn/data/carbon-inventory/",
+      "access": "部分下载需注册",
+      "registration": "可能需要",
+      "used_for": "苏州市年度CO2背景；不得当作园区排放",
+      "status": "沿用现有项目数据，包内未重复下载",
+      "temporal_coverage": "annual city background through 2019",
+      "spatial_scale": "Suzhou city",
+      "field_units": "CO2 inventory",
+      "license_or_terms": "see CEADs access terms",
+      "provenance_status": "reused_project_data",
+      "processing_script": "scripts/build_carbon_eye_data.py",
+      "download_date": "not recorded; source page retained for audit"
+    },
+    {
+      "source_id": "S12",
+      "dataset": "WAQI/AQICN实时空气质量API",
+      "publisher": "World Air Quality Index Project",
+      "url_or_path": "https://aqicn.org/data-platform/token/",
+      "access": "Token API",
+      "registration": "需要申请Token",
+      "used_for": "实时AQI卡片（可选）",
+      "status": "需要用户本人申请Token，不能放入代码包",
+      "temporal_coverage": "current station status only",
+      "spatial_scale": "Suzhou Industrial Park station",
+      "field_units": "AQI and pollutant concentrations",
+      "license_or_terms": "Token and attribution required; no historical redistribution",
+      "provenance_status": "optional_not_configured",
+      "processing_script": "backend/main.py",
+      "download_date": "not recorded; source page retained for audit"
+    }
+  ],
+  "file_manifest": [
+    {
+      "path": "sources/monthly_risk_index.csv",
+      "sha256": "88863e75b884aef9dc5199351a3d3eb6f7ef7f0ed95fa476d46f1f713bafe00b",
+      "bytes": 44809,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/monthly_anomalies_2023_2026.csv",
+      "sha256": "5909b4eccdb8bbe9967f9b24fb5d8f3e475a490551a0af151f2b701b771fa008",
+      "bytes": 1148,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/daily_cleaned_risk_sample.csv",
+      "sha256": "7536bedc715bea9a2361988b2b691172bf0476f1d851e39e5a21e114534e9603",
+      "bytes": 182628,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/sip_electricity_official.csv",
+      "sha256": "485b8a9e25ea7d9d6e15b128920a577dacc4db13d03bb6134eb473c63f521b34",
+      "bytes": 1545,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/sip_electricity_missing_years_template.csv",
+      "sha256": "caab0d8f2497e6db53a54d267fd6fbd3d454635ac3ec6b7e5068213394f34599",
+      "bytes": 291,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/jiangsu_electricity_emission_factors.csv",
+      "sha256": "86053c68d14ce59fb0820ba483387fcf3fe0dc4abff0b3e506cb01c82b168e4b",
+      "bytes": 658,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/sip_economic_activity_official.csv",
+      "sha256": "29495d29b27ff64a8f4c9ca7ce3cbf7f6aca376b9de3ac0942dfd2e20e17babd",
+      "bytes": 848,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/sip_characteristic_air_snapshot.csv",
+      "sha256": "e6b139cb63f39901ef8b03e7527e05750b63f877998172221ac4bd26b68124ea",
+      "bytes": 27398,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sources/industry_profile.csv",
+      "sha256": "9023b35c034f610b7095cbf3a700e96d7644fa85a09a528541c1e0d94ffb35ef",
+      "bytes": 2687,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "monthly_trends.json",
+      "sha256": "476676e40c11a5157f49a85e6da7c1dad4246a20eebb6da726d8926fad6dc220",
+      "bytes": 165928,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "daily_cases.json",
+      "sha256": "54da9701db72350fa919f8cce7ce2eefeb982873ae43b09e100bdcd91ef7c211",
+      "bytes": 9047,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "park_electricity_emissions.json",
+      "sha256": "c4cf7efc16b845296d169bc3194695073550c4f91e37f05eb708d67676da8f69",
+      "bytes": 23495,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "sip_economic_carbon_intensity.json",
+      "sha256": "ed99e4c367dd2ff33342f60f71299891b5c53d6ae1a8b138bb50a3ceadbbdb1f",
+      "bytes": 7842,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "park_environment_snapshot.json",
+      "sha256": "b2e93a05927ab6a7eba3e6c1c2732b9a91d17c7d1679bcff7c00db3e5f34ae82",
+      "bytes": 56322,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "carbon_emissions.json",
+      "sha256": "9ac65391617a0dcf99828d9d5cae70e8658d9d1c096cf667df48afe5a90ce4cc",
+      "bytes": 2794,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "cdci.json",
+      "sha256": "496caf30f9e74b1aec947d7f5207c0bf8b9669f37918276c39685c68bd10b971",
+      "bytes": 28881,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "weather/weather_park_monthly.csv",
+      "sha256": "b14aff07ebb03a10b80bdf6dc1aae6a613d771e17239f5953276c765a214a0a2",
+      "bytes": 12193,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    },
+    {
+      "path": "weather/weather_validation_summary.json",
+      "sha256": "276a842b676bef7a441281bae5d3738107605596dd79247539a234256b125d5b",
+      "bytes": 294,
+      "generated_or_checked_at": "2026-07-18T23:08:45+08:00"
+    }
+  ],
+  "known_gaps": {
+    "electricity_2020_2022": "No verified official annual paired total and industrial electricity values; kept as explicit missing years.",
+    "air_quality_original_platform": "Original platform, download date and licence for S01 remain pending confirmation."
+  }
+}

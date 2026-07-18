@@ -35,3 +35,11 @@
 发布范围已搜索四类越界表述（过度碳核算、实时 CO2、确定交通来源、确定企业来源），均未发现。
 
 安全审计结果见 `SECURITY_AUDIT.md`，科学边界见 `SCIENTIFIC_BOUNDARY_REPORT.md`。
+
+## 2026-07-18 数据专业升级回归
+
+- `python scripts/build_carbon_eye_data.py`：通过；验证摘要确认 152 条月度记录、151 个月气象、7 个年度槽位、4 条合格年度用电记录及 48 条实验性 CDCI 月度记录。
+- `python -m pytest tests/test_carbon_eye.py -q`：6 通过，0 失败；新增断点、字段契约和 SHA-256 溯源台账测试。
+- `python -m py_compile backend/main.py`：通过。
+- `frontend/npm.cmd run build`：通过。构建仍提示 ECharts 主包较大和第三方注释位置，均为非阻塞警告。
+- 生产接口和页面验证结果将写入更新后的 `DEPLOYMENT_REPORT.md`。
