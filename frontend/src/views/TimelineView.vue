@@ -4,8 +4,6 @@
       <div class="section-heading">
         <RouterLink class="back-button" to="/">返回首页</RouterLink>
         <p class="eyebrow">Timeline</p>
-        <h1>成长时间线</h1>
-        <p>这里记录网站从 0 到 1 的演进过程，也可以当作你的学习轨迹。</p>
       </div>
 
       <div class="timeline-list">

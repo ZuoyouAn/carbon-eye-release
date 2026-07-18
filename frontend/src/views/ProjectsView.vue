@@ -5,7 +5,6 @@
         <RouterLink class="back-button" to="/">返回首页</RouterLink>
         <p class="eyebrow">Projects</p>
         <h1>项目作品详情</h1>
-        <p>这里专门沉淀可以拿出来展示的项目：既有完整网站，也有算法实验和数据决策原型。</p>
       </div>
 
       <div class="card-grid two-grid">

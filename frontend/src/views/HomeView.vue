@@ -2,10 +2,8 @@
   <main>
     <section class="hero-section">
       <div class="hero-copy">
-        <p class="eyebrow">Vue Router / FastAPI / MySQL</p>
         <h1>左右</h1>
-        <p class="hero-title">我是神</p>
-        <p class="hero-slogan">买挂联系我</p>
+        <p class="hero-slogan">team</p>
         <p class="hero-description">功能：文章、发帖子、看小说、收藏、点赞、论文实现、</p>
 
         <div class="hero-actions">
@@ -18,8 +16,7 @@
         <div class="profile-head">
           <div class="avatar">左</div>
           <div>
-            <p class="panel-label">个人网站</p>
-            <h2>买挂找我</h2>
+            <p class="panel-label">左</p>
           </div>
         </div>
 
@@ -64,8 +61,7 @@
     <section class="section">
       <div class="section-heading">
         <p class="eyebrow">Modules</p>
-        <h2>现在可以从这些入口开始玩</h2>
-        <p>每个模块都已经接到后端接口，后续你学习 Vue、FastAPI、MySQL 时，可以按模块一点点拆开看。</p>
+        <h2>快速入口</h2>
       </div>
 
       <div class="feature-grid">
