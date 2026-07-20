@@ -111,12 +111,12 @@
   },
   {
     "source_id": "S12",
-    "dataset": "WAQI/AQICN实时空气质量API",
+    "dataset": "AQICN苏州工业园区公开站点页面",
     "publisher": "World Air Quality Index Project",
-    "url_or_path": "https://aqicn.org/data-platform/token/",
-    "access": "Token API",
-    "registration": "需要申请Token",
-    "used_for": "实时AQI卡片（可选）",
-    "status": "需要用户本人申请Token，不能放入代码包"
+    "url_or_path": "https://aqicn.org/city/jiangsu/suzhou/suzhougongyeyuanqu/cn/",
+    "access": "公开网页抓取",
+    "registration": "否",
+    "used_for": "实时AQI状态卡片；仅内存缓存，不形成历史库",
+    "status": "已接入公开站点页面的尽力抓取；页面不可用时返回暂不可用或最近内存缓存"
   }
 ]

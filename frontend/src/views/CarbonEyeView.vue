@@ -24,7 +24,7 @@
         <section class="metric-grid" aria-label="专题驾驶舱">
           <article class="metric-card">
             <span>实时 AQI 状态</span>
-            <strong>{{ realtimeAqi?.status === 'ok' ? realtimeAqi?.items?.find((item) => item.pollutant === 'aqi')?.current_value ?? '-' : '暂不可用' }}</strong>
+            <strong>{{ realtimeAqiValue }}</strong>
             <p>{{ realtimeStatus }}</p>
           </article>
           <article class="metric-card">
@@ -38,16 +38,15 @@
             <p>万吨 CO2 · {{ latestParkProxy?.year || '-' }} 年</p>
           </article>
           <article class="metric-card">
-            <span>年度 EAI / CEI</span>
-            <strong>{{ latestAnnualDimension ? `${latestAnnualDimension.eai} / ${latestAnnualDimension.cei}` : '-' }}</strong>
-            <p>{{ latestAnnualDimension?.year || '-' }} 年年度能源活动 / 排放强度代理</p>
-          </article>
-          <article class="metric-card">
-            <span>数据质量</span>
-            <strong>{{ dataQuality?.weather_months ?? '-' }}</strong>
-            <p>气象月度记录 · 6 点位 · {{ dataQuality?.snapshot_records ?? '-' }} 条快照记录</p>
+            <span>PRI / EAI / CEI 三维态势</span>
+            <strong>{{ threeDimensionSummary }}</strong>
+            <p>PRI 为月度；EAI、CEI 为 {{ latestAnnualDimension?.year || '-' }} 年年度背景</p>
           </article>
         </section>
+        <details class="dashboard-boundary">
+          <summary>查看驾驶舱的数据时间尺度与边界</summary>
+          <p>实时 AQI 仅反映公开站点页面的当前状态；PRI 来自苏州市级月度空气质量背景；购电间接排放代理、EAI 与 CEI 来自园区年度公开用电和经济数据。它们不构成同一时点的实时碳排放判断。</p>
+        </details>
 
         <section class="carbon-section">
           <div class="section-heading">
@@ -102,19 +101,36 @@
           </div>
           <div class="section-note warning-note">本模块为官方短期补充监测快照，不代表全年均值或实时序列；不基于此快照识别具体污染企业。</div>
           <div class="site-layout">
-            <div class="site-list">
-              <button
-                v-for="site in parkSnapshot?.sites || []"
-                :key="site.site_id"
-                class="site-button"
-                :class="{ active: selectedSiteId === site.site_id }"
-                type="button"
-                @click="selectedSiteId = site.site_id"
-              >
-                <strong>{{ site.site_id }}</strong>
-                <span>{{ site.site_name }}</span>
-                <small>{{ site.functional_zone }}</small>
-              </button>
+            <div class="site-overview">
+              <div class="site-map" aria-label="六点位相对位置图">
+                <span class="map-title">相对点位图</span>
+                <span class="map-scale map-scale-north">北</span>
+                <span class="map-scale map-scale-south">南</span>
+                <button
+                  v-for="site in parkSnapshot?.sites || []"
+                  :key="`map-${site.site_id}`"
+                  class="site-marker"
+                  :class="{ active: selectedSiteId === site.site_id }"
+                  :style="siteMarkerStyle(site)"
+                  type="button"
+                  :aria-label="`查看${site.site_name}`"
+                  @click="selectedSiteId = site.site_id"
+                >{{ site.site_id }}</button>
+              </div>
+              <div class="site-list">
+                <button
+                  v-for="site in parkSnapshot?.sites || []"
+                  :key="site.site_id"
+                  class="site-button"
+                  :class="{ active: selectedSiteId === site.site_id }"
+                  type="button"
+                  @click="selectedSiteId = site.site_id"
+                >
+                  <strong>{{ site.site_id }}</strong>
+                  <span>{{ site.site_name }}</span>
+                  <small>{{ site.functional_zone }}</small>
+                </button>
+              </div>
             </div>
             <div class="snapshot-detail">
               <div class="snapshot-selected">
@@ -232,6 +248,7 @@
             </div>
             <p>同月历史阈值超出与当前污染压力等级为两项独立判断。</p>
           </div>
+          <p class="section-note warning-note">点击任一异常月份，查看相对异常、历史同月阈值、绝对风险、主要贡献和适用治理建议。</p>
           <div class="table-wrap">
             <table class="data-table">
               <thead>
@@ -245,9 +262,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in warnings" :key="item.date">
+                <tr
+                  v-for="item in warnings"
+                  :key="item.date"
+                  class="warning-row"
+                  :class="{ active: selectedWarningDate === item.date }"
+                  role="button"
+                  tabindex="0"
+                  @click="selectedWarningDate = item.date"
+                  @keydown.enter="selectedWarningDate = item.date"
+                >
                   <td>{{ item.date }}</td>
-                  <td>是</td>
+                  <td>{{ item.relative_anomaly ? '超过' : '未超过' }}</td>
                   <td>{{ item.anomaly_items?.join('；') }}</td>
                   <td>{{ item.absolute_risk_score }} · {{ item.absolute_risk_level }}</td>
                   <td>{{ item.main_contributor }} · {{ item.main_risk_type }}</td>
@@ -256,6 +282,38 @@
               </tbody>
             </table>
           </div>
+          <article v-if="selectedWarning" class="warning-workbench">
+            <div>
+              <p class="eyebrow">Selected Month / {{ selectedWarning.date }}</p>
+              <h3>预警工作台</h3>
+            </div>
+            <dl class="warning-detail-grid">
+              <div>
+                <dt>相对异常</dt>
+                <dd>{{ selectedWarning.relative_anomaly ? '超过历史同月 90% 分位阈值' : '未超过历史同月阈值' }}</dd>
+              </div>
+              <div>
+                <dt>触发污染物与历史阈值</dt>
+                <dd>{{ selectedWarning.anomaly_items?.join('；') || '-' }}</dd>
+              </div>
+              <div>
+                <dt>绝对风险等级</dt>
+                <dd>{{ selectedWarning.absolute_risk_score }} · {{ selectedWarning.absolute_risk_level }}</dd>
+              </div>
+              <div>
+                <dt>主要贡献</dt>
+                <dd>{{ selectedWarning.main_contributor }} · {{ selectedWarning.main_risk_type }}</dd>
+              </div>
+              <div>
+                <dt>适用治理建议</dt>
+                <dd>{{ selectedWarning.governance_advice }}</dd>
+              </div>
+              <div>
+                <dt>数据时间尺度</dt>
+                <dd>{{ selectedWarning.time_scale }} · {{ selectedWarning.data_scope }}</dd>
+              </div>
+            </dl>
+          </article>
         </section>
 
         <section class="carbon-section">
@@ -264,7 +322,7 @@
               <p class="eyebrow">Daily Replay</p>
               <h2>日级历史案例回放</h2>
             </div>
-            <p>时间范围：2013-12-02 至 2015-07-31。日表 20 个月中 18 个月完成字段纠偏，平均相对误差约 0.0182。</p>
+            <p>历史回放：2013-12-02 至 2015-07-31。日表 20 个月中 18 个月完成字段纠偏，平均相对误差约 0.0182；不等于实时园区预警。</p>
           </div>
           <div class="table-wrap">
             <table class="data-table">
@@ -308,6 +366,7 @@
               <p><b>官方定位：</b>{{ item.official_basis || item.official_direction || '-' }}</p>
               <p><b>规则模板：</b>{{ item.energy_carbon_feature || item.carbon_feature || item.energy_feature || '-' }}</p>
               <p><b>建议方向：</b>{{ item.governance_advice || item.governance || '-' }}</p>
+              <p><b>关联展示：</b>{{ industryLinkText(item) }}</p>
               <small>需结合企业能源与现场审计数据后再形成具体方案。</small>
             </article>
           </div>
@@ -323,15 +382,17 @@
               <p>规则匹配，不做企业责任认定。</p>
             </div>
             <div class="governance-context">
-              <strong>{{ governance?.latest_context?.date || '-' }}</strong>
-              <p>{{ governance?.latest_context?.advice }}</p>
-              <small>数据缺口：{{ governance?.latest_context?.data_gap }}</small>
+              <strong>{{ governanceContext.date || '-' }}</strong>
+              <p>{{ governanceContext.advice }}</p>
+              <small>数据缺口：{{ governanceContext.data_gap }}</small>
             </div>
             <ul class="governance-list">
               <li v-for="rule in governance?.rules || []" :key="rule.trigger_basis">
-                <b>{{ rule.trigger_basis }}</b>
-                <span>{{ rule.action }}</span>
-                <small>适用：{{ rule.applicable_industries }}；缺口：{{ rule.data_gap }}</small>
+                <span><b>触发依据：</b>{{ rule.trigger_basis }}</span>
+                <span><b>适用产业：</b>{{ rule.applicable_industries }}</span>
+                <span><b>建议动作：</b>{{ rule.action }}</span>
+                <small><b>数据缺口：</b>{{ rule.data_gap }}</small>
+                <small>本规则不能替代现场审计、源解析或具体企业责任认定。</small>
               </li>
             </ul>
           </article>
@@ -435,6 +496,7 @@ const governance = ref(null)
 const dataQuality = ref(null)
 const sources = ref([])
 const selectedSiteId = ref('')
+const selectedWarningDate = ref('')
 const loading = ref(true)
 const error = ref('')
 
@@ -446,6 +508,7 @@ const parkCarbonChartRef = ref(null)
 const intensityChartRef = ref(null)
 const cdciChartRef = ref(null)
 let charts = []
+let realtimeTimer = null
 
 const latestMonthly = computed(() => overview.value?.latestMonthly || null)
 const latestParkProxy = computed(() => overview.value?.latestParkElectricityProxy || parkElectricity.value?.records?.at(-1) || null)
@@ -458,9 +521,28 @@ const cdciRecords = computed(() => cdci.value?.records || [])
 const industryProfiles = computed(() => industryProfile.value?.profiles || industryProfile.value?.industries || [])
 const selectedSnapshotSite = computed(() => (parkSnapshot.value?.sites || []).find((site) => site.site_id === selectedSiteId.value))
 const selectedSnapshotRecords = computed(() => (parkSnapshot.value?.records || []).filter((item) => item.site_id === selectedSiteId.value))
+const selectedWarning = computed(() => warnings.value.find((item) => item.date === selectedWarningDate.value) || warnings.value[0] || null)
+const realtimeAqiValue = computed(() => {
+  if (!['ok', 'stale'].includes(realtimeAqi.value?.status)) return '暂不可用'
+  return realtimeAqi.value?.items?.find((item) => item.pollutant === 'aqi')?.current_value ?? '暂不可用'
+})
+const threeDimensionSummary = computed(() => {
+  if (!latestMonthly.value || !latestAnnualDimension.value) return '-'
+  return `${latestMonthly.value.absolute_risk_score} / ${latestAnnualDimension.value.eai} / ${latestAnnualDimension.value.cei}`
+})
+const governanceContext = computed(() => {
+  if (selectedWarning.value) {
+    return {
+      date: selectedWarning.value.date,
+      advice: selectedWarning.value.governance_advice,
+      data_gap: '缺少企业级用电、燃料、排放清单、工况与现场审计数据。',
+    }
+  }
+  return governance.value?.latest_context || {}
+})
 const realtimeStatus = computed(() => {
   if (!realtimeAqi.value) return '未返回实时接口状态'
-  if (realtimeAqi.value.status === 'ok') return realtimeAqi.value.cached ? '内存缓存，10分钟内有效' : '正式 API 获取成功'
+  if (realtimeAqi.value.status === 'ok') return realtimeAqi.value.cached ? '一小时内存缓存' : '公开页面抓取成功'
   if (realtimeAqi.value.status === 'stale') return '接口刷新失败，展示最近缓存'
   return realtimeAqi.value.message || '实时数据暂不可用'
 })
@@ -473,10 +555,12 @@ function sourceHref(source) {
 onMounted(async () => {
   await loadData()
   window.addEventListener('resize', resizeCharts)
+  realtimeTimer = window.setInterval(refreshRealtimeAqi, 5 * 60 * 1000)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', resizeCharts)
+  window.clearInterval(realtimeTimer)
   disposeCharts()
 })
 
@@ -542,6 +626,7 @@ async function loadData() {
     dataQuality.value = qualityData
     sources.value = sourceData
     selectedSiteId.value = snapshotData.sites?.[0]?.site_id || ''
+    selectedWarningDate.value = warningData[0]?.date || ''
     loading.value = false
     await nextTick()
     requestAnimationFrame(renderCharts)
@@ -549,6 +634,33 @@ async function loadData() {
     error.value = requestError.message || '专题数据加载失败，请检查后端静态数据状态。'
     loading.value = false
   }
+}
+
+async function refreshRealtimeAqi() {
+  try {
+    realtimeAqi.value = await getCarbonEyeRealtimeAqi()
+  } catch {
+    // Keep the last known response visible if a transient request fails.
+  }
+}
+
+function siteMarkerStyle(site) {
+  const sites = parkSnapshot.value?.sites || []
+  const longitudes = sites.map((item) => Number(item.longitude)).filter(Number.isFinite)
+  const latitudes = sites.map((item) => Number(item.latitude)).filter(Number.isFinite)
+  const longitudeSpan = Math.max(...longitudes) - Math.min(...longitudes) || 1
+  const latitudeSpan = Math.max(...latitudes) - Math.min(...latitudes) || 1
+  const left = 12 + ((Number(site.longitude) - Math.min(...longitudes)) / longitudeSpan) * 76
+  const top = 12 + ((Math.max(...latitudes) - Number(site.latitude)) / latitudeSpan) * 76
+  return { left: `${left}%`, top: `${top}%` }
+}
+
+function industryLinkText(item) {
+  const characteristics = item.energy_carbon_characteristics || []
+  const electricityYear = latestParkProxy.value?.year
+  const scope2 = latestParkProxy.value?.total_purchased_electricity_scope2_10k_tco2
+  const electricityContext = electricityYear && scope2 ? `园区 ${electricityYear} 年全社会购电代理为 ${scope2} 万吨 CO2。` : '园区年度购电代理数据存在时间缺口。'
+  return `${characteristics[0] || '行业能碳特征待补'}；${electricityContext} 此为产业规则与园区宏观指标的关联展示，不对应具体企业。`
 }
 
 function disposeCharts() {
@@ -752,11 +864,14 @@ h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
 .boundary-banner { border-left: 3px solid #fbbf24; padding: 10px 12px; background: #172637; color: #dceaf6; line-height: 1.6; font-size: 13px; }
 .carbon-state, .carbon-error, .chart-empty { padding: 22px; border: 1px solid #32445b; background: #101b2d; color: #cbd5e1; }
 .carbon-error { border-color: #be4b57; color: #fecdd3; }
-.metric-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .metric-card { min-height: 132px; display: flex; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid #2c4058; background: #101b2d; }
 .metric-card span { color: #94a9be; font-size: 13px; }
 .metric-card strong { color: #f8fafc; font-size: 25px; line-height: 1.15; overflow-wrap: anywhere; }
 .metric-card p { margin: 0; color: #aac0d4; font-size: 12px; line-height: 1.55; }
+.dashboard-boundary { border: 1px solid #2c4058; background: #101b2d; padding: 11px 14px; }
+.dashboard-boundary summary { color: #cfe5f7; cursor: pointer; font-size: 13px; }
+.dashboard-boundary p { margin: 10px 0 0; color: #9eb4c9; font-size: 13px; line-height: 1.65; }
 .carbon-section { min-width: 0; padding: 20px; border: 1px solid #2a3f57; background: #0e1928; }
 .section-heading { display: flex; justify-content: space-between; gap: 18px; align-items: start; margin-bottom: 12px; }
 .section-heading > div { min-width: 0; }
@@ -769,7 +884,17 @@ h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
 .chart-medium { min-height: 330px; }
 .two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .compact-section { min-height: 0; }
-.site-layout { display: grid; grid-template-columns: minmax(230px, .6fr) minmax(0, 1.4fr); gap: 18px; }
+.site-layout { display: grid; grid-template-columns: minmax(260px, .7fr) minmax(0, 1.3fr); gap: 18px; }
+.site-overview { display: grid; gap: 12px; align-content: start; }
+.site-map { position: relative; min-height: 260px; border: 1px solid #31506c; background: #152d42; overflow: hidden; }
+.site-map::before, .site-map::after { content: ''; position: absolute; inset: 12% 8%; border: 1px dashed rgba(125, 211, 252, .28); transform: rotate(-12deg); }
+.site-map::after { inset: 30% 16%; transform: rotate(20deg); border-color: rgba(94, 234, 212, .2); }
+.map-title, .map-scale { position: absolute; z-index: 1; color: #acc6d9; font-size: 12px; }
+.map-title { left: 12px; top: 10px; font-weight: 700; color: #d8ecfb; }
+.map-scale-north { right: 12px; top: 10px; }
+.map-scale-south { right: 12px; bottom: 10px; }
+.site-marker { position: absolute; z-index: 2; transform: translate(-50%, -50%); width: 34px; height: 34px; border: 2px solid #7dd3fc; border-radius: 50%; background: #132c43; color: #f8fafc; font-size: 12px; font-weight: 800; cursor: pointer; }
+.site-marker:hover, .site-marker.active { border-color: #fbbf24; background: #20455d; box-shadow: 0 0 0 4px rgba(251, 191, 36, .16); }
 .site-list { display: grid; gap: 8px; align-content: start; }
 .site-button { display: grid; grid-template-columns: 32px minmax(0, 1fr); text-align: left; gap: 3px 8px; padding: 10px; color: #dceaf6; border: 1px solid #2d435d; background: #132238; cursor: pointer; }
 .site-button:hover, .site-button.active { border-color: #38bdf8; background: #18314c; }
@@ -785,6 +910,14 @@ h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
 .data-table th, .data-table td { padding: 10px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid #263a51; line-height: 1.5; }
 .data-table th { position: sticky; top: 0; background: #14243a; color: #d9e8f5; white-space: nowrap; }
 .data-table td { color: #b8cadd; }
+.warning-row { cursor: pointer; }
+.warning-row:hover td, .warning-row.active td { background: #19324a; }
+.warning-workbench { margin-top: 14px; padding: 16px; border: 1px solid #3b5d78; background: #122238; }
+.warning-workbench h3 { margin-bottom: 12px; color: #e5f4ff; }
+.warning-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.warning-detail-grid div { min-width: 0; padding: 10px; border: 1px solid #2a465e; background: #101e31; }
+.warning-detail-grid dt { color: #7dd3fc; font-size: 12px; margin-bottom: 5px; }
+.warning-detail-grid dd { margin: 0; color: #c7d7e5; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
 .sensitivity-wrap { margin-top: 14px; }
 .industry-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .industry-item { padding: 14px; border: 1px solid #2a3f57; background: #132238; min-width: 0; }
@@ -808,7 +941,7 @@ h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
 .carbon-footer { padding: 15px 0 4px; color: #9fb3c8; font-size: 13px; text-align: center; }
 
 @media (max-width: 1100px) {
-  .metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .industry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -816,6 +949,7 @@ h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
   .carbon-topbar, .carbon-header, .section-heading, .snapshot-selected { align-items: start; flex-direction: column; }
   .carbon-header, .two-column, .site-layout { grid-template-columns: 1fr; }
   .metric-grid, .industry-grid { grid-template-columns: 1fr; }
+  .warning-detail-grid { grid-template-columns: 1fr; }
   .metric-card { min-height: 106px; }
   .carbon-section { padding: 15px; }
   .chart, .chart-medium, .chart-tall { min-height: 300px; }

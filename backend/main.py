@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import json
 import math
+import asyncio
 import os
 from pathlib import Path
 import random
@@ -41,7 +42,7 @@ from models import Profile
 from models import ReadingProgress
 from models import User
 from models import Yulu
-from carbon_eye_realtime import get_realtime_aqi
+from carbon_eye_realtime import get_realtime_aqi, refresh_realtime_aqi_hourly
 from secure_geometry import SecureGeometryError
 from secure_geometry import calculate_secure_geometry
 
@@ -494,8 +495,16 @@ def seed_demo_data(db: Session, admin: User):
     db.commit()
 
 
+realtime_refresh_task = None
+realtime_refresh_stop_event = None
+
+
 @app.on_event("startup")
-def startup_event():
+async def startup_event():
+    global realtime_refresh_task, realtime_refresh_stop_event
+    if os.getenv("CARBON_EYE_REALTIME_SCHEDULER", "").strip().lower() in {"1", "true", "yes"}:
+        realtime_refresh_stop_event = asyncio.Event()
+        realtime_refresh_task = asyncio.create_task(refresh_realtime_aqi_hourly(realtime_refresh_stop_event))
     if os.getenv("CARBON_EYE_STANDALONE", "").strip().lower() in {"1", "true", "yes"}:
         return
     try:
@@ -523,6 +532,17 @@ def startup_event():
             db.close()
     except SQLAlchemyError as exc:
         print(f"数据库启动初始化失败，数据库功能暂不可用；碳眼只读接口仍可用：{exc}")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    if realtime_refresh_stop_event:
+        realtime_refresh_stop_event.set()
+    if realtime_refresh_task:
+        try:
+            await realtime_refresh_task
+        except asyncio.CancelledError:
+            pass
 
 
 @app.get("/healthz")

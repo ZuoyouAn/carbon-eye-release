@@ -10,4 +10,4 @@ S08,Open-Meteo Historical Weather API / ERA5,Open-Meteo/ECMWF再分析,https://o
 S09,苏州工业园区623产业体系,苏州工业园区管委会,https://www.sipac.gov.cn/szgyyq/mtjj/202601/803e21c03c3140569f9e811c28039ef2.shtml,公开网页,否,六类产业画像官方分类,已结构化
 S10,国家碳达峰试点（苏州工业园区）实施方案,苏州市人民政府,https://www.suzhou.gov.cn/szsrmzf/zfwj/202405/3df5e68dcc1a4bf79947e6cbb4524968.shtml,公开网页,否,产业与治理建议政策映射,已纳入说明
 S11,中国290个城市碳排放清单,CEADs,https://www.ceads.net.cn/data/carbon-inventory/,部分下载需注册,可能需要,苏州市年度CO2背景；不得当作园区排放,沿用现有项目数据，包内未重复下载
-S12,WAQI/AQICN实时空气质量API,World Air Quality Index Project,https://aqicn.org/data-platform/token/,Token API,需要申请Token,实时AQI卡片（可选）,需要用户本人申请Token，不能放入代码包
+S12,AQICN苏州工业园区公开站点页面,World Air Quality Index Project,https://aqicn.org/city/jiangsu/suzhou/suzhougongyeyuanqu/cn/,公开网页抓取,否,实时AQI状态卡片；仅内存缓存，不形成历史库,已接入公开站点页面的尽力抓取；页面不可用时返回暂不可用或最近内存缓存

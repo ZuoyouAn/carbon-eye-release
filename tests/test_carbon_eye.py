@@ -15,6 +15,7 @@ os.environ["CARBON_EYE_STANDALONE"] = "true"
 sys.path.insert(0, str(ROOT / "backend"))
 
 import main as backend_main  # noqa: E402
+import carbon_eye_realtime  # noqa: E402
 
 
 def read_json(name: str):
@@ -94,13 +95,36 @@ def test_static_api_endpoints_work_without_database():
         "/api/carbon-eye/data-quality",
         "/api/carbon-eye/sources",
     ]
-    with TestClient(backend_main.app) as client:
-        for endpoint in endpoints:
-            response = client.get(endpoint)
-            assert response.status_code == 200, endpoint
-        realtime = client.get("/api/carbon-eye/realtime-aqi")
-        assert realtime.status_code == 200
-        assert realtime.json()["status"] in {"ok", "stale", "unavailable"}
+    realtime_payload = {"status": "unavailable", "items": [], "message": "test response"}
+    with patch.object(backend_main, "get_realtime_aqi", return_value=realtime_payload):
+        with TestClient(backend_main.app) as client:
+            for endpoint in endpoints:
+                response = client.get(endpoint)
+                assert response.status_code == 200, endpoint
+            realtime = client.get("/api/carbon-eye/realtime-aqi")
+            assert realtime.status_code == 200
+            assert realtime.json()["status"] == "unavailable"
+
+
+def test_realtime_page_parser_normalizes_current_minimum_and_maximum_values():
+    document = carbon_eye_realtime.html.fromstring(
+        "<table><tr id='tr_aqi'><td>AQI</td><td id='cur_aqi'>76</td><td id='min_aqi'>21</td><td id='max_aqi'>109</td></tr>"
+        "<tr id='tr_pm25'><td>PM2.5</td><td id='cur_pm25'>35.2</td><td id='min_pm25'>12</td><td id='max_pm25'>48</td></tr></table>"
+    )
+    aqi = carbon_eye_realtime._build_item(document, "aqi")
+    pm25 = carbon_eye_realtime._build_item(document, "pm25")
+
+    assert aqi["current_numeric"] == 76
+    assert aqi["min_value"] == "21"
+    assert aqi["max_value"] == "109"
+    assert pm25["current_value"] == "35.2"
+    assert pm25["unit"] == "ug/m3"
+
+
+def test_realtime_page_uses_aqicn_widget_value_for_aqi():
+    document = carbon_eye_realtime.html.fromstring("<div id='aqiwgtvalue'>44</div><div id='aqiwgtutime'>更新时间 星期一17:00</div>")
+    assert carbon_eye_realtime._number(carbon_eye_realtime._read_cell(document, "aqiwgtvalue")) == 44
+    assert carbon_eye_realtime._read_cell(document, "aqiwgtutime") == "更新时间 星期一17:00"
 
 
 def test_missing_static_json_returns_readable_503(tmp_path):
