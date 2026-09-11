@@ -8,12 +8,12 @@
 
       <section class="carbon-header">
         <div>
-          <p class="eyebrow">Carbon Eye / v2.0</p>
-          <h1>园区碳眼</h1>
-          <p>{{ overview?.positioning }}</p>
+          <p class="eyebrow">Carbon Eye / 焦作应用示范版</p>
+          <h1>焦作园区碳眼</h1>
+          <p>面向焦作工业园区减污降碳协同治理场景的应用示范。当前版本沿用苏州公开数据验证系统功能，待接入焦作本地监测、用电与产业数据后形成焦作实证结果。</p>
         </div>
         <div class="boundary-banner">
-          城市空气质量仅作区域背景；园区碳结果为购电间接排放位置法代理估算，不代表园区总碳排放或正式碳核算。
+          当前为焦作应用示范界面，页面数值仍来自苏州样例数据；购电间接排放位置法代理估算不代表焦作或园区总碳排放。
         </div>
       </section>
 
@@ -23,38 +23,38 @@
       <template v-else>
         <section class="metric-grid" aria-label="专题驾驶舱">
           <article class="metric-card">
-            <span>实时 AQI 状态</span>
+            <span>实时 AQI 状态（苏州样例站）</span>
             <strong>{{ realtimeAqiValue }}</strong>
             <p>{{ realtimeStatus }}</p>
           </article>
           <article class="metric-card">
-            <span>最新完整月 PRI</span>
+            <span>最新完整月 PRI（苏州样例）</span>
             <strong>{{ latestMonthly?.absolute_risk_score ?? '-' }}</strong>
             <p>{{ latestMonthly?.date }} · {{ latestMonthly?.absolute_risk_level }} · {{ latestMonthly?.main_contributor }}</p>
           </article>
           <article class="metric-card">
-            <span>最新购电间接排放代理</span>
+            <span>最新购电间接排放代理（苏州样例）</span>
             <strong>{{ latestParkProxy?.total_purchased_electricity_scope2_10k_tco2 ?? '-' }}</strong>
             <p>万吨 CO2 · {{ latestParkProxy?.year || '-' }} 年</p>
           </article>
           <article class="metric-card">
-            <span>PRI / EAI / CEI 三维态势</span>
+            <span>PRI / EAI / CEI 三维态势（样例）</span>
             <strong>{{ threeDimensionSummary }}</strong>
             <p>PRI 为月度；EAI、CEI 为 {{ latestAnnualDimension?.year || '-' }} 年年度背景</p>
           </article>
         </section>
         <details class="dashboard-boundary">
           <summary>查看驾驶舱的数据时间尺度与边界</summary>
-          <p>实时 AQI 仅反映公开站点页面的当前状态；PRI 来自苏州市级月度空气质量背景；购电间接排放代理、EAI 与 CEI 来自园区年度公开用电和经济数据。它们不构成同一时点的实时碳排放判断。</p>
+          <p>当前实时 AQI、PRI、购电间接排放代理、EAI 与 CEI 均沿用苏州公开数据，用于验证焦作版系统交互和分析流程，不代表焦作当前环境或能碳状态；各指标时间尺度也不相同。</p>
         </details>
 
         <section class="carbon-section">
           <div class="section-heading">
             <div>
               <p class="eyebrow">City Background</p>
-              <h2>城市长期空气质量与污染压力</h2>
+              <h2>焦作应用示范：城市长期空气质量</h2>
             </div>
-            <p>单位：AQI 或 µg/m3；时间：2013-12 至 2026-07。月度空气质量为苏州市级背景，风险指数用于排序和解释。</p>
+            <p>苏州样例数据；单位：AQI 或 µg/m3；时间：2013-12 至 2026-07。仅用于演示焦作版的长期趋势和污染压力分析流程。</p>
           </div>
           <div class="section-note">
             最新部分月 <b>2026-07</b> 已标记，不参与年度统计、历史阈值、训练基线或气象相关分析。
@@ -68,9 +68,9 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">Weather</p>
-                <h2>园区六点位 ERA5 长期气象</h2>
+                <h2>长期气象解释样例</h2>
               </div>
-              <p>单位：°C、mm、km/h；2013-12 至 2026-06；六个官方点位空间平均。</p>
+              <p>苏州六点位 ERA5 样例；单位：°C、mm、km/h；2013-12 至 2026-06。</p>
             </div>
             <div v-if="weatherRecords.length" ref="weatherChartRef" class="chart chart-medium"></div>
             <div v-else class="chart-empty">暂无长期气象数据</div>
@@ -95,15 +95,15 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Park Snapshot</p>
-              <h2>2026年6月园区六点位特征因子监测快照</h2>
+              <h2>焦作六区域部署占位与特征因子样例</h2>
             </div>
-            <p>{{ parkSnapshot?.site_count || 0 }} 点位 · {{ parkSnapshot?.monitoring_days || 0 }} 天 · {{ parkSnapshot?.pollutant_count || 0 }} 项因子 · {{ parkSnapshot?.records?.length || 0 }} 条记录。</p>
+            <p>界面按焦作六区域设置部署占位；数值仍为苏州2026年6月短期快照：{{ parkSnapshot?.site_count || 0 }} 点位 · {{ parkSnapshot?.monitoring_days || 0 }} 天 · {{ parkSnapshot?.pollutant_count || 0 }} 项因子。</p>
           </div>
-          <div class="section-note warning-note">本模块为官方短期补充监测快照，不代表全年均值或实时序列；不基于此快照识别具体污染企业。</div>
+          <div class="section-note warning-note">焦作区域名称仅为未来部署占位，不是焦作实测点位；表中数值来自苏州官方短期补充监测快照，不代表焦作或苏州全年均值、实时序列，也不用于识别具体企业。</div>
           <div class="site-layout">
             <div class="site-overview">
-              <div class="site-map" aria-label="六点位相对位置图">
-                <span class="map-title">相对点位图</span>
+              <div class="site-map" aria-label="焦作六区域部署示意图">
+                <span class="map-title">焦作部署示意（非实测坐标）</span>
                 <span class="map-scale map-scale-north">北</span>
                 <span class="map-scale map-scale-south">南</span>
                 <button
@@ -113,7 +113,7 @@
                   :class="{ active: selectedSiteId === site.site_id }"
                   :style="siteMarkerStyle(site)"
                   type="button"
-                  :aria-label="`查看${site.site_name}`"
+                  :aria-label="`查看${siteDisplayName(site)}`"
                   @click="selectedSiteId = site.site_id"
                 >{{ site.site_id }}</button>
               </div>
@@ -127,8 +127,8 @@
                   @click="selectedSiteId = site.site_id"
                 >
                   <strong>{{ site.site_id }}</strong>
-                  <span>{{ site.site_name }}</span>
-                  <small>{{ site.functional_zone }}</small>
+                  <span>{{ siteDisplayName(site) }}</span>
+                  <small>部署占位 · 数据源为苏州样例</small>
                 </button>
               </div>
             </div>
@@ -136,9 +136,9 @@
               <div class="snapshot-selected">
                 <div>
                   <span>当前点位</span>
-                  <strong>{{ selectedSnapshotSite?.site_name || '-' }}</strong>
+                  <strong>{{ siteDisplayName(selectedSnapshotSite) }}</strong>
                 </div>
-                <p>{{ selectedSnapshotSite?.functional_zone }}</p>
+                <p>焦作部署占位；样例原点位：{{ selectedSnapshotSite?.site_name || '-' }}</p>
               </div>
               <div class="table-wrap">
                 <table class="data-table">
@@ -171,7 +171,7 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">City CO2 Background</p>
-                <h2>苏州市年度 CO2 背景</h2>
+                <h2>苏州市年度 CO2 样例背景</h2>
               </div>
               <p>城市级年度背景；不代表园区碳排放，不参与日级预警。</p>
             </div>
@@ -183,7 +183,7 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">Electricity Proxy</p>
-                <h2>苏州工业园区购电间接排放估算（位置法代理值）</h2>
+                <h2>苏州工业园区购电间接排放样例（位置法代理值）</h2>
               </div>
               <p>单位：亿 kWh、万吨 CO2；2019、2023-2025 有值，2020-2022 为真实缺口。</p>
             </div>
@@ -196,7 +196,7 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Intensity</p>
-              <h2>园区用电与购电间接排放强度代理</h2>
+              <h2>园区用电与购电间接排放强度代理（苏州样例）</h2>
             </div>
             <p>每万元 GDP 或规上工业总产值的宏观代理指标；不能替代企业或产品碳强度。</p>
           </div>
@@ -356,7 +356,7 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Industry</p>
-              <h2>园区产业画像与规则模板</h2>
+              <h2>产业画像与规则模板（苏州样例）</h2>
             </div>
             <p>产业分类和政策方向来自官方资料；能碳特征、KPI 与建议属于专家规则模板。</p>
           </div>
@@ -447,7 +447,7 @@
           </ul>
         </section>
 
-        <footer class="carbon-footer">本系统是减污降碳协同预警与治理决策原型，不是正式碳核算系统。</footer>
+        <footer class="carbon-footer">本系统为焦作园区减污降碳应用示范原型；当前数据来自苏州公开样例，不代表焦作实测结果，也不是正式碳核算系统。</footer>
       </template>
     </section>
   </main>
@@ -510,6 +510,24 @@ const cdciChartRef = ref(null)
 let charts = []
 let realtimeTimer = null
 
+const jiaozuoSiteAliases = {
+  G1: '焦作部署占位·解放区',
+  G2: '焦作部署占位·山阳区',
+  G3: '焦作部署占位·中站区',
+  G4: '焦作部署占位·马村区',
+  G5: '焦作部署占位·城乡一体化示范区',
+  G6: '焦作部署占位·修武县',
+}
+
+const jiaozuoMarkerPositions = {
+  G1: { left: '20%', top: '34%' },
+  G2: { left: '46%', top: '20%' },
+  G3: { left: '74%', top: '34%' },
+  G4: { left: '26%', top: '70%' },
+  G5: { left: '52%', top: '58%' },
+  G6: { left: '78%', top: '72%' },
+}
+
 const latestMonthly = computed(() => overview.value?.latestMonthly || null)
 const latestParkProxy = computed(() => overview.value?.latestParkElectricityProxy || parkElectricity.value?.records?.at(-1) || null)
 const latestAnnualDimension = computed(() => cdci.value?.annual_dimensions?.at(-1) || null)
@@ -555,7 +573,7 @@ function sourceHref(source) {
 onMounted(async () => {
   await loadData()
   window.addEventListener('resize', resizeCharts)
-  realtimeTimer = window.setInterval(refreshRealtimeAqi, 5 * 60 * 1000)
+  realtimeTimer = window.setInterval(refreshRealtimeAqi, 60 * 60 * 1000)
 })
 
 onBeforeUnmount(() => {
@@ -645,14 +663,12 @@ async function refreshRealtimeAqi() {
 }
 
 function siteMarkerStyle(site) {
-  const sites = parkSnapshot.value?.sites || []
-  const longitudes = sites.map((item) => Number(item.longitude)).filter(Number.isFinite)
-  const latitudes = sites.map((item) => Number(item.latitude)).filter(Number.isFinite)
-  const longitudeSpan = Math.max(...longitudes) - Math.min(...longitudes) || 1
-  const latitudeSpan = Math.max(...latitudes) - Math.min(...latitudes) || 1
-  const left = 12 + ((Number(site.longitude) - Math.min(...longitudes)) / longitudeSpan) * 76
-  const top = 12 + ((Math.max(...latitudes) - Number(site.latitude)) / latitudeSpan) * 76
-  return { left: `${left}%`, top: `${top}%` }
+  return jiaozuoMarkerPositions[site.site_id] || { left: '50%', top: '50%' }
+}
+
+function siteDisplayName(site) {
+  if (!site) return '-'
+  return jiaozuoSiteAliases[site.site_id] || `焦作部署占位·${site.site_id}`
 }
 
 function industryLinkText(item) {
@@ -772,10 +788,10 @@ function renderCityCarbonChart() {
   if (!chart) return
   chart.setOption({
     ...axisOptions(),
-    title: { text: '苏州市 CO2 年度背景', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: '苏州市 CO2 年度样例背景', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
     xAxis: { ...axisOptions().xAxis, data: cityCarbon.value.map((item) => item.year) },
     yAxis: { ...axisOptions().yAxis, name: cityCarbon.value[0]?.unit || 'CO2', nameTextStyle: { color: '#9fb3c8' } },
-    series: [{ name: '苏州市 CO2 背景', type: 'bar', data: cityCarbon.value.map((item) => item.co2_emission), color: '#60a5fa' }],
+    series: [{ name: '苏州市 CO2 样例背景', type: 'bar', data: cityCarbon.value.map((item) => item.co2_emission), color: '#60a5fa' }],
   })
 }
 
