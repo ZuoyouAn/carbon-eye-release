@@ -5,10 +5,10 @@
         <RouterLink class="back-button" to="/">返回首页</RouterLink>
         <p class="eyebrow">Messages</p>
         <h1>留言板</h1>
-        <p>游客可以填写昵称留言；登录用户留言会自动绑定当前账号。</p>
+        <p>所有人可浏览留言，高权限账号和管理员可以发布留言。</p>
       </div>
 
-      <form class="form-stack publish-box" @submit.prevent="submitMessage">
+      <form v-if="canPublish" class="form-stack publish-box" @submit.prevent="submitMessage">
         <label v-if="!isLoggedIn">
           昵称
           <input v-model="form.nickname" type="text" placeholder="怎么称呼你">
@@ -19,6 +19,7 @@
         </label>
         <el-button type="primary" native-type="submit">发布留言</el-button>
       </form>
+      <p v-else class="state-text">{{ !isLoggedIn ? '请登录高权限账号后留言。' : isMuted ? '你已被禁言，不能留言。' : '当前为低权限账号，请联系管理员提升权限后留言。' }}</p>
 
       <el-skeleton v-if="loading" :rows="4" animated />
       <el-empty v-else-if="!messages.length" description="还没有留言" />
@@ -51,7 +52,7 @@ import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiRequest, postJson } from '../api/client'
-import { isLoggedIn } from '../stores/auth'
+import { canPublish, isLoggedIn, isMuted } from '../stores/auth'
 
 const loading = ref(false)
 const messages = ref([])

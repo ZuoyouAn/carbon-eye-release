@@ -116,6 +116,7 @@ const commentForm = ref({ content: '' })
 const publishTip = computed(() => {
   if (!isLoggedIn.value) return '请先登录后再发布或评论。'
   if (isMuted.value) return '你已被禁言，不能发帖或评论。'
+  if (!canPublish.value) return '当前为低权限账号，请联系管理员提升为高权限后发帖或评论。'
   return ''
 })
 

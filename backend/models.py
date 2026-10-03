@@ -49,6 +49,18 @@ class AuthToken(Base):
     expires_at = Column(DateTime, nullable=False)
 
 
+class PermissionAudit(Base):
+    __tablename__ = "permission_audit"
+
+    id = Column(Integer, primary_key=True)
+    actor_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    target_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    action = Column(String(40), nullable=False)
+    old_role = Column(String(20), nullable=True)
+    new_role = Column(String(20), nullable=False)
+    created_at = Column(DateTime, nullable=False, server_default=func.now())
+
+
 class Post(Base):
     __tablename__ = "posts"
 

@@ -48,6 +48,8 @@ def full_client(monkeypatch):
     monkeypatch.setenv("CARBON_EYE_STANDALONE", "false")
     monkeypatch.delenv("RENDER", raising=False)
     monkeypatch.delenv("SEED_DEMO_DATA", raising=False)
+    monkeypatch.delenv("ADMIN_SETUP_PASSWORD", raising=False)
+    monkeypatch.delenv("INITIAL_ADMIN_PASSWORD", raising=False)
 
     def override_db():
         with factory() as db:
@@ -84,15 +86,15 @@ def test_full_site_readiness_and_content(full_client):
     assert full_client.get("/api/admin/dashboard").status_code == 401
 
 
-def test_registered_users_can_publish_but_not_administer(full_client):
+def test_registered_users_need_promotion_to_publish(full_client):
     payload = {"username": "visitor", "password": "-".join(["test", "visitor", "1234"])}
     assert full_client.post("/api/auth/register", json=payload).status_code == 200
     response = full_client.post("/api/auth/login", json=payload)
     assert response.status_code == 200
     headers = {"Authorization": "Bearer " + response.json()["token"]}
     assert full_client.get("/api/admin/dashboard", headers=headers).status_code == 403
-    assert full_client.post("/api/posts", headers=headers, json={"title": "云端帖子", "content": "测试"}).status_code == 200
-    assert full_client.post("/api/messages", headers=headers, json={"content": "留言测试"}).status_code == 200
+    assert full_client.post("/api/posts", headers=headers, json={"title": "云端帖子", "content": "测试"}).status_code == 403
+    assert full_client.post("/api/messages", headers=headers, json={"content": "留言测试"}).status_code == 403
     assert full_client.get("/api/me/summary", headers=headers).status_code == 200
 
 
@@ -157,6 +159,18 @@ def test_migration_refuses_same_database():
     engine = memory_engine()
     with pytest.raises(ValueError, match="different databases"):
         migration.migrate(engine, engine, apply=True)
+
+
+def test_migration_accepts_legacy_source_without_new_audit_table():
+    source, target = memory_engine(), memory_engine()
+    populate(source)
+    website.PermissionAudit.__table__.drop(source)
+    report = migration.migrate(source, target, apply=True)
+    assert report["verified"] is True
+    from sqlalchemy import inspect
+    assert "permission_audit" in inspect(target).get_table_names()
+    with target.connect() as db:
+        assert db.scalar(select(func.count()).select_from(website.PermissionAudit.__table__)) == 0
 
 
 def test_full_mode_never_silently_seeds_demo_content(full_client):

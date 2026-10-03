@@ -4,7 +4,7 @@
       <RouterLink class="back-button" to="/">返回首页</RouterLink>
       <p class="eyebrow">Register</p>
       <h1>注册</h1>
-      <p class="panel-text">注册后就是普通用户，可以进入帖子和文章评论区互动。</p>
+      <p class="panel-text">新账号默认低权限，可点赞、收藏和保存阅读进度。需要发布内容时，请联系管理员提升权限。</p>
 
       <form class="form-stack" @submit.prevent="submitRegister">
         <label>
@@ -13,7 +13,7 @@
         </label>
         <label>
           密码
-          <input v-model="form.password" type="password" autocomplete="new-password" placeholder="至少 3 个字符">
+          <input v-model="form.password" type="password" autocomplete="new-password" minlength="8" maxlength="80" placeholder="至少 8 个字符，不使用常见弱密码">
         </label>
         <button class="button button-primary" type="submit">注册</button>
       </form>

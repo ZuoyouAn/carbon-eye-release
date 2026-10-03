@@ -9,6 +9,7 @@
       </div>
 
       <p v-if="message" class="message">{{ message }}</p>
+      <p v-if="summary" class="state-text">当前角色：{{ roleLabel(summary.user.role) }}。低权限可收藏和保存阅读进度；高权限可发布内容；管理员可管理站点。</p>
 
       <div v-if="summary" class="stat-grid">
         <div>
@@ -86,9 +87,12 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { apiRequest } from '../api/client'
-import { changePassword, refreshMe } from '../stores/auth'
+import { changePassword } from '../stores/auth'
+import { roleLabel } from '../utils/permissions'
+
+const router = useRouter()
 
 const message = ref('')
 const summary = ref(null)
@@ -128,7 +132,8 @@ async function submitPassword() {
     const data = await changePassword(passwordForm.value)
     message.value = data.message
     passwordForm.value = { old_password: '', new_password: '' }
-    await refreshMe()
+    window.alert(data.message)
+    await router.push('/login')
   } catch (error) {
     message.value = error.message
   }

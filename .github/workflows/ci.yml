@@ -42,5 +42,5 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Build Vue application
         run: npm ci && npm run build
-      - name: Test HUMAN 3 rules
-        run: node --test src/features/human3/engine.test.js
+      - name: Test HUMAN 3 rules and role permissions
+        run: node --test src/features/human3/engine.test.js src/utils/permissions.test.js

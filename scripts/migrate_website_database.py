@@ -48,8 +48,10 @@ def migration_tables(source):
             Column(column.name, column.type.as_generic(), primary_key=column.primary_key, nullable=column.nullable)
             for column in legacy.columns
         ])
-    tables = metadata.sorted_tables
     source_names = set(inspect(source).get_table_names())
+    # The permission audit table was introduced after the original migration.
+    # Older sources legitimately lack it; still create the empty target table.
+    tables = [table for table in metadata.sorted_tables if table.name != "permission_audit" or table.name in source_names]
     for table in tables:
         if table.name not in source_names:
             raise ValueError(f"Source is missing required table: {table.name}")
@@ -107,7 +109,7 @@ def migrate(source_engine, target_engine, apply=False):
             metadata, tables = migration_tables(source)
             source_counts = table_counts(source, tables)
             with target_engine.connect() as target:
-                if any(table_counts(target, tables).values()):
+                if any(table_counts(target, metadata.sorted_tables).values()):
                     raise ValueError("Target is not empty; no records have been overwritten")
             report = {"mode": "apply" if apply else "dry-run", "source_rows": source_counts,
                       "target_dialect": target_engine.dialect.name,
@@ -118,7 +120,7 @@ def migrate(source_engine, target_engine, apply=False):
             with target_engine.begin() as target:
                 if target_engine.dialect.name == "postgresql":
                     target.execute(text("SELECT pg_advisory_xact_lock(739302024)"))
-                if any(table_counts(target, tables).values()):
+                if any(table_counts(target, metadata.sorted_tables).values()):
                     raise ValueError("Target changed during preflight; migration cancelled")
                 expected_hashes = {}
                 for table in tables:

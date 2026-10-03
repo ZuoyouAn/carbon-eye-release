@@ -28,9 +28,9 @@
     </header>
 
     <div class="status-strip">
-      <span v-if="isLoggedIn">当前登录：{{ authState.user.username }} / {{ isAdmin ? '管理员' : '普通用户' }}</span>
-      <span v-else>游客模式：可以浏览内容，发布、评论、点赞和收藏需要登录。</span>
-      <strong v-if="isMuted">你已被禁言，不能发帖或评论。</strong>
+      <span v-if="isLoggedIn">当前登录：{{ authState.user.username }} / {{ roleLabel(authState.user.role) }}</span>
+      <span v-else>游客可浏览内容；登录后可点赞和收藏，发布内容需要高权限。</span>
+      <strong v-if="isMuted">你已被禁言，不能发布内容。</strong>
     </div>
 
     <RouterView v-slot="{ Component }">
@@ -42,15 +42,25 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { authState, isAdmin, isLoggedIn, isMuted, logout, refreshMe } from './stores/auth'
+import { roleLabel } from './utils/permissions'
 
 const router = useRouter()
 
 onMounted(() => {
   refreshMe()
+  window.addEventListener('auth-invalidated', handleInvalidated)
 })
+
+onUnmounted(() => window.removeEventListener('auth-invalidated', handleInvalidated))
+
+function handleInvalidated() {
+  if (router.currentRoute.value.meta.requiresAuth) {
+    router.replace({ name: 'login', query: { redirect: router.currentRoute.value.fullPath } })
+  }
+}
 
 async function handleLogout() {
   await logout()

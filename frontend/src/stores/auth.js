@@ -1,5 +1,6 @@
 import { computed, reactive } from 'vue'
 import { apiRequest, postJson, putJson } from '../api/client'
+import { mayPublish } from '../utils/permissions'
 
 function readStoredUser() {
   try {
@@ -16,9 +17,9 @@ export const authState = reactive({
 })
 
 export const isLoggedIn = computed(() => Boolean(authState.user && authState.token))
-export const isAdmin = computed(() => authState.user?.role === 'admin')
+export const isAdmin = computed(() => isLoggedIn.value && authState.user?.role === 'admin' && !authState.user.is_muted && !authState.user.is_deleted)
 export const isMuted = computed(() => Boolean(authState.user?.is_muted))
-export const canPublish = computed(() => Boolean(authState.user && !authState.user.is_muted))
+export const canPublish = computed(() => isLoggedIn.value && mayPublish(authState.user))
 
 export function saveAuth(token, user) {
   authState.token = token
@@ -33,6 +34,8 @@ export function clearAuth() {
   localStorage.removeItem('token')
   localStorage.removeItem('currentUser')
 }
+
+window.addEventListener('auth-invalidated', clearAuth)
 
 export async function refreshMe() {
   if (!authState.token) {
@@ -71,5 +74,7 @@ export async function logout() {
 }
 
 export async function changePassword(form) {
-  return putJson('/api/me/password', form)
+  const result = await putJson('/api/me/password', form)
+  clearAuth()
+  return result
 }

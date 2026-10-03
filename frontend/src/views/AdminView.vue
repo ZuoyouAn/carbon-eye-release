@@ -5,7 +5,7 @@
         <RouterLink class="back-button" to="/">返回首页</RouterLink>
         <p class="eyebrow">Admin</p>
         <h1>管理后台</h1>
-        <p>这里统一管理用户、文章、帖子、评论和留言。</p>
+        <p>管理账号、内容及权限。新注册默认低权限；调整权限后，用户需要重新登录。</p>
       </div>
 
       <div v-if="dashboard" class="stat-grid">
@@ -25,10 +25,13 @@
       <el-tabs v-model="activeTab" class="admin-tabs" @tab-change="loadCurrentTab">
         <el-tab-pane label="用户" name="users">
           <form class="form-stack publish-box" @submit.prevent="createUser">
-            <h2>创建普通用户</h2>
+            <h2>创建账号</h2>
             <div class="form-row">
               <input v-model="createForm.username" type="text" placeholder="新用户名">
               <input v-model="createForm.password" type="password" placeholder="新密码">
+              <select v-model="createForm.role" aria-label="新账号权限">
+                <option v-for="role in ROLE_OPTIONS" :key="role.value" :value="role.value">{{ role.label }}</option>
+              </select>
             </div>
             <el-button type="primary" native-type="submit">创建用户</el-button>
           </form>
@@ -40,13 +43,21 @@
                 <input v-model="row.editUsername" :disabled="row.role === 'admin'">
               </template>
             </el-table-column>
-            <el-table-column prop="role" label="角色" width="100" />
+            <el-table-column label="权限" width="220">
+              <template #default="{ row }">
+                <span>{{ roleLabel(row.role) }}</span>
+                <select v-model="row.editRole" :disabled="row.is_deleted || row.id === authState.user?.id" :aria-label="`${row.username}的权限`">
+                  <option v-for="role in ROLE_OPTIONS" :key="role.value" :value="role.value">{{ role.label }}</option>
+                </select>
+                <el-button size="small" :disabled="row.is_deleted || row.id === authState.user?.id || row.editRole === row.role" @click="changeUserRole(row)">调整权限</el-button>
+              </template>
+            </el-table-column>
             <el-table-column label="状态" width="120">
               <template #default="{ row }">{{ row.is_deleted ? '已删除' : row.is_muted ? '已禁言' : '正常' }}</template>
             </el-table-column>
             <el-table-column label="新密码">
               <template #default="{ row }">
-                <input v-model="row.editPassword" :disabled="row.role === 'admin'" placeholder="留空不改">
+                <input v-model="row.editPassword" type="password" autocomplete="new-password" :disabled="row.role === 'admin' && row.editRole !== 'admin'" placeholder="升管理员需至少12位新密码">
               </template>
             </el-table-column>
             <el-table-column label="操作" width="300">
@@ -58,6 +69,19 @@
               </template>
             </el-table-column>
           </el-table>
+        </el-tab-pane>
+
+        <el-tab-pane label="权限记录" name="audit">
+          <p class="state-text">记录谁在何时创建了账号或调整了权限；不记录密码。</p>
+          <el-table :data="audit.items" border>
+            <el-table-column prop="actor" label="操作管理员" />
+            <el-table-column prop="target" label="目标账号" />
+            <el-table-column label="操作"><template #default="{ row }">{{ row.action === 'admin_setup' ? '初始化管理员' : row.action === 'create_user' ? '创建账号' : '调整权限' }}</template></el-table-column>
+            <el-table-column label="原权限"><template #default="{ row }">{{ row.old_role ? roleLabel(row.old_role) : '无' }}</template></el-table-column>
+            <el-table-column label="新权限"><template #default="{ row }">{{ roleLabel(row.new_role) }}</template></el-table-column>
+            <el-table-column prop="created_at" label="时间（UTC）" width="180" />
+          </el-table>
+          <el-pagination class="el-pager" background layout="prev, pager, next" :current-page="audit.page" :page-size="audit.page_size" :total="audit.total" @current-change="fetchAudit" />
         </el-tab-pane>
 
         <el-tab-pane label="文章" name="articles">
@@ -187,6 +211,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiRequest, deleteRequest, postJson, putJson } from '../api/client'
+import { authState } from '../stores/auth'
+import { ROLE_OPTIONS, roleLabel } from '../utils/permissions'
 
 const activeTab = ref('users')
 const dashboard = ref(null)
@@ -195,7 +221,8 @@ const articles = ref(emptyPage())
 const posts = ref(emptyPage())
 const comments = ref(emptyPage())
 const messages = ref(emptyPage())
-const createForm = ref({ username: '', password: '' })
+const audit = ref(emptyPage())
+const createForm = ref({ username: '', password: '', role: 'user' })
 const articleFilters = ref({ status: '', q: '' })
 const postFilters = ref({ q: '' })
 const commentFilters = ref({ comment_type: 'all' })
@@ -228,6 +255,7 @@ async function loadCurrentTab() {
   if (activeTab.value === 'posts') await fetchPosts()
   if (activeTab.value === 'comments') await fetchComments()
   if (activeTab.value === 'messages') await fetchMessages()
+  if (activeTab.value === 'audit') await fetchAudit()
   await fetchDashboard()
 }
 
@@ -237,17 +265,49 @@ async function fetchDashboard() {
 
 async function fetchUsers() {
   const data = await apiRequest('/api/admin/users')
-  users.value = data.map((user) => ({ ...user, editUsername: user.username, editPassword: '' }))
+  users.value = data.map((user) => ({ ...user, editUsername: user.username, editPassword: '', editRole: user.role }))
+}
+
+async function confirmAdminPassword() {
+  const { value } = await ElMessageBox.prompt('请输入当前管理员密码以确认敏感操作。', '确认管理员身份', {
+    inputType: 'password', inputValidator: (value) => Boolean(value) || '请输入密码',
+    confirmButtonText: '确认', cancelButtonText: '取消',
+  })
+  return value
+}
+
+async function changeUserRole(user) {
+  try {
+    if (user.editRole === 'admin' && !user.editPassword) {
+      ElMessage.warning('提升为管理员前，请在新密码栏设置至少 12 位的新密码。')
+      return
+    }
+    await confirmAction(`将「${user.username}」从${roleLabel(user.role)}调整为${roleLabel(user.editRole)}？该账号现有登录会失效。`)
+    const adminPassword = await confirmAdminPassword()
+    const body = { role: user.editRole, admin_password: adminPassword }
+    if (user.editRole === 'admin') body.new_password = user.editPassword
+    const data = await putJson(`/api/admin/users/${user.id}/role`, body)
+    ElMessage.success(data.message)
+    await loadAdmin()
+  } catch (error) {
+    if (error !== 'cancel' && error !== 'close') ElMessage.error(error.message || '操作未完成')
+  }
+}
+
+async function fetchAudit(nextPage = 1) {
+  audit.value = await apiRequest(`/api/admin/permission-audit?page=${nextPage}&page_size=20`)
 }
 
 async function createUser() {
   try {
-    const data = await postJson('/api/admin/users', createForm.value)
+    const body = { ...createForm.value }
+    if (body.role === 'admin') body.admin_password = await confirmAdminPassword()
+    const data = await postJson('/api/admin/users', body)
     ElMessage.success(data.message)
-    createForm.value = { username: '', password: '' }
+    createForm.value = { username: '', password: '', role: 'user' }
     await loadAdmin()
   } catch (error) {
-    ElMessage.error(error.message)
+    if (error !== 'cancel' && error !== 'close') ElMessage.error(error.message || '操作未完成')
   }
 }
 

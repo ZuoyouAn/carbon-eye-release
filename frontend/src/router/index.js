@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { authState, isAdmin } from '../stores/auth'
+import { isAdmin, isLoggedIn, refreshMe } from '../stores/auth'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
@@ -49,8 +49,9 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !authState.user) {
+router.beforeEach(async (to) => {
+  if (to.meta.requiresAuth) await refreshMe()
+  if (to.meta.requiresAuth && !isLoggedIn.value) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 

@@ -39,10 +39,13 @@ from models import NovelFavorite
 from models import Post
 from models import PostComment
 from models import PostLike
+from models import PermissionAudit
 from models import Profile
 from models import ReadingProgress
 from models import User
 from models import Yulu
+from permissions import ROLE_LABELS, permissions_for
+from typing import Literal
 from carbon_eye_realtime import get_realtime_aqi, refresh_realtime_aqi_hourly
 from secure_geometry import SecureGeometryError
 from secure_geometry import calculate_secure_geometry
@@ -74,6 +77,7 @@ CARBON_EYE_STATIC_FILES = (
 
 
 class RegisterRequest(BaseModel):
+    model_config = {"extra": "forbid"}
     username: str
     password: str
 
@@ -89,14 +93,25 @@ class PasswordRequest(BaseModel):
 
 
 class AdminCreateUserRequest(BaseModel):
+    model_config = {"extra": "forbid"}
     username: str
     password: str
+    role: Literal["user", "elevated", "admin"] = "user"
+    admin_password: Optional[str] = None
 
 
 class AdminUpdateUserRequest(BaseModel):
+    model_config = {"extra": "forbid"}
     username: Optional[str] = None
     password: Optional[str] = None
     is_muted: Optional[bool] = None
+
+
+class RoleUpdateRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    role: Literal["user", "elevated", "admin"]
+    admin_password: str
+    new_password: Optional[str] = None
 
 
 class PostCreateRequest(BaseModel):
@@ -236,6 +251,16 @@ def clean_status(value: str, allowed: set[str], field_name: str):
     return status
 
 
+def validate_new_password(value: str, role: str = "user"):
+    # Do not trim passwords: spaces can be intentional passphrase characters.
+    minimum = 12 if role == "admin" else 8
+    if len(value) < minimum or len(value) > 80:
+        raise HTTPException(status_code=400, detail=f"密码需要 {minimum}–80 个字符")
+    if value.lower() in {"123456", "12345678", "123456789012", "password", "password1234"} or len(set(value)) < 3:
+        raise HTTPException(status_code=400, detail="请勿使用常见密码或重复字符密码")
+    return value
+
+
 def normalize_page(page: int, page_size: int):
     safe_page = max(1, int(page or 1))
     safe_page_size = min(50, max(1, int(page_size or 10)))
@@ -268,6 +293,8 @@ def user_to_dict(user: User):
         "id": user.id,
         "username": user.username,
         "role": user.role,
+        "role_label": ROLE_LABELS.get(user.role, "未授权"),
+        "permissions": permissions_for(user.role, user.is_muted),
         "is_muted": bool(user.is_muted),
         "is_deleted": bool(user.is_deleted),
         "created_at": format_time(user.created_at),
@@ -306,11 +333,13 @@ def get_current_user(authorization: Optional[str] = Header(default=None), db: Se
     user = optional_user_from_header(db, authorization)
     if not user:
         raise HTTPException(status_code=401, detail="请先登录")
+    if user.role not in ROLE_LABELS:
+        raise HTTPException(status_code=403, detail="账号权限未配置，请联系管理员")
     return user
 
 
 def get_admin_user(current_user: User = Depends(get_current_user)):
-    if current_user.role != "admin":
+    if "manage_users" not in permissions_for(current_user.role, current_user.is_muted):
         raise HTTPException(status_code=403, detail="只有管理员可以操作")
     return current_user
 
@@ -318,6 +347,54 @@ def get_admin_user(current_user: User = Depends(get_current_user)):
 def ensure_not_muted(user: User):
     if user.is_muted:
         raise HTTPException(status_code=403, detail="你已被禁言，不能发布内容")
+
+
+def get_publishing_user(current_user: User = Depends(get_current_user)):
+    ensure_not_muted(current_user)
+    if "publish" not in permissions_for(current_user.role):
+        raise HTTPException(status_code=403, detail="当前为低权限账号，请联系管理员提升为高权限后发布内容")
+    return current_user
+
+
+def revoke_user_tokens(db: Session, user_id: int):
+    db.query(AuthToken).filter(AuthToken.user_id == user_id).delete(synchronize_session=False)
+
+
+def record_permission_change(db: Session, actor: User, target: User, old_role: Optional[str], action="role_change"):
+    db.add(PermissionAudit(actor_user_id=actor.id, target_user_id=target.id, action=action, old_role=old_role, new_role=target.role))
+
+
+def initialize_configured_admin(db: Session):
+    """One-time owner-controlled setup; never resets an existing admin on restart."""
+    setup_password = os.getenv("ADMIN_SETUP_PASSWORD")
+    if not setup_password:
+        return
+    try:
+        validate_new_password(setup_password, "admin")
+    except HTTPException:
+        raise RuntimeError("ADMIN_SETUP_PASSWORD 至少需要 12 位，且不能是常见弱密码") from None
+    if db.bind.dialect.name == "postgresql":
+        db.execute(text("SELECT pg_advisory_xact_lock(739302605)"))
+    existing = db.query(User).filter(User.username == "admin").with_for_update().first()
+    if existing:
+        if existing.role != "admin" or existing.is_deleted or existing.is_muted:
+            raise RuntimeError("admin 用户名已被非正常管理员占用，不会自动提权或恢复账号")
+        return
+    legacy = db.query(User).filter(User.username == "root", User.role == "admin", User.is_deleted == False).with_for_update().first()
+    if legacy:
+        # Preserve the user ID and all related content, but invalidate the
+        # publicly advertised legacy credentials and every previous session.
+        legacy.username = "admin"
+        legacy.password_hash = hash_password(setup_password)
+        legacy.is_muted = False
+        admin = legacy
+    else:
+        admin = User(username="admin", password_hash=hash_password(setup_password), role="admin", is_muted=False, is_deleted=False)
+        db.add(admin)
+        db.flush()
+    revoke_user_tokens(db, admin.id)
+    record_permission_change(db, admin, admin, "admin" if legacy else None, "admin_setup")
+    db.commit()
 
 
 def ensure_article_exists(db: Session, article_id: int, user: Optional[User] = None, admin_mode: bool = False):
@@ -520,15 +597,21 @@ async def startup_event():
         upgrade_existing_schema()
         db = SessionLocal()
         try:
-            admin = db.query(User).filter(User.username == "root").first()
+            initialize_configured_admin(db)
+            bootstrap_username = clean_text(os.getenv("INITIAL_ADMIN_USERNAME", "admin"), "管理员用户名", 30)
+            admin = db.query(User).filter(User.role == "admin", User.is_deleted == False).order_by(User.id).first()
             if not admin:
                 bootstrap_password = os.getenv("INITIAL_ADMIN_PASSWORD")
                 if not bootstrap_password:
                     database_initialized = True
                     return
-                if len(bootstrap_password) < 12:
-                    raise RuntimeError("INITIAL_ADMIN_PASSWORD 至少需要 12 个字符")
-                admin = User(username="root", password_hash=hash_password(bootstrap_password), role="admin", is_muted=False, is_deleted=False)
+                try:
+                    validate_new_password(bootstrap_password, "admin")
+                except HTTPException:
+                    raise RuntimeError("INITIAL_ADMIN_PASSWORD 至少需要 12 个字符，且不能是常见弱密码") from None
+                if db.query(User).filter(User.username == bootstrap_username).first():
+                    raise RuntimeError("初始化管理员用户名已存在，不会自动提权已有账号")
+                admin = User(username=bootstrap_username, password_hash=hash_password(bootstrap_password), role="admin", is_muted=False, is_deleted=False)
                 db.add(admin)
                 db.commit()
                 db.refresh(admin)
@@ -759,9 +842,9 @@ def read_novel_detail(novel_id: int, db: Session = Depends(get_db), authorizatio
 @app.post("/api/auth/register")
 def register_user(data: RegisterRequest, db: Session = Depends(get_db)):
     username = clean_text(data.username, "用户名", 30)
-    password = clean_text(data.password, "密码", 80)
-    if len(password) < 3:
-        raise HTTPException(status_code=400, detail="密码至少需要 3 个字符")
+    password = validate_new_password(data.password)
+    if username.lower() in {"admin", "root"}:
+        raise HTTPException(status_code=400, detail="该用户名保留给管理员，请使用其他用户名")
     if db.query(User).filter(User.username == username).first():
         raise HTTPException(status_code=400, detail="用户名已存在")
     user = User(username=username, password_hash=hash_password(password), role="user", is_muted=False, is_deleted=False)
@@ -774,7 +857,9 @@ def register_user(data: RegisterRequest, db: Session = Depends(get_db)):
 @app.post("/api/auth/login")
 def login_user(data: LoginRequest, db: Session = Depends(get_db)):
     username = clean_text(data.username, "用户名", 30)
-    password = clean_text(data.password, "密码", 80)
+    password = data.password
+    if len(password) > 80:
+        raise HTTPException(status_code=400, detail="密码不能超过 80 个字符")
     user = db.query(User).filter(User.username == username).first()
     if not user or user.is_deleted or not verify_password(password, user.password_hash):
         raise HTTPException(status_code=401, detail="用户名或密码错误")
@@ -826,14 +911,61 @@ def admin_read_users(db: Session = Depends(get_db), admin_user: User = Depends(g
 @app.post("/api/admin/users")
 def admin_create_user(data: AdminCreateUserRequest, db: Session = Depends(get_db), admin_user: User = Depends(get_admin_user)):
     username = clean_text(data.username, "用户名", 30)
-    password = clean_text(data.password, "密码", 80)
+    password = validate_new_password(data.password, data.role)
+    if data.role == "admin" and not verify_password(data.admin_password or "", admin_user.password_hash):
+        raise HTTPException(status_code=403, detail="创建管理员前请确认当前管理员密码")
     if db.query(User).filter(User.username == username).first():
         raise HTTPException(status_code=400, detail="用户名已存在")
-    user = User(username=username, password_hash=hash_password(password), role="user", is_muted=False, is_deleted=False)
+    user = User(username=username, password_hash=hash_password(password), role=data.role, is_muted=False, is_deleted=False)
     db.add(user)
+    db.flush()
+    record_permission_change(db, admin_user, user, None, "create_user")
     db.commit()
     db.refresh(user)
     return {"message": "用户创建成功", "user": user_to_dict(user)}
+
+
+@app.put("/api/admin/users/{user_id}/role")
+def admin_update_user_role(user_id: int, data: RoleUpdateRequest, db: Session = Depends(get_db), admin_user: User = Depends(get_admin_user)):
+    # Serialize changes to administrators on PostgreSQL, then recheck the actor:
+    # two administrators must not concurrently demote one another to zero admins.
+    admins = db.query(User).filter(User.role == "admin", User.is_deleted == False).order_by(User.id).with_for_update().populate_existing().all()
+    actor = next((user for user in admins if user.id == admin_user.id and not user.is_muted), None)
+    if actor is None:
+        raise HTTPException(status_code=403, detail="管理员权限已失效，请重新登录")
+    if not verify_password(data.admin_password, actor.password_hash):
+        raise HTTPException(status_code=403, detail="当前管理员密码不正确")
+    target = db.query(User).filter(User.id == user_id).with_for_update().populate_existing().first()
+    if not target or target.is_deleted:
+        raise HTTPException(status_code=404, detail="用户不存在或已删除")
+    if target.id == actor.id:
+        raise HTTPException(status_code=403, detail="不能修改自己的角色，请由另一位管理员操作")
+    old_role = target.role
+    if old_role == data.role:
+        return {"message": "角色未变更", "user": user_to_dict(target)}
+    if old_role == "admin" and data.role != "admin" and sum(not user.is_muted for user in admins) <= 1:
+        raise HTTPException(status_code=409, detail="必须保留至少一个可用管理员")
+    if data.role == "admin":
+        if target.is_muted:
+            raise HTTPException(status_code=400, detail="请先解除禁言再提升为管理员")
+        if data.new_password is None:
+            raise HTTPException(status_code=400, detail="提升为管理员时必须设置至少 12 位的新密码")
+        target.password_hash = hash_password(validate_new_password(data.new_password, "admin"))
+    target.role = data.role
+    revoke_user_tokens(db, target.id)
+    record_permission_change(db, actor, target, old_role)
+    db.commit()
+    db.refresh(target)
+    return {"message": "权限已更新，该用户需要重新登录", "user": user_to_dict(target)}
+
+
+@app.get("/api/admin/permission-audit")
+def admin_permission_audit(page: int = 1, page_size: int = 20, db: Session = Depends(get_db), admin_user: User = Depends(get_admin_user)):
+    query = db.query(PermissionAudit).order_by(PermissionAudit.id.desc())
+    return paged_response(query, page, page_size, lambda row: {
+        "id": row.id, "actor": get_username(db, row.actor_user_id), "target": get_username(db, row.target_user_id),
+        "action": row.action, "old_role": row.old_role, "new_role": row.new_role, "created_at": format_time(row.created_at),
+    })
 
 
 @app.put("/api/admin/users/{user_id}")
@@ -850,8 +982,11 @@ def admin_update_user(user_id: int, data: AdminUpdateUserRequest, db: Session = 
             raise HTTPException(status_code=400, detail="用户名已存在")
         user.username = username
     if data.password is not None and data.password.strip():
-        user.password_hash = hash_password(clean_text(data.password, "密码", 80))
+        user.password_hash = hash_password(validate_new_password(data.password, user.role))
+        revoke_user_tokens(db, user.id)
     if data.is_muted is not None:
+        if user.is_muted != data.is_muted:
+            revoke_user_tokens(db, user.id)
         user.is_muted = data.is_muted
     db.commit()
     db.refresh(user)
@@ -866,6 +1001,7 @@ def admin_delete_user(user_id: int, db: Session = Depends(get_db), admin_user: U
     if user.role == "admin":
         raise HTTPException(status_code=403, detail="不能删除管理员账号")
     user.is_deleted = True
+    revoke_user_tokens(db, user.id)
     db.commit()
     return {"message": "用户已软删除"}
 
@@ -876,6 +1012,7 @@ def admin_mute_user(user_id: int, db: Session = Depends(get_db), admin_user: Use
     if not user or user.role == "admin":
         raise HTTPException(status_code=404, detail="普通用户不存在")
     user.is_muted = True
+    revoke_user_tokens(db, user.id)
     db.commit()
     return {"message": "已禁言", "user": user_to_dict(user)}
 
@@ -886,6 +1023,7 @@ def admin_unmute_user(user_id: int, db: Session = Depends(get_db), admin_user: U
     if not user or user.role == "admin":
         raise HTTPException(status_code=404, detail="普通用户不存在")
     user.is_muted = False
+    revoke_user_tokens(db, user.id)
     db.commit()
     return {"message": "已解除禁言", "user": user_to_dict(user)}
 
@@ -902,7 +1040,7 @@ def read_posts(page: int = 1, page_size: int = 9, sort: str = "latest", q: str =
 
 
 @app.post("/api/posts")
-def create_post(data: PostCreateRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def create_post(data: PostCreateRequest, db: Session = Depends(get_db), current_user: User = Depends(get_publishing_user)):
     ensure_not_muted(current_user)
     title = clean_text(data.title, "帖子标题", 80)
     content = clean_text(data.content, "帖子内容", 5000)
@@ -922,7 +1060,7 @@ def read_post_detail(post_id: int, db: Session = Depends(get_db), authorization:
 
 
 @app.post("/api/posts/{post_id}/comments")
-def create_post_comment(post_id: int, data: CommentCreateRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def create_post_comment(post_id: int, data: CommentCreateRequest, db: Session = Depends(get_db), current_user: User = Depends(get_publishing_user)):
     ensure_not_muted(current_user)
     post = ensure_post_exists(db, post_id)
     content = clean_text(data.content, "评论内容", 1000)
@@ -1001,7 +1139,7 @@ def read_article_detail(article_id: int, db: Session = Depends(get_db), authoriz
 
 
 @app.post("/api/articles/{article_id}/comments")
-def create_article_comment(article_id: int, data: CommentCreateRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def create_article_comment(article_id: int, data: CommentCreateRequest, db: Session = Depends(get_db), current_user: User = Depends(get_publishing_user)):
     ensure_not_muted(current_user)
     article = ensure_article_exists(db, article_id, user=current_user)
     content = clean_text(data.content, "评论内容", 1000)
@@ -1210,8 +1348,7 @@ def read_messages(page: int = 1, page_size: int = 10, db: Session = Depends(get_
 
 
 @app.post("/api/messages")
-def create_message(data: MessageCreateRequest, db: Session = Depends(get_db), authorization: Optional[str] = Header(default=None)):
-    user = optional_user_from_header(db, authorization)
+def create_message(data: MessageCreateRequest, db: Session = Depends(get_db), user: User = Depends(get_publishing_user)):
     content = clean_text(data.content, "留言内容", 1000)
     nickname = user.username if user else clean_text(data.nickname, "昵称", 40)
     message = Message(user_id=user.id if user else None, nickname=nickname, content=content, status="published")
@@ -1287,7 +1424,10 @@ def read_my_favorites(db: Session = Depends(get_db), current_user: User = Depend
     novel_favorites = db.query(NovelFavorite).filter(NovelFavorite.user_id == current_user.id).order_by(NovelFavorite.created_at.desc()).all()
     articles = []
     for favorite in article_favorites:
-        article = db.query(Article).filter(Article.id == favorite.article_id, Article.is_deleted == False).first()
+        article_query = db.query(Article).filter(Article.id == favorite.article_id, Article.is_deleted == False)
+        if current_user.role != "admin":
+            article_query = article_query.filter(Article.status == "published")
+        article = article_query.first()
         if article:
             articles.append(article_to_dict(db, article, current_user))
     novels = [novel_to_dict(db, ensure_novel_exists(db, favorite.novel_id), current_user) for favorite in novel_favorites]
@@ -1296,12 +1436,11 @@ def read_my_favorites(db: Session = Depends(get_db), current_user: User = Depend
 
 @app.put("/api/me/password")
 def update_my_password(data: PasswordRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    old_password = clean_text(data.old_password, "旧密码", 80)
-    new_password = clean_text(data.new_password, "新密码", 80)
-    if len(new_password) < 3:
-        raise HTTPException(status_code=400, detail="新密码至少需要 3 个字符")
+    old_password = data.old_password
+    new_password = validate_new_password(data.new_password, current_user.role)
     if not verify_password(old_password, current_user.password_hash):
         raise HTTPException(status_code=400, detail="旧密码不正确")
     current_user.password_hash = hash_password(new_password)
+    revoke_user_tokens(db, current_user.id)
     db.commit()
-    return {"message": "密码修改成功"}
+    return {"message": "密码修改成功，请重新登录"}

@@ -12,7 +12,13 @@ export async function apiRequest(path, options = {}) {
   const data = await response.json().catch(() => ({}))
 
   if (!response.ok) {
-    throw new Error(data.detail || `接口返回 ${response.status}`)
+    if (response.status === 401 && token && !path.startsWith('/api/auth/login')) {
+      window.dispatchEvent(new Event('auth-invalidated'))
+    }
+    const detail = typeof data.detail === 'string' ? data.detail : '输入信息不符合要求，请检查后重试'
+    const error = new Error(detail || `接口返回 ${response.status}`)
+    error.status = response.status
+    throw error
   }
 
   return data

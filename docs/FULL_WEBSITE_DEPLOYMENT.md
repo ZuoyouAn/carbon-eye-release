@@ -21,7 +21,7 @@ Render 的现有后端服务需要设置：
 | `CORS_ORIGINS` | `https://carbon-eye-sip.netlify.app` |
 | `SEED_DEMO_DATA` | `false` |
 
-已迁移的 root 账号沿用原来的密码哈希，不自动更改权限或重置账号。只有新空库需要 `INITIAL_ADMIN_PASSWORD` 引导创建管理员，密码至少 12 个字符。对已经公开到聊天的 Neon 密码应立即轮换，然后同步更新私密配置和 Render 环境变量。
+初次迁移保留原有密码哈希；三档权限版本通过用户明确配置的私密 `ADMIN_SETUP_PASSWORD` 一次性把旧 root 管理员改为 admin 并设置新密码，保留 ID 与内容。后续重启不重置现有 admin 密码，也不会自动提权普通账号。只有没有管理员时才可使用 `INITIAL_ADMIN_USERNAME` / `INITIAL_ADMIN_PASSWORD` 引导创建管理员。管理员新密码至少 12 位，详见 [权限说明](ROLE_PERMISSIONS.md)。对已经公开到聊天的 Neon 密码应立即轮换，然后同步更新私密配置和 Render 环境变量。
 
 Netlify 的 `VITE_API_BASE` 保持 `https://personal-website-carbon-eye-api.onrender.com`。数据库密码绝不能以 `VITE_` 前缀注入前端。
 
