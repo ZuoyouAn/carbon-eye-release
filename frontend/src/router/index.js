@@ -36,6 +36,7 @@ const router = createRouter({
     { path: '/messages', name: 'messages', component: MessagesView },
     { path: '/changelog', name: 'changelog', component: ChangelogView },
     { path: '/carbon-eye', name: 'carbon-eye', component: CarbonEyeView },
+    { path: '/human3', name: 'human3', component: () => import('../views/Human3View.vue') },
     { path: '/secure-geometry', name: 'secure-geometry', component: SecureGeometryView },
     { path: '/secure-geometry/paper', name: 'secure-geometry-paper', component: SecureGeometryPaperView },
     { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },

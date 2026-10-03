@@ -19,6 +19,7 @@ from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import or_
+from sqlalchemy import inspect
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -449,8 +450,10 @@ def yulu_to_dict(yulu: Yulu):
 
 
 def add_column_if_missing(connection, table_name: str, column_name: str, ddl: str):
-    row = connection.execute(text(f"SHOW COLUMNS FROM {table_name} LIKE :column_name"), {"column_name": column_name}).fetchone()
-    if not row:
+    columns = {column["name"] for column in inspect(connection).get_columns(table_name)}
+    if column_name not in columns:
+        if connection.dialect.name == "postgresql":
+            ddl = ddl.replace("DATETIME", "TIMESTAMP")
         connection.execute(text(f"ALTER TABLE {table_name} ADD COLUMN {ddl}"))
 
 
@@ -469,7 +472,8 @@ def upgrade_existing_schema():
         add_column_if_missing(connection, "post_comments", "deleted_at", "deleted_at DATETIME NULL")
         add_column_if_missing(connection, "article_comments", "is_deleted", "is_deleted BOOLEAN NOT NULL DEFAULT FALSE")
         add_column_if_missing(connection, "article_comments", "deleted_at", "deleted_at DATETIME NULL")
-        connection.execute(text("ALTER TABLE articles ALTER category SET DEFAULT 'Essay'"))
+        if connection.dialect.name != "sqlite":
+            connection.execute(text("ALTER TABLE articles ALTER COLUMN category SET DEFAULT '随笔'"))
         connection.execute(text("UPDATE articles SET category = :category WHERE category IN ('Ëæ±Ê', 'éç¬', '')"), {"category": "随笔"})
         connection.execute(text("UPDATE articles SET status = 'published' WHERE status IS NULL OR status = ''"))
 
@@ -497,16 +501,20 @@ def seed_demo_data(db: Session, admin: User):
 
 realtime_refresh_task = None
 realtime_refresh_stop_event = None
+database_initialized = False
 
 
 @app.on_event("startup")
 async def startup_event():
-    global realtime_refresh_task, realtime_refresh_stop_event
+    global realtime_refresh_task, realtime_refresh_stop_event, database_initialized
+    database_initialized = False
     if os.getenv("CARBON_EYE_REALTIME_SCHEDULER", "").strip().lower() in {"1", "true", "yes"}:
         realtime_refresh_stop_event = asyncio.Event()
         realtime_refresh_task = asyncio.create_task(refresh_realtime_aqi_hourly(realtime_refresh_stop_event))
     if os.getenv("CARBON_EYE_STANDALONE", "").strip().lower() in {"1", "true", "yes"}:
         return
+    if os.getenv("RENDER") and engine.dialect.name == "sqlite":
+        raise RuntimeError("完整网站部署必须配置持久化 DATABASE_URL，不能使用 Render 临时 SQLite 文件")
     try:
         Base.metadata.create_all(bind=engine)
         upgrade_existing_schema()
@@ -516,22 +524,23 @@ async def startup_event():
             if not admin:
                 bootstrap_password = os.getenv("INITIAL_ADMIN_PASSWORD")
                 if not bootstrap_password:
+                    database_initialized = True
                     return
+                if len(bootstrap_password) < 12:
+                    raise RuntimeError("INITIAL_ADMIN_PASSWORD 至少需要 12 个字符")
                 admin = User(username="root", password_hash=hash_password(bootstrap_password), role="admin", is_muted=False, is_deleted=False)
                 db.add(admin)
                 db.commit()
                 db.refresh(admin)
-            else:
-                admin.role = "admin"
-                admin.is_deleted = False
-                admin.is_muted = False
-                db.commit()
-                db.refresh(admin)
-            seed_demo_data(db, admin)
+            if os.getenv("SEED_DEMO_DATA", "").strip().lower() in {"1", "true", "yes"}:
+                seed_demo_data(db, admin)
+            database_initialized = True
         finally:
             db.close()
     except SQLAlchemyError as exc:
-        print(f"数据库启动初始化失败，数据库功能暂不可用；碳眼只读接口仍可用：{exc}")
+        # Fail a full-site deploy instead of advertising a healthy partial site.
+        # Never log connection URLs, SQL parameters or account content.
+        raise RuntimeError("数据库初始化失败，请检查持久化 DATABASE_URL 和网络配置") from None
 
 
 @app.on_event("shutdown")
@@ -553,7 +562,22 @@ def read_healthz():
         "version": "2.0.0",
         "status": "ok" if static_status["status"] == "ok" else "degraded",
         "static_data_status": static_status,
+        "website_mode": "full" if database_initialized else "carbon-eye-only",
     }
+
+
+@app.get("/readyz")
+def read_website_readyz():
+    if not database_initialized:
+        raise HTTPException(status_code=503, detail="完整网站数据库尚未初始化")
+    try:
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
+            if not db.query(Profile).first():
+                raise HTTPException(status_code=503, detail="尚未迁移个人资料")
+    except SQLAlchemyError:
+        raise HTTPException(status_code=503, detail="持久化数据库暂不可用") from None
+    return {"status": "ok", "service": "personal-website", "database": "ok"}
 
 
 @app.get("/")
@@ -670,8 +694,8 @@ def read_carbon_eye_sources():
 def read_profile(db: Session = Depends(get_db)):
     try:
         profile = db.query(Profile).order_by(Profile.id.asc()).first()
-    except SQLAlchemyError as exc:
-        raise HTTPException(status_code=500, detail=f"数据库连接或查询失败：{exc}") from exc
+    except SQLAlchemyError:
+        raise HTTPException(status_code=503, detail="数据库暂不可用，请稍后重试") from None
     if not profile:
         raise HTTPException(status_code=404, detail="profile 表中还没有个人信息，请先执行 sql/init.sql")
     return {

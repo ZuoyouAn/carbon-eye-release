@@ -9,6 +9,13 @@
 
       <div class="card-grid two-grid">
         <article class="content-card project-detail-card">
+          <div class="card-meta"><span>Human 3.0</span><span>四维成长 / 自我反思</span></div>
+          <h2>四维成长评估</h2>
+          <p>通过 24 道问题了解思维、身体、关系与事业的当前状态，获得初步发展画像与行动计划。无需登录，回答在浏览器内处理。</p>
+          <div class="tag-list"><span>四象限</span><span>固定问卷</span><span>行动计划</span></div>
+          <RouterLink class="text-button" to="/human3">开始了解自己</RouterLink>
+        </article>
+        <article class="content-card project-detail-card">
           <div class="card-meta">
             <span>Project 01</span>
             <span>本地全栈项目</span>

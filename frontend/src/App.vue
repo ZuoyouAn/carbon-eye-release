@@ -13,6 +13,7 @@
         <RouterLink to="/articles">文章</RouterLink>
         <RouterLink to="/roadmap">路线</RouterLink>
         <RouterLink to="/projects">项目</RouterLink>
+        <RouterLink to="/human3">成长评估</RouterLink>
         <RouterLink to="/timeline">时间线</RouterLink>
         <RouterLink to="/messages">留言板</RouterLink>
         <RouterLink to="/changelog">更新日志</RouterLink>

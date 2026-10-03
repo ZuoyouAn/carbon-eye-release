@@ -105,7 +105,7 @@
 
 <script setup>
 import { ElMessage } from 'element-plus'
-import { marked } from 'marked'
+import { renderMarkdown } from '../utils/markdown'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { apiRequest, deleteRequest, postJson } from '../api/client'
@@ -128,7 +128,7 @@ const publishTip = computed(() => {
   return ''
 })
 
-const renderedArticle = computed(() => marked.parse(selectedArticle.value?.content || ''))
+const renderedArticle = computed(() => renderMarkdown(selectedArticle.value?.content || ''))
 
 onMounted(async () => {
   await Promise.all([fetchCategories(), fetchArticles()])

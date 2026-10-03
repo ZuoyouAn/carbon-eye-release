@@ -59,7 +59,7 @@
 
 <script setup>
 import { ElMessage } from 'element-plus'
-import { marked } from 'marked'
+import { renderMarkdown } from '../utils/markdown'
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { apiRequest, postJson, putJson } from '../api/client'
@@ -78,7 +78,7 @@ const form = ref({
 })
 
 const isEdit = computed(() => Boolean(route.params.id))
-const previewHtml = computed(() => marked.parse(form.value.content || ''))
+const previewHtml = computed(() => renderMarkdown(form.value.content || ''))
 
 onMounted(loadArticle)
 
