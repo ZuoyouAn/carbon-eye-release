@@ -97,6 +97,8 @@
 
 <script setup>
 import { ElMessage, ElEmpty, ElPagination } from 'element-plus'
+import 'element-plus/es/components/empty/style/css'
+import 'element-plus/es/components/pagination/style/css'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { apiRequest, deleteRequest, postJson } from '../api/client'

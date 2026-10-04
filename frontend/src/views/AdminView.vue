@@ -208,6 +208,13 @@
 
 <script setup>
 import { ElMessage, ElMessageBox, ElTabs, ElTabPane, ElButton, ElTable, ElTableColumn, ElPagination } from 'element-plus'
+import 'element-plus/es/components/message-box/style/css'
+import 'element-plus/es/components/tabs/style/css'
+import 'element-plus/es/components/tab-pane/style/css'
+import 'element-plus/es/components/button/style/css'
+import 'element-plus/es/components/table/style/css'
+import 'element-plus/es/components/table-column/style/css'
+import 'element-plus/es/components/pagination/style/css'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiRequest, deleteRequest, postJson, putJson } from '../api/client'

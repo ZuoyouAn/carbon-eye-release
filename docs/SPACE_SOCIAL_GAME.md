@@ -28,6 +28,19 @@
 
 `python -m pytest -q` 包括隔离数据库下的头像格式/大小/所有权、私聊同意、管理员无越权、群人数上限、拉黑、撤回、禁言、重试、节流/额度回滚、历史分页/保留期检查。
 
-`cd frontend && node --test src/features/human3/engine.test.js src/features/wasteland/engine.test.js src/utils/permissions.test.js` 检查原测评/权限规则和新游戏：100种子状态边界、确定性重放、所有结局、行动门槛和坏存档拒绝。
+`cd frontend && node --test src/features/human3/engine.test.js src/features/wasteland/engine.test.js src/features/chat/history.test.js src/utils/permissions.test.js` 检查原测评/权限规则、聊天窗口/状态逻辑和新游戏：100种子状态边界、确定性重放、所有结局、行动门槛和坏存档拒绝。
 
 `python scripts/check_space_browser.py` 默认仅操作一次性本地账号，真实浏览器检查头像、双用户聊天、邀请接受、撤回、游戏存档/结局和移动端布局。`--live` 只读验证线上公共页面、游客聊天室登录跳转及游戏，不创建线上账号、不写线上数据库。
+
+## 2026-10-05 体验与性能优化
+
+- Element Plus采用组件官方按需样式入口，不安装新插件；消息提示保留首屏样式，后台表格/分页/确认弹窗随各自路由加载。首屏CSS本地构建由约378.5KB降到约34.6KB（未压缩），gzip约7.8KB。`node frontend/scripts/check-bundle.mjs` 自动限制入口CSS≤100KiB、JS≤220KiB；已加入CI。
+- 会话轮询不再反复写公共大厅行，仅首次初始化插入。私聊联系人/成员状态与双向拉黑批量读取；20个私聊场景验证总SQL语句不超过8条，没有轮询写入。未更改账号、权限或私聊同意规则。
+- 会话列表标识待接受、已关闭、被拉黑的私聊；发送框跟随服务端状态禁用并解释原因，后端仍再次校验实际发送权。
+- 阅读旧消息时保持原窗口和滚动位置，不自动跳到底部；新消息以提示和“回到最新消息”按钮呈现。分页渲染最多200条，继续向前时保留较旧窗口，仍可返回最新。与最新窗口重叠的撤回消息会同步，更旧条目需要重新加载。
+- 草稿和失败重试消息标识在本次组件内按会话暂存，切换会话不丢草稿；刷新/离开聊天页面清除，不把聊天正文放进localStorage。现有登录令牌存储方案未变。
+- 正常约12秒同步；失败逐步退避到24/48/60秒，成功恢复正常频率。页面隐藏或离开时取消读取、停止轮询，不自动重试有副作用的发送操作。
+- 游戏的开始/重开滚动遵循系统减少动态效果偏好，不改变规则或存档版本。
+- `python scripts/check_chat_history_browser.py` 本地专用模拟历史测试：长分页、锚点位置、刷新不丢历史、新消息提示、最新窗口恢复、后台停止/恢复、网络失败退避及手机布局。
+
+样式入口依据：[Element Plus官方按需样式说明](https://github.com/element-plus/unplugin-element-plus)，路由样式拆分依据：[Vite官方CSS拆分说明](https://vite.dev/guide/features.html#css-code-splitting)。

@@ -74,6 +74,7 @@ def main():
         click(driver, room)
 
     def send_message(driver, text):
+        wait(driver, lambda d: shown(d, '#chat-content').is_enabled())
         shown(driver, '#chat-content').send_keys(text)
         click(driver, button(driver, '发送消息'))
         wait(driver, lambda d: text in shown(d, '.chat-messages').text)
@@ -95,6 +96,8 @@ def main():
         assert requests.get(api + '/api/chat/rooms', timeout=65).status_code == 401
         checks.append('guest chat redirects and API requires authentication')
 
+        a.execute_cdp_cmd('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-reduced-motion', 'value': 'reduce'}]})
+        a.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': "const originalScroll=window.scrollTo;window.__scrollCalls=[];window.scrollTo=function(...args){window.__scrollCalls.push(args[0]);return originalScroll.apply(window,args)}"})
         visit(a, '/wasteland')
         assert shown(a, '.setup-form .game-primary').get_attribute('disabled')
         click(a, shown(a, '.talent-card:nth-child(3)')); click(a, shown(a, '.talent-card:nth-child(6)'))
@@ -105,6 +108,9 @@ def main():
         a.save_screenshot(str(output / 'game-setup-desktop.png'))
         click(a, shown(a, '.setup-form .game-primary'))
         shown(a, '.game-status')
+        assert a.execute_script("return window.__scrollCalls.some(call=>call?.behavior==='instant')")
+        assert a.execute_script("return getComputedStyle(document.documentElement).scrollBehavior") == 'auto'
+        checks.append('game scroll and page transitions respect reduced-motion preference')
         assert a.execute_script("return localStorage.getItem('space-wasteland-v1')") is None
         click(a, shown(a, '.event-choices button:not(:disabled)'))
         wait(a, lambda d: len(d.find_elements(By.CSS_SELECTOR, '.game-journal li')) == 1)
@@ -178,8 +184,18 @@ def main():
             send_message(a, text); refresh_chat(b)
             wait(b, lambda d: text in shown(d, '.chat-messages').text)
             checks.append('two independent accounts share persistent lobby')
+            public_draft = '本次页面里暂存的未发送草稿'
+            shown(a, '#chat-content').send_keys(public_draft)
             search(a, names[1]); click(a, button(a, '私聊', '.chat-person button'))
             wait(a, lambda d: shown(d, '.conversation-heading h2').text == names[1])
+            assert not shown(a, '#chat-content').is_enabled()
+            assert '等待对方接受' in shown(a, '.chat-composer').text
+            checks.append('pending direct room disables composer with consent hint')
+            select_room(a, 'Space公共大厅')
+            wait(a, lambda d: shown(d, '#chat-content').get_attribute('value') == public_draft)
+            select_room(a, names[1])
+            wait(a, lambda d: not shown(d, '#chat-content').is_enabled())
+            checks.append('room switching preserves unsent draft in memory only')
             refresh_chat(b); select_room(b, names[0])
             shown(b, '.chat-invitation')
             assert not b.find_elements(By.CSS_SELECTOR, '.chat-messages')

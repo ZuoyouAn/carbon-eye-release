@@ -253,6 +253,51 @@ def test_muted_recipient_can_still_decline_invitation(full_client):
     assert full_client.put(room + '/invitation', headers=recipient, json={'accept': False}).status_code == 200
 
 
+def test_room_list_reports_private_consent_closed_and_blocked_states(full_client):
+    a, ua = member(full_client, 'statea')
+    b, ub = member(full_client, 'stateb')
+    room_id = full_client.post('/api/chat/direct', headers=a, json={'user_id': ub['id']}).json()['id']
+    path = '/api/chat/rooms/' + room_id
+    def state():
+        return next(row for row in full_client.get('/api/chat/rooms', headers=a).json() if row['id'] == room_id)['send_state']
+    assert state() == 'pending'
+    assert full_client.put(path + '/invitation', headers=b, json={'accept': True}).status_code == 200
+    assert state() == 'ready'
+    assert full_client.put(f'/api/chat/blocks/{ua["id"]}', headers=b, json={}).status_code == 200
+    assert state() == 'blocked'
+    assert full_client.delete(f'/api/chat/blocks/{ua["id"]}', headers=b).status_code == 200
+    assert full_client.delete(path + '/membership', headers=b).status_code == 200
+    assert state() == 'closed'
+
+
+def test_room_list_batches_participants_and_does_not_write_on_poll(full_client):
+    from sqlalchemy import event
+    from social import ChatRoom
+    headers, actor = member(full_client, 'batchowner')
+    lobby(full_client, headers)
+    with website.SessionLocal() as db:
+        for index in range(20):
+            target = User(username=f'batch{index}', role='user', password_hash=website.hash_password(secrets.token_urlsafe(24)))
+            db.add(target); db.flush()
+            room_id = str(uuid.uuid4())
+            db.add(ChatRoom(id=room_id, kind='direct', name='私聊', owner_id=actor['id'], pair_key=f'{actor["id"]}:{target.id}'))
+            db.flush()
+            db.add_all([ChatMember(room_id=room_id, user_id=actor['id'], status='accepted', invited_by=actor['id']), ChatMember(room_id=room_id, user_id=target.id, status='accepted', invited_by=actor['id'])])
+        db.commit()
+    statements = []
+    def record(connection, cursor, statement, params, context, executemany):
+        statements.append(statement.lstrip().upper())
+    event.listen(website.engine, 'before_cursor_execute', record)
+    try:
+        response = full_client.get('/api/chat/rooms', headers=headers)
+    finally:
+        event.remove(website.engine, 'before_cursor_execute', record)
+    assert response.status_code == 200 and len(response.json()) == 21
+    assert all(row['send_state'] == 'ready' for row in response.json())
+    assert len(statements) <= 8
+    assert all(not row.startswith(('INSERT', 'UPDATE', 'DELETE')) for row in statements)
+
+
 def test_history_pagination_and_retention_do_not_touch_legacy_content(full_client):
     headers, user = member(full_client, 'historyuser')
     room = lobby(full_client, headers)

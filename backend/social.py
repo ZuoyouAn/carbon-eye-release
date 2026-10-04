@@ -228,18 +228,33 @@ def make_router(get_db, get_current_user):
 
     @router.get('/chat/rooms')
     def rooms(user=Depends(get_current_user), db=Depends(get_db)):
-        upsert(db, ChatRoom, {'id': LOBBY, 'kind': 'public', 'name': 'Space公共大厅'})
-        db.commit()
+        if not db.get(ChatRoom, LOBBY):
+            upsert(db, ChatRoom, {'id': LOBBY, 'kind': 'public', 'name': 'Space公共大厅'})
+            db.commit()
         own = db.query(ChatRoom, ChatMember).join(ChatMember, ChatMember.room_id == ChatRoom.id).filter(ChatMember.user_id == user.id, ChatMember.status.in_(['accepted', 'invited'])).order_by(ChatRoom.created_at.desc()).limit(50).all()
-        result = [{'id': LOBBY, 'name': 'Space公共大厅', 'kind': 'public', 'status': 'accepted', 'owner_id': None}]
+        direct_ids = [room.id for room, _ in own if room.kind == 'direct']
+        peers = {}
+        if direct_ids:
+            participants = db.query(User, ChatMember).join(ChatMember, ChatMember.user_id == User.id).filter(ChatMember.room_id.in_(direct_ids), User.id != user.id).all()
+            peers = {membership.room_id: (person, membership) for person, membership in participants}
+        block_rows = db.query(ChatBlock).filter(or_(ChatBlock.user_id == user.id, ChatBlock.blocked_id == user.id)).all()
+        blocked_ids = {row.blocked_id if row.user_id == user.id else row.user_id for row in block_rows}
+        result = [{'id': LOBBY, 'name': 'Space公共大厅', 'kind': 'public', 'status': 'accepted', 'owner_id': None, 'send_state': 'ready'}]
         for room, membership in own:
             name = room.name
             other_id = None
+            send_state = 'ready' if membership.status == 'accepted' else 'pending'
             if room.kind == 'direct':
-                other = db.query(User).join(ChatMember, ChatMember.user_id == User.id).filter(ChatMember.room_id == room.id, User.id != user.id).first()
+                other, peer_member = peers.get(room.id, (None, None))
                 name = other.username if other and not other.is_deleted else '已注销用户'
                 other_id = other.id if other else None
-            result.append({'id': room.id, 'name': name, 'kind': room.kind, 'status': membership.status, 'owner_id': room.owner_id, 'other_id': other_id, 'blocked': bool(other_id and blocked(db, user.id, other_id))})
+                if not other or other.is_deleted or not peer_member or peer_member.status in ('declined', 'left'):
+                    send_state = 'closed'
+                elif peer_member.status != 'accepted' or membership.status != 'accepted':
+                    send_state = 'pending'
+                if other_id in blocked_ids:
+                    send_state = 'blocked'
+            result.append({'id': room.id, 'name': name, 'kind': room.kind, 'status': membership.status, 'owner_id': room.owner_id, 'other_id': other_id, 'blocked': other_id in blocked_ids, 'send_state': send_state})
         return result
 
     @router.post('/chat/direct')

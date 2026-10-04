@@ -42,5 +42,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Build Vue application
         run: npm ci && npm run build
+      - name: Check homepage asset budgets
+        run: node scripts/check-bundle.mjs
       - name: Test HUMAN 3, game rules and role permissions
-        run: node --test src/features/human3/engine.test.js src/features/wasteland/engine.test.js src/utils/permissions.test.js
+        run: node --test src/features/human3/engine.test.js src/features/wasteland/engine.test.js src/features/chat/history.test.js src/utils/permissions.test.js

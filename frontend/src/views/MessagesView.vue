@@ -49,6 +49,10 @@
 
 <script setup>
 import { ElMessage, ElButton, ElSkeleton, ElEmpty, ElPagination } from 'element-plus'
+import 'element-plus/es/components/button/style/css'
+import 'element-plus/es/components/skeleton/style/css'
+import 'element-plus/es/components/empty/style/css'
+import 'element-plus/es/components/pagination/style/css'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiRequest, postJson } from '../api/client'
