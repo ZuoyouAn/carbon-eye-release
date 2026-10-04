@@ -29,8 +29,9 @@
 import { RouterLink } from 'vue-router'
 
 const logs = [
+  { version: 'v4', date: '2026-10-04', title: '左右的Space：连接与冒险', text: '统一Space品牌，新增持久化用户头像、公共大厅、邀请制小群和双向同意私聊；上线原创文字游戏末世模拟器，支持本机存档与生存日记。', tags: ['Avatar', 'Chat', 'Wasteland'] },
   { version: 'v3', date: '2026-05-28', title: '内容管理完整化', text: '新增后台内容管理、留言板、分页、软删除和 Element Plus 交互。', tags: ['Admin', 'Messages', 'Pagination'] },
-  { version: 'v2', date: '2026-05-27', title: '个人网站全栈化', text: '新增 Vue Router、文章、帖子、小说阅读、点赞收藏和个人中心。', tags: ['Vue Router', 'FastAPI', 'MySQL'] },
-  { version: 'v1', date: '2026-05-24', title: '首页搭建', text: '完成个人网站首页和基础视觉。', tags: ['HTML', 'CSS', 'Vue'] },
+  { version: 'v2', date: '2026-05-27', title: 'Space 全栈化', text: '新增 Vue Router、文章、帖子、小说阅读、点赞收藏和个人中心。', tags: ['Vue Router', 'FastAPI', 'MySQL'] },
+  { version: 'v1', date: '2026-05-24', title: '首页搭建', text: '完成 Space 首页和基础视觉。', tags: ['HTML', 'CSS', 'Vue'] },
 ]
 </script>

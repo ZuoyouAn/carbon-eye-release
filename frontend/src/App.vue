@@ -4,7 +4,7 @@
     <header class="site-header">
       <RouterLink class="brand" to="/">
         <span class="brand-mark">左</span>
-        <span>左右的个人网站</span>
+        <span>左右的Space</span>
       </RouterLink>
 
       <button class="menu-toggle nav-button" type="button" aria-controls="main-navigation" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen">{{ menuOpen ? '收起导航 ×' : '浏览菜单 ☰' }}</button>
@@ -15,8 +15,10 @@
         <RouterLink to="/articles">文章</RouterLink>
         <RouterLink to="/projects">项目</RouterLink>
         <RouterLink to="/human3">成长评估</RouterLink>
-        <RouterLink to="/store">数字商品</RouterLink>
+        <RouterLink to="/chat">聊天室</RouterLink>
+        <RouterLink to="/wasteland">末世模拟器</RouterLink>
         <details class="nav-more"><summary>更多</summary><div>
+        <RouterLink to="/store">数字商品</RouterLink>
         <RouterLink to="/roadmap">学习路线</RouterLink>
         <RouterLink to="/timeline">时间线</RouterLink>
         <RouterLink to="/messages">留言板</RouterLink>
@@ -33,8 +35,8 @@
     </header>
 
     <div class="status-strip">
-      <span v-if="isLoggedIn">当前登录：{{ authState.user.username }} / {{ roleLabel(authState.user.role) }}</span>
-      <span v-else>游客可浏览内容；登录后可点赞和收藏，发布内容需要高权限。</span>
+      <span v-if="isLoggedIn" class="signed-user"><UserAvatar :user="authState.user" :size="26" />当前登录：{{ authState.user.username }} / {{ roleLabel(authState.user.role) }}</span>
+      <span v-else>自由探索Space与游戏；登录后可收藏、上传头像及聊天，发布帖子需要高权限。</span>
       <strong v-if="isMuted">你已被禁言，不能发布内容。</strong>
     </div>
 
@@ -43,7 +45,7 @@
         <component :is="Component" />
       </Transition>
     </RouterView></div>
-    <footer class="site-footer"><span>左右 · 记录学习，连接生活。</span><div><RouterLink to="/human3">四维成长地图</RouterLink><RouterLink to="/store">数字商品 · 筹备中</RouterLink><RouterLink to="/changelog">更新记录</RouterLink></div></footer>
+    <footer class="site-footer"><span>左右的Space · 记录学习，连接生活。</span><div><RouterLink to="/human3">四维成长地图</RouterLink><RouterLink to="/store">数字商品 · 筹备中</RouterLink><RouterLink to="/changelog">更新记录</RouterLink></div></footer>
   </div>
 </template>
 
@@ -52,6 +54,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { authState, isAdmin, isLoggedIn, isMuted, logout, refreshMe } from './stores/auth'
 import { roleLabel } from './utils/permissions'
+import UserAvatar from './components/UserAvatar.vue'
 
 const router = useRouter()
 const menuOpen = ref(false)

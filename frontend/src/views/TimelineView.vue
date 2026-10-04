@@ -24,7 +24,7 @@
 import { RouterLink } from 'vue-router'
 
 const timeline = [
-  { date: 'v1', type: '静态页面', title: '个人网站首页', text: '先完成首页视觉、个人介绍、作品入口和联系入口。' },
+  { date: 'v1', type: '静态页面', title: 'Space 首页', text: '先完成首页视觉、个人介绍、作品入口和联系入口。' },
   { date: 'v2', type: '全栈跑通', title: '接入 FastAPI 和 MySQL', text: '完成登录、文章、帖子、小说、点赞、收藏和个人中心。' },
   { date: 'v3', type: '内容管理', title: '后台管理和留言板', text: '补齐文章管理、评论治理、留言板、分页和状态控制。' },
 ]

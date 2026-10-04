@@ -47,6 +47,7 @@ from models import User
 from models import Yulu
 from permissions import ROLE_LABELS, permissions_for
 from human3_ai import make_router as make_human3_router
+from social import make_router as make_social_router
 from typing import Literal
 from carbon_eye_realtime import get_realtime_aqi, refresh_realtime_aqi_hourly
 from secure_geometry import SecureGeometryError
@@ -164,7 +165,7 @@ class SecureGeometryRequest(BaseModel):
     bob: dict[str, Any]
 
 
-app = FastAPI(title="个人网站后端")
+app = FastAPI(title="左右的Space API")
 
 
 def carbon_eye_cors_origins() -> list[str]:
@@ -294,6 +295,7 @@ def user_to_dict(user: User):
     return {
         "id": user.id,
         "username": user.username,
+        "avatar_path": f"/api/users/{user.id}/avatar",
         "role": user.role,
         "role_label": ROLE_LABELS.get(user.role, "未授权"),
         "permissions": permissions_for(user.role, user.is_muted),
@@ -359,6 +361,7 @@ def get_publishing_user(current_user: User = Depends(get_current_user)):
 
 
 app.include_router(make_human3_router(get_db, get_current_user))
+app.include_router(make_social_router(get_db, get_current_user))
 
 
 def revoke_user_tokens(db: Session, user_id: int):
@@ -670,7 +673,7 @@ def read_website_readyz():
 
 @app.get("/")
 def read_root():
-    return {"message": "个人网站后端启动成功"}
+    return {"message": "左右的Space API启动成功"}
 
 
 @app.get("/api/carbon-eye/overview")

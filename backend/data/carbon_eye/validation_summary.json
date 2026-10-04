@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T19:47:57.744791+08:00",
+  "generated_at": "2026-10-04T23:38:50.627166+08:00",
   "status": "pass",
   "passed": [
     "文件存在：backend/data/carbon_eye/sources/sip_electricity_official.csv",

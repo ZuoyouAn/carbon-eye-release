@@ -10,6 +10,7 @@
 
       <p v-if="message" class="message">{{ message }}</p>
       <p v-if="summary" class="state-text">当前角色：{{ roleLabel(summary.user.role) }}。低权限可收藏和保存阅读进度；高权限可发布内容；管理员可管理站点。</p>
+      <section class="avatar-settings"><div><img v-if="avatarDraft" class="avatar-preview" :src="avatarDraft.preview" alt="待上传头像预览"><UserAvatar v-else :user="authState.user" :size="90" /></div><div><h2>我的头像</h2><p class="panel-text">选择5MB以内的JPEG、PNG或WebP。自动居中裁剪并压缩为128像素；上传后头像公开可见，原图不保存。请使用你有权使用的图片。</p><label class="text-button avatar-picker">选择图片<input type="file" accept="image/jpeg,image/png,image/webp" :disabled="avatarBusy" @change="selectAvatar"></label><div class="hero-actions"><button class="button button-primary" :disabled="!avatarDraft || avatarBusy" @click="uploadAvatar">{{ avatarBusy ? '处理中…' : '保存头像' }}</button><button class="button button-secondary" :disabled="avatarBusy" @click="removeAvatar">移除头像</button><RouterLink class="button button-secondary" to="/chat">进入聊天室 →</RouterLink></div><p v-if="avatarNotice" role="status" class="panel-text">{{ avatarNotice }}</p></div></section>
 
       <div v-if="summary" class="stat-grid">
         <div>
@@ -88,9 +89,11 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { apiRequest } from '../api/client'
-import { changePassword } from '../stores/auth'
+import { apiRequest, putJson, deleteRequest } from '../api/client'
+import { changePassword, authState } from '../stores/auth'
 import { roleLabel } from '../utils/permissions'
+import UserAvatar from '../components/UserAvatar.vue'
+import { prepareAvatar } from '../utils/avatar.js'
 
 const router = useRouter()
 
@@ -100,6 +103,24 @@ const posts = ref([])
 const comments = ref({ post_comments: [], article_comments: [] })
 const favorites = ref({ articles: [], novels: [] })
 const passwordForm = ref({ old_password: '', new_password: '' })
+const avatarDraft = ref(null), avatarBusy = ref(false), avatarNotice = ref('')
+async function selectAvatar(event) {
+  const file = event.target.files?.[0]; event.target.value = ''
+  if (!file) return
+  avatarDraft.value = null; avatarNotice.value = ''; avatarBusy.value = true
+  try { avatarDraft.value = await prepareAvatar(file) } catch (error) { avatarNotice.value = error.message } finally { avatarBusy.value = false }
+}
+function refreshAvatar(version) { window.dispatchEvent(new CustomEvent('avatar-updated', { detail: { userId: authState.user?.id, version } })) }
+async function uploadAvatar() {
+  if (!avatarDraft.value || avatarBusy.value) return
+  avatarBusy.value = true; avatarNotice.value = ''
+  try { const result = await putJson('/api/me/avatar', { image_base64: avatarDraft.value.image_base64 }); avatarDraft.value = null; refreshAvatar(result.version); avatarNotice.value = '头像已保存，重新登录后仍会保留。' } catch (error) { avatarNotice.value = error.message } finally { avatarBusy.value = false }
+}
+async function removeAvatar() {
+  if (avatarBusy.value || !window.confirm('移除已上传的头像？之后将显示默认头像。')) return
+  avatarBusy.value = true
+  try { await deleteRequest('/api/me/avatar'); avatarDraft.value = null; refreshAvatar(); avatarNotice.value = '头像已移除。' } catch (error) { avatarNotice.value = error.message } finally { avatarBusy.value = false }
+}
 
 const allComments = computed(() => [
   ...comments.value.post_comments.map((comment) => ({ ...comment, type: '帖子评论' })),
@@ -139,3 +160,4 @@ async function submitPassword() {
   }
 }
 </script>
+<style scoped>.avatar-settings { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 24px; padding: 24px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }.avatar-settings h2 { margin-top: 0; }.avatar-preview { width: 90px; height: 90px; object-fit: cover; border-radius: 30%; }.avatar-picker { display: inline-block; }.avatar-picker input { display: block; margin-top: 8px; max-width: 280px; min-height: auto; font-size: 13px; }@media(max-width:620px){.avatar-settings{grid-template-columns:1fr;}.avatar-picker{max-width:100%;}.avatar-picker input{max-width:100%;}}</style>

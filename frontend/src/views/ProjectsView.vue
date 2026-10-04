@@ -9,6 +9,18 @@
 
       <div class="card-grid two-grid">
         <article class="content-card project-detail-card">
+          <div class="card-meta"><span>Original Game</span><span>文字生存 / 免费游玩</span></div>
+          <h2>末世模拟器</h2><p>原创末日世界，六种天赋、四项属性、随机遭遇与四种结局。无需登录，不调用AI；可选本机存档与导出生存日记。</p>
+          <div class="tag-list"><span>30天生存</span><span>选择与后果</span><span>可复现世界种子</span></div>
+          <RouterLink class="text-button" to="/wasteland">走进长夜 →</RouterLink>
+        </article>
+        <article class="content-card project-detail-card">
+          <div class="card-meta"><span>Space Chat</span><span>持久化 / 成员权限</span></div>
+          <h2>Space 聊天室</h2><p>公共大厅、邀请制小群和双向同意的私聊。支持头像、拉黑与撤回；消息保留30天，应用内管理员不能读取非成员私聊。</p>
+          <div class="tag-list"><span>公共群聊</span><span>一对一私聊</span><span>隐私边界</span></div>
+          <RouterLink class="text-button" to="/chat">进入聊天室 →</RouterLink>
+        </article>
+        <article class="content-card project-detail-card">
           <div class="card-meta"><span>Human 3.0</span><span>四维成长 / 自我反思</span></div>
           <h2>四维成长评估</h2>
           <p>24 道选择题与根据回答调整的追问，区分日常实践与压力下的差异。基础测评免费、无需登录，默认在浏览器内处理；AI补充需另行同意。</p>
@@ -20,8 +32,8 @@
             <span>Project 01</span>
             <span>已上线 / 全栈项目</span>
           </div>
-          <h2>左右的个人网站</h2>
-          <p>从静态页面逐步升级的 Vue + FastAPI 个人网站，现使用 Neon PostgreSQL 持久化数据，包含文章、帖子、小说、留言和分级权限管理。</p>
+          <h2>左右的Space</h2>
+          <p>从静态页面逐步升级的 Vue + FastAPI 交流空间，现使用 Neon PostgreSQL 持久化数据，包含文章、帖子、小说、头像、聊天和分级权限管理。</p>
           <div class="tag-list">
             <span>Vue 3</span>
             <span>Vite</span>

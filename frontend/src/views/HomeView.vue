@@ -91,6 +91,8 @@ const quoteLoading = ref(false)
 const quoteError = ref('')
 
 const cards = [
+  { index: '↗', title: 'Space 聊天室', text: '进入公共大厅、加入小群，或向朋友发起双方同意的私聊。', to: '/chat' },
+  { index: '30', title: '末世模拟器', text: '两个天赋，十二点属性，三十天长夜。你的选择，决定下一段路。', to: '/wasteland' },
   { index: '01', title: '小说阅读', text: '搜索小说、进入阅读模式、调整字号和保存阅读进度。', to: '/novels' },
   { index: '02', title: '帖子广场', text: '交流想法、收藏与点赞；高权限用户可以发布和评论。', to: '/posts' },
   { index: '03', title: '作品文章', text: '文章支持分类、标签、Markdown、收藏、点赞和评论。', to: '/articles' },

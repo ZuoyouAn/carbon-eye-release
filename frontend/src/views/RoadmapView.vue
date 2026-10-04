@@ -5,7 +5,7 @@
         <RouterLink class="back-button" to="/">返回首页</RouterLink>
         <p class="eyebrow">Learning Roadmap</p>
         <h1>学习路线</h1>
-        <p>这条路线围绕当前个人网站项目展开，边学边改，学到的东西会直接长到项目里。</p>
+        <p>这条路线围绕左右的Space展开，边学边改，学到的东西会直接长到项目里。</p>
       </div>
 
       <div class="timeline-list">

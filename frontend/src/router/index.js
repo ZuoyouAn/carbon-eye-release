@@ -38,6 +38,8 @@ const router = createRouter({
     { path: '/carbon-eye', name: 'carbon-eye', component: CarbonEyeView },
     { path: '/human3', name: 'human3', component: () => import('../views/Human3View.vue') },
     { path: '/store', name: 'store', component: () => import('../views/StoreView.vue') },
+    { path: '/chat', name: 'chat', component: () => import('../views/ChatView.vue'), meta: { requiresAuth: true } },
+    { path: '/wasteland', name: 'wasteland', component: () => import('../views/WastelandView.vue') },
     { path: '/secure-geometry', name: 'secure-geometry', component: SecureGeometryView },
     { path: '/secure-geometry/paper', name: 'secure-geometry-paper', component: SecureGeometryPaperView },
     { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
@@ -54,7 +56,7 @@ const router = createRouter({
 
 router.afterEach((to) => {
   const titles = { home: '首页', human3: '四维成长测评', store: '数字商品 · 筹备中', projects: '项目', articles: '文章', novels: '小说', posts: '帖子', login: '登录', register: '注册', admin: '管理后台', profile: '个人中心', 'not-found': '页面不存在' }
-  document.title = `${titles[to.name] || '探索'} · 左右的个人网站`
+  document.title = `${to.name === 'chat' ? '聊天室' : to.name === 'wasteland' ? '末世模拟器' : titles[to.name] || '探索'} · 左右的Space`
 })
 
 router.beforeEach(async (to) => {
