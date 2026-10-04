@@ -16,11 +16,12 @@ const LOOT = [
 const clamp = (v, low, high) => Math.max(low, Math.min(high, v))
 const distance = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
 function hash(seed) { let value = 2166136261; for (const char of seed) { value ^= char.charCodeAt(0); value = Math.imul(value, 16777619) } return value >>> 0 }
-export function createExpedition(seed = '晨光营地') {
+export function createExpedition(seed = '晨光营地', { difficulty = 'standard' } = {}) {
   if (typeof seed !== 'string' || !seed.trim() || seed.length > 64) throw new Error('世界种子需要1至64个字符。')
+  if (!['standard', 'practice'].includes(difficulty)) throw new Error('请选择标准探索或练习模式。')
   const value = hash(seed)
   return {
-    seed, status: 'playing', elapsed: 0, repaired: false,
+    seed, difficulty, limitSeconds: difficulty === 'practice' ? 300 : LIMIT_SECONDS, status: 'playing', elapsed: 0, repaired: false,
     player: { ...WORLD.spawn, facing: Math.PI, health: 100, stamina: 100, invulnerable: 3, scrap: 0, cells: 0, meds: 1 },
     loot: LOOT.map(([kind, x, z], id) => ({ id, kind, x, z, taken: false })),
     enemies: [{ x: 6, z: -12, homeX: 6, homeZ: -12, phase: value % 360 / 57.3 }, { x: -13, z: -7, homeX: -13, homeZ: -7, phase: value % 120 / 57.3 }],
@@ -72,7 +73,8 @@ export function stepExpedition(state, input = {}, seconds = 1 / 60) {
   if (state.status !== 'playing') return state
   const dt = clamp(Number.isFinite(seconds) ? seconds : 0, 0, .05)
   if (!dt) return state
-  state.elapsed = Math.min(LIMIT_SECONDS, state.elapsed + dt)
+  const limit = state.limitSeconds || LIMIT_SECONDS, practice = state.difficulty === 'practice'
+  state.elapsed = Math.min(limit, state.elapsed + dt)
   const p = state.player
   let x = Number.isFinite(input.x) ? clamp(input.x, -1, 1) : 0, z = Number.isFinite(input.z) ? clamp(input.z, -1, 1) : 0
   const magnitude = Math.hypot(x, z)
@@ -87,10 +89,10 @@ export function stepExpedition(state, input = {}, seconds = 1 / 60) {
     const chase = distance(enemy, p) < 5.5
     const target = chase ? p : { x: enemy.homeX + Math.sin(state.elapsed * .35 + enemy.phase) * 2, z: enemy.homeZ + Math.cos(state.elapsed * .35 + enemy.phase) * 2 }
     const length = distance(enemy, target)
-    if (length > .1) { const speed = chase ? 2.5 : .85; move(enemy, (target.x - enemy.x) / length * dt * speed, (target.z - enemy.z) / length * dt * speed) }
-    if (distance(enemy, p) < .85 && !p.invulnerable) { p.health = Math.max(0, p.health - 12); p.invulnerable = 1.5; say(state, '被巡逻者发现了！按住 Shift 冲刺，或用 F 急救。') }
+    if (length > .1) { const speed = (chase ? 2.5 : .85) * (practice ? .65 : 1); move(enemy, (target.x - enemy.x) / length * dt * speed, (target.z - enemy.z) / length * dt * speed) }
+    if (distance(enemy, p) < .85 && !p.invulnerable) { p.health = Math.max(0, p.health - (practice ? 8 : 12)); p.invulnerable = 1.5; say(state, '被巡逻者发现了！按住 Shift 冲刺，或用 F 急救。') }
   }
-  if (p.health <= 0 || state.elapsed >= LIMIT_SECONDS) { state.status = 'lost'; say(state, p.health <= 0 ? '本次探索结束。换条路线，再试一次。' : '撤离窗口已关闭。下一次，尽量沿开阔街道前进。') }
+  if (p.health <= 0 || state.elapsed >= limit) { state.status = 'lost'; say(state, p.health <= 0 ? '本次探索结束。换条路线，再试一次。' : '撤离窗口已关闭。下一次，尽量沿开阔街道前进。') }
   else if (state.repaired && distance(p, WORLD.exit) <= 1.8) { state.status = 'won'; say(state, '晨光营地收到你的信号。你为这座城市留下了新的坐标。') }
   return state
 }

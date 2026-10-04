@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { WORLD } from './expedition'
+import { expeditionObjective } from './navigation'
 
 // All scenery is original procedural geometry; no downloaded models or textures.
 export function createWastelandScene(container, state) {
@@ -64,6 +65,11 @@ export function createWastelandScene(container, state) {
   box(2.3, .2, .2, '#a9bcc0', WORLD.beacon.x, 3.7, WORLD.beacon.z)
   const beam = cylinder(.3, 6, '#87cbf5', WORLD.beacon.x, 6.8, WORLD.beacon.z)
   ring(1.4, '#6a9eb8', WORLD.beacon.x, WORLD.beacon.z)
+  const objectiveRing = ring(1.1, '#c49b42', 0, 0)
+  for (const [x, z] of [[-3, 12], [3, 0], [-12, 2], [3, -10]]) {
+    cylinder(.07, 2.8, '#657d80', x, 1.4, z)
+    box(.6, .1, .4, '#f5ecd2', x + .2, 2.8, z)
+  }
   const pickups = state.loot.map(item => {
     const group = new THREE.Group(); group.position.set(item.x, .5, item.z); scene.add(group)
     if (item.kind === 'cell') { cylinder(.28, .7, '#5bafe0', 0, 0, 0, group); cylinder(.18, .1, '#e2f5ff', 0, .4, 0, group) }
@@ -100,6 +106,9 @@ export function createWastelandScene(container, state) {
     render(current, yaw = Math.PI / 4, zoom = 18, reducedMotion = false, moving = false) {
       if (disposed) return
       const p = current.player, aspect = width / height
+      const objective = expeditionObjective(current)
+      objectiveRing.visible = Boolean(objective) && current.status === 'playing'
+      if (objective) objectiveRing.position.set(objective.x, .04, objective.z)
       camera.left = -zoom * aspect; camera.right = zoom * aspect; camera.top = zoom; camera.bottom = -zoom; camera.updateProjectionMatrix()
       const cx = Math.max(-7, Math.min(7, p.x * .5)), cz = Math.max(-7, Math.min(7, p.z * .5))
       camera.position.set(cx + Math.sin(yaw) * 27, 24, cz + Math.cos(yaw) * 27); camera.lookAt(cx, 0, cz)
