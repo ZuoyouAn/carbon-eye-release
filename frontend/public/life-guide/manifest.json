@@ -1,0 +1,285 @@
+{
+  "title": "高性价比人生指南",
+  "author": "eternity4719 / HowToLiveBetter contributors",
+  "source": "https://github.com/eternity4719/HowToLiveBetter",
+  "commit": "b4048d14960fec19c0367f8c0e6891f2b038c7ef",
+  "syncedAt": "2026-10-05",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "changes": "正文未改写；拆分为章节 JSON，新增 Space 阅读和检索界面。",
+  "count": 657,
+  "chapters": [
+    {
+      "number": 1,
+      "title": "1. 不要早死",
+      "file": "01-不要早死.md",
+      "hash": "b51bb3ab67543a384c49edd809fcae6acd3be5ad72c938d83b7a6f0add977134",
+      "count": 42,
+      "url": "/life-guide/chapter-01.json"
+    },
+    {
+      "number": 2,
+      "title": "2. 不要慢慢死",
+      "file": "02-不要慢慢死.md",
+      "hash": "51e237338fd2dc04c1c863b393968ad55f31b8151f4ea5fc5634b985c110afaa",
+      "count": 42,
+      "url": "/life-guide/chapter-02.json"
+    },
+    {
+      "number": 3,
+      "title": "3. 不要浪费精力",
+      "file": "03-不要浪费精力.md",
+      "hash": "5101c2ab51f8b9a084c7b57ea1cfe1af7f3fa215981cf679395dfc3313774470",
+      "count": 24,
+      "url": "/life-guide/chapter-03.json"
+    },
+    {
+      "number": 4,
+      "title": "4. 不要浪费时间",
+      "file": "04-不要浪费时间.md",
+      "hash": "f5c9ff7caf35ead52af847b42824165538a7d6edcb26db0562eab90de42a74bb",
+      "count": 18,
+      "url": "/life-guide/chapter-04.json"
+    },
+    {
+      "number": 5,
+      "title": "5. 不要浪费钱",
+      "file": "05-不要浪费钱.md",
+      "hash": "66df09f56b1c71e44176f03e575d019f3ab5c5084e0eb30f208b8dc6bb9788c3",
+      "count": 45,
+      "url": "/life-guide/chapter-05.json"
+    },
+    {
+      "number": 6,
+      "title": "6. 反面清单",
+      "file": "06-反面清单.md",
+      "hash": "4a15447c9ab94a44df3173f93463e16bec5dd9f43a17a63db785149cb293fb0e",
+      "count": 29,
+      "url": "/life-guide/chapter-06.json"
+    },
+    {
+      "number": 7,
+      "title": "7. 没钱的时候怎么活",
+      "file": "07-没钱的时候怎么活.md",
+      "hash": "4f23050edf70baba7bf41e361ce1f682517633aa7d381b7eda1746db65122908",
+      "count": 22,
+      "url": "/life-guide/chapter-07.json"
+    },
+    {
+      "number": 8,
+      "title": "8. 别把自己搭进去：法律与财产安全",
+      "file": "08-别把自己搭进去.md",
+      "hash": "df4915dc679612dd0161f3a90807515f7679cf0de59b5beddac0d2db20d98e57",
+      "count": 45,
+      "url": "/life-guide/chapter-08.json"
+    },
+    {
+      "number": 9,
+      "title": "9. 普通人容易踩的法律红线",
+      "file": "09-普通人容易踩的法律红线.md",
+      "hash": "07048db8f2cf0d94f71c2ced8565c9fd93a3284d5d1eb2209b37220f40aed480",
+      "count": 25,
+      "url": "/life-guide/chapter-09.json"
+    },
+    {
+      "number": 10,
+      "title": "10. 恋爱和结婚划不划算",
+      "file": "10-恋爱和结婚划不划算.md",
+      "hash": "85100e1e51180fee476f41193dd35635cc1f69a7fbd2ba30837098915f6f488f",
+      "count": 20,
+      "url": "/life-guide/chapter-10.json"
+    },
+    {
+      "number": 11,
+      "title": "11. 程序员和技术人容易踩的红线",
+      "file": "11-程序员和技术人容易踩的红线.md",
+      "hash": "c8047ee05c9991f7fe06310f5c04c5747999fa172ba424537dadb51427dc5d3a",
+      "count": 17,
+      "url": "/life-guide/chapter-11.json"
+    },
+    {
+      "number": 12,
+      "title": "12. 创业与做生意：别把家底赔进去",
+      "file": "12-创业与做生意.md",
+      "hash": "87ed506b8860530929c4df1fbc1891d56870855f2c9c0554a993c3070ebb3db0",
+      "count": 24,
+      "url": "/life-guide/chapter-12.json"
+    },
+    {
+      "number": 13,
+      "title": "13. 紧急情况：先做什么",
+      "file": "13-紧急情况.md",
+      "hash": "b81600038f5c86251c6e945f98e31d13e085ed69e56c7866aba87aa89bb0a82f",
+      "count": 44,
+      "url": "/life-guide/chapter-13.json"
+    },
+    {
+      "number": 14,
+      "title": "14. 账号与信息安全",
+      "file": "14-账号与信息安全.md",
+      "hash": "92907efd1feae3ef8f3797a13dc3c78e09bbb0b140413d0fb994b73a8079310f",
+      "count": 9,
+      "url": "/life-guide/chapter-14.json"
+    },
+    {
+      "number": 15,
+      "title": "15. 租房与买房",
+      "file": "15-租房与买房.md",
+      "hash": "61081850c448856d7a2ba8acb0c6ea7c00318ce7f93b03373bec2db0936f2ad4",
+      "count": 9,
+      "url": "/life-guide/chapter-15.json"
+    },
+    {
+      "number": 16,
+      "title": "16. 得了慢性病之后怎么活",
+      "file": "16-得了慢性病之后怎么活.md",
+      "hash": "6d997cf1068c123a58e296eb7d4b74f9ef619d2790049a66eb3a217129ee76d2",
+      "count": 9,
+      "url": "/life-guide/chapter-16.json"
+    },
+    {
+      "number": 17,
+      "title": "17. 家里有老人",
+      "file": "17-家里有老人.md",
+      "hash": "15936f220d85ac5084e369eb4dfffe5d1a44ddc4f561555ff94fb00811d1a0dc",
+      "count": 9,
+      "url": "/life-guide/chapter-17.json"
+    },
+    {
+      "number": 18,
+      "title": "18. 养孩子划不划算",
+      "file": "18-养孩子划不划算.md",
+      "hash": "72ae66e46dce8993a4743d9441a59749dec46d24077f6374c0bafd44ba6ed606",
+      "count": 6,
+      "url": "/life-guide/chapter-18.json"
+    },
+    {
+      "number": 19,
+      "title": "19. 在职、离职和工伤",
+      "file": "19-在职离职和工伤.md",
+      "hash": "c64c8811a04d073e91eb9857cd5735423471d7e19bcd4289493460d7a9cb77c9",
+      "count": 18,
+      "url": "/life-guide/chapter-19.json"
+    },
+    {
+      "number": 20,
+      "title": "20. 刚出生的孩子怎么带",
+      "file": "20-刚出生的孩子怎么带.md",
+      "hash": "23c8be17185edcd2c75726fd86fe8cc87298a867d7eaa770cbf84d4227772061",
+      "count": 13,
+      "url": "/life-guide/chapter-20.json"
+    },
+    {
+      "number": 21,
+      "title": "21. 出国、旅行与境外安全",
+      "file": "21-出国旅行与境外安全.md",
+      "hash": "1eb5647d942c34e194ec1627d0a650155ed608493430a1c011000886917045e2",
+      "count": 11,
+      "url": "/life-guide/chapter-21.json"
+    },
+    {
+      "number": 22,
+      "title": "22. 怎么放松：娱乐场所和减压",
+      "file": "22-怎么放松.md",
+      "hash": "21e2b3f99b19fc1b14d8cd049aa3a63905fa805844e6da9c2eca2fb34c385571",
+      "count": 10,
+      "url": "/life-guide/chapter-22.json"
+    },
+    {
+      "number": 23,
+      "title": "23. 学什么技能划算",
+      "file": "23-学什么技能划算.md",
+      "hash": "16a43e17ce646915709daec52681d2f22f436083a36c15b3589ff12b9334c07c",
+      "count": 23,
+      "url": "/life-guide/chapter-23.json"
+    },
+    {
+      "number": 24,
+      "title": "24. 看病：怎么少花钱少走弯路",
+      "file": "24-看病.md",
+      "hash": "1ead1a8326606f2412cd567c25df028c929b487d92a029017888567a870e6791",
+      "count": 11,
+      "url": "/life-guide/chapter-24.json"
+    },
+    {
+      "number": 25,
+      "title": "25. 人走了以后要办什么",
+      "file": "25-人走了以后要办什么.md",
+      "hash": "9e1bc9d2e8ad3e3a22bed8cc909b4dc4d1ee0c33d2d85e3d2164534d09712c89",
+      "count": 10,
+      "url": "/life-guide/chapter-25.json"
+    },
+    {
+      "number": 26,
+      "title": "26. 做一个网站或平台：资质、备案和服务器",
+      "file": "26-做一个网站或平台.md",
+      "hash": "a9da7f7b194ea4120ab92e437a2ce45f0cc965536de00a2af9162d86c63ad6a3",
+      "count": 11,
+      "url": "/life-guide/chapter-26.json"
+    },
+    {
+      "number": 27,
+      "title": "27. 怀孕和生产：从发现怀孕到出院办证",
+      "file": "27-怀孕和生产.md",
+      "hash": "694b9a4e399e279c8e17aced423b5b53e32d16b3cf1004a4c4ea2484cc63e44f",
+      "count": 16,
+      "url": "/life-guide/chapter-27.json"
+    },
+    {
+      "number": 28,
+      "title": "28. 别为了外形把身体搞坏",
+      "file": "28-别为了外形把身体搞坏.md",
+      "hash": "2bbeb681e810aca6dca49bf3d616faccad5fc671506f502395e7c6e31f66dba2",
+      "count": 8,
+      "url": "/life-guide/chapter-28.json"
+    },
+    {
+      "number": 29,
+      "title": "29. 遭遇重大打击之后",
+      "file": "29-遭遇重大打击之后.md",
+      "hash": "f79fd6b7b960fe9bcc6f4ba016978a8a3911156a3e28d8d13aa99246787f3cfc",
+      "count": 13,
+      "url": "/life-guide/chapter-29.json"
+    },
+    {
+      "number": 30,
+      "title": "30. 上学以后的孩子",
+      "file": "30-上学以后的孩子.md",
+      "hash": "ad9fa087500ea8c13a74173ec7ee2d778af8471476f5204b850d40f714ecc107",
+      "count": 17,
+      "url": "/life-guide/chapter-30.json"
+    },
+    {
+      "number": 31,
+      "title": "31. 十八岁之后有哪几条路",
+      "file": "31-十八岁之后有哪几条路.md",
+      "hash": "dd46dab95791babdf83d009e4482550b4a0219bb4d43e916b1a7a45f627003e1",
+      "count": 16,
+      "url": "/life-guide/chapter-31.json"
+    },
+    {
+      "number": 32,
+      "title": "32. 出国留学：身份、打工、保险和回国认证",
+      "file": "32-出国留学.md",
+      "hash": "4a804908370c5a376475da4b47e2d9ed7850ac1d3a14e9201aaaa48edf3c070c",
+      "count": 10,
+      "url": "/life-guide/chapter-32.json"
+    },
+    {
+      "number": 33,
+      "title": "33. 残疾之后怎么活",
+      "file": "33-残疾之后怎么活.md",
+      "hash": "a311ed69d6d36d61fd929c033db3f30e77d5348eb09ec2c1d0ad5acc64383bb3",
+      "count": 20,
+      "url": "/life-guide/chapter-33.json"
+    },
+    {
+      "number": 34,
+      "title": "34. 家里的常备药别吃出事",
+      "file": "34-家里的常备药别吃出事.md",
+      "hash": "02e7da180f51c586030349ab5eed988b48bf26f568b439d01f7fb0c22b218cfb",
+      "count": 11,
+      "url": "/life-guide/chapter-34.json"
+    }
+  ]
+}

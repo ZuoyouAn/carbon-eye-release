@@ -9,4 +9,4 @@ window.addEventListener('avatar-updated', updated)
 onUnmounted(() => window.removeEventListener('avatar-updated', updated))
 watch(() => props.user?.id, () => { failed.value = false; revision.value = '' })
 </script>
-<style scoped>.user-avatar { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--avatar-size); height: var(--avatar-size); border-radius: 30%; background: linear-gradient(140deg, #abebd2, #aebdff); color: #102436; font-weight: 800; overflow: hidden; vertical-align: middle; }.user-avatar img { width: 100%; height: 100%; object-fit: cover; }</style>
+<style scoped>.user-avatar { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: var(--avatar-size); height: var(--avatar-size); border-radius: 30%; background: linear-gradient(135deg, #f1f6ff, #f8f5ef); color: var(--ink); font-weight: 800; overflow: hidden; vertical-align: middle; }.user-avatar img { width: 100%; height: 100%; object-fit: cover; }</style>

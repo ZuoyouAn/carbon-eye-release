@@ -98,7 +98,7 @@ def main():
 
         a.execute_cdp_cmd('Emulation.setEmulatedMedia', {'features': [{'name': 'prefers-reduced-motion', 'value': 'reduce'}]})
         a.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': "const originalScroll=window.scrollTo;window.__scrollCalls=[];window.scrollTo=function(...args){window.__scrollCalls.push(args[0]);return originalScroll.apply(window,args)}"})
-        visit(a, '/wasteland')
+        visit(a, '/wasteland?mode=story')
         assert shown(a, '.setup-form .game-primary').get_attribute('disabled')
         click(a, shown(a, '.talent-card:nth-child(3)')); click(a, shown(a, '.talent-card:nth-child(6)'))
         assert len(a.find_elements(By.CSS_SELECTOR, '.talent-card[aria-pressed=true]')) == 2
@@ -138,7 +138,7 @@ def main():
         checks.extend(['playable journey reaches ending', 'Markdown journal download', 'local save deletion'])
         a.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {'width': 390, 'height': 844, 'deviceScaleFactor': 1, 'mobile': True})
         responsive(a); a.save_screenshot(str(output / 'game-ending-mobile.png'))
-        visit(a, '/wasteland'); responsive(a)
+        visit(a, '/wasteland?mode=story'); responsive(a)
         a.save_screenshot(str(output / 'game-setup-mobile.png'))
         checks.append('game setup and gameplay mobile layout')
         a.execute_script("localStorage.setItem('space-wasteland-v1', '{invalid')")

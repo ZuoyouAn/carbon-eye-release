@@ -53,7 +53,7 @@
           <label>
             主题
             <select v-model="reader.theme">
-              <option value="dark">深色</option>
+              <option value="dark">暖纸</option>
               <option value="light">浅色</option>
             </select>
           </label>

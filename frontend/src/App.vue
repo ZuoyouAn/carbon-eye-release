@@ -18,6 +18,8 @@
         <RouterLink to="/chat">聊天室</RouterLink>
         <RouterLink to="/wasteland">末世模拟器</RouterLink>
         <details class="nav-more"><summary>更多</summary><div>
+        <RouterLink to="/solar-system">太阳系图谱</RouterLink>
+        <RouterLink to="/life-guide">人生指南</RouterLink>
         <RouterLink to="/store">数字商品</RouterLink>
         <RouterLink to="/roadmap">学习路线</RouterLink>
         <RouterLink to="/timeline">时间线</RouterLink>

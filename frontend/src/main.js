@@ -4,5 +4,7 @@ import 'element-plus/es/components/message/style/css'
 import App from './App.vue'
 import router from './router'
 import './style.css'
+import './design.css'
+import { reveal } from './utils/reveal.js'
 
-createApp(App).use(router).mount('#app')
+createApp(App).directive('reveal', reveal).use(router).mount('#app')

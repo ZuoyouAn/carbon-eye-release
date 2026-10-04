@@ -2,9 +2,9 @@
   <main>
     <section class="hero-section">
       <div class="hero-copy">
-        <p class="eyebrow">ZUOYOU / PERSONAL SPACE</p>
-        <h1>记录热爱，<br>让想法生长。</h1>
-        <p class="hero-description">我是左右。这是我的学习笔记、项目实验与阅读空间，也是一处探索生活与成长的小站。</p>
+        <p class="eyebrow">ZUOYOU'S SPACE</p>
+        <h1>好奇心，<br><span>值得一个空间。</span></h1>
+        <p class="hero-description">写下所想，连接彼此，探索未曾到过的世界。<br>这是左右的 Space，也是想法开始生长的地方。</p>
 
         <div class="hero-actions">
           <RouterLink class="button button-primary" to="/articles">查看文章</RouterLink>
@@ -12,7 +12,8 @@
         </div>
       </div>
 
-      <aside class="identity-panel">
+      <div class="hero-sculpture" aria-hidden="true"><div class="sculpture-shadow"></div><div class="sculpture-orbit"></div><span class="sculpture-chip one">想法 / STORIES</span><span class="sculpture-chip two">探索 / POSSIBILITIES ↗</span></div>
+      <aside class="identity-panel home-identity" v-reveal>
         <div class="profile-head">
           <div class="avatar">左</div>
           <div>
@@ -61,13 +62,17 @@
     </section>
 
     <section class="section">
+      <div class="home-featured">
+        <article class="showcase-card green" v-reveal><p class="eyebrow">SPACE ARCADE · 3D</p><h2>世界安静之后，<br>仍有路可走。</h2><p>走进原创低多边形城市。移动、探索、搜寻，点亮最后一座信标。</p><RouterLink class="text-button" to="/wasteland">开启末世探索 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">⌁</span></article>
+        <article class="showcase-card" v-reveal><p class="eyebrow">HUMAN 3.0 · REFLECTION</p><h2>更了解自己，<br>从一次停顿开始。</h2><p>四个生活维度，二十四道问题。不是一个标签，而是下一步行动的起点。</p><RouterLink class="text-button" to="/human3">探索成长地图 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">◌</span></article>
+      </div>
       <div class="section-heading">
         <p class="eyebrow">Modules</p>
         <h2>快速入口</h2>
       </div>
 
       <div class="feature-grid">
-        <RouterLink v-for="card in cards" :key="card.title" class="feature-card lift-card" :to="card.to">
+        <RouterLink v-for="card in cards" :key="card.title" class="feature-card lift-card" :to="card.to" v-reveal>
           <span>{{ card.index }}</span>
           <h3>{{ card.title }}</h3>
           <p>{{ card.text }}</p>
@@ -92,8 +97,10 @@ const statsLoading = statsRead.loading, statsError = statsRead.error
 const quoteLoading = quoteRead.loading, quoteError = quoteRead.error
 
 const cards = [
+  { index: '◉', title: '太阳系图谱', text: '拖动视角，靠近八颗行星。在一张浅色 3D 图谱里，重新发现宇宙。', to: '/solar-system' },
+  { index: '↗', title: '高性价比人生指南', text: '34 节原文，按关键词、成本和证据查阅；保留完整来源与适用条件。', to: '/life-guide' },
   { index: '↗', title: 'Space 聊天室', text: '进入公共大厅、加入小群，或向朋友发起双方同意的私聊。', to: '/chat' },
-  { index: '30', title: '末世模拟器', text: '两个天赋，十二点属性，三十天长夜。你的选择，决定下一段路。', to: '/wasteland' },
+  { index: '3D', title: '末世模拟器', text: '移动探索、搜集资源、修复信标；也可以继续原来的三十天剧情。', to: '/wasteland' },
   { index: '01', title: '小说阅读', text: '搜索小说、进入阅读模式、调整字号和保存阅读进度。', to: '/novels' },
   { index: '02', title: '帖子广场', text: '交流想法、收藏与点赞；高权限用户可以发布和评论。', to: '/posts' },
   { index: '03', title: '作品文章', text: '文章支持分类、标签、Markdown、收藏、点赞和评论。', to: '/articles' },

@@ -699,12 +699,12 @@ function axisOptions() {
   return {
     backgroundColor: 'transparent',
     animation: false,
-    textStyle: { color: '#dbeafe', fontFamily: 'Microsoft YaHei, Segoe UI, sans-serif' },
-    tooltip: { trigger: 'axis', backgroundColor: '#101b2d', borderColor: '#38516e', textStyle: { color: '#f8fafc' } },
-    legend: { top: 28, textStyle: { color: '#cbd5e1' }, type: 'scroll' },
+    textStyle: { color: '#41434a', fontFamily: 'Microsoft YaHei, Segoe UI, sans-serif' },
+    tooltip: { trigger: 'axis', backgroundColor: '#ffffff', borderColor: '#e2e4e8', textStyle: { color: '#41434a' } },
+    legend: { top: 28, textStyle: { color: '#62646b' }, type: 'scroll' },
     grid: { top: 76, left: 56, right: 28, bottom: 52, containLabel: false },
-    xAxis: { type: 'category', axisLabel: { color: '#9fb3c8' }, axisLine: { lineStyle: { color: '#3c5067' } } },
-    yAxis: { type: 'value', axisLabel: { color: '#9fb3c8' }, splitLine: { lineStyle: { color: 'rgba(148, 163, 184, 0.15)' } } },
+    xAxis: { type: 'category', axisLabel: { color: '#62646b' }, axisLine: { lineStyle: { color: '#d0d4dc' } } },
+    yAxis: { type: 'value', axisLabel: { color: '#62646b' }, splitLine: { lineStyle: { color: 'rgba(148, 163, 184, 0.15)' } } },
   }
 }
 
@@ -726,9 +726,9 @@ function renderTrendChart() {
   const dates = monthlyTrends.value.map((item) => item.date)
   chart.setOption({
     ...axisOptions(),
-    title: { text: 'AQI、PM2.5、O3 与 PRI（月度）', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: 'AQI、PM2.5、O3 与 PRI（月度）', left: 0, textStyle: { color: '#1d1d1f', fontSize: 15, fontWeight: 600 } },
     xAxis: { ...axisOptions().xAxis, data: dates },
-    dataZoom: [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 8, textStyle: { color: '#9fb3c8' } }],
+    dataZoom: [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 8, textStyle: { color: '#62646b' } }],
     series: [
       { name: 'AQI', type: 'line', symbol: 'none', smooth: true, data: monthlyTrends.value.map((item) => item.aqi), color: '#60a5fa' },
       { name: 'PM2.5', type: 'line', symbol: 'none', smooth: true, data: monthlyTrends.value.map((item) => item.pm25), color: '#5eead4' },
@@ -744,13 +744,13 @@ function renderWeatherChart() {
   const records = weatherRecords.value
   chart.setOption({
     ...axisOptions(),
-    title: { text: '温度、降水与风速（月度）', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: '温度、降水与风速（月度）', left: 0, textStyle: { color: '#1d1d1f', fontSize: 15, fontWeight: 600 } },
     xAxis: { ...axisOptions().xAxis, data: records.map((item) => item.month) },
     yAxis: [
-      { ...axisOptions().yAxis, name: '°C / km/h', nameTextStyle: { color: '#9fb3c8' } },
-      { ...axisOptions().yAxis, name: 'mm', nameTextStyle: { color: '#9fb3c8' } },
+      { ...axisOptions().yAxis, name: '°C / km/h', nameTextStyle: { color: '#62646b' } },
+      { ...axisOptions().yAxis, name: 'mm', nameTextStyle: { color: '#62646b' } },
     ],
-    dataZoom: [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 8, textStyle: { color: '#9fb3c8' } }],
+    dataZoom: [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 8, textStyle: { color: '#62646b' } }],
     series: [
       { name: '平均气温', type: 'line', symbol: 'none', smooth: true, data: records.map((item) => item.avg_temp_c), color: '#fbbf24' },
       { name: '平均风速', type: 'line', symbol: 'none', smooth: true, data: records.map((item) => item.avg_wind_speed_kmh), color: '#60a5fa' },
@@ -773,12 +773,12 @@ function renderCorrelationChart() {
   }))
   chart.setOption({
     backgroundColor: 'transparent',
-    title: { text: '去季节 Pearson r', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: '去季节 Pearson r', left: 0, textStyle: { color: '#1d1d1f', fontSize: 15, fontWeight: 600 } },
     tooltip: { formatter: (params) => `${labels[pollutants[params.value[0]]]} · ${labels[variables[params.value[1]]]}<br/>去季节 r：${params.value[2]}<br/>Pearson：${params.value[4]}<br/>Spearman：${params.value[5]}<br/>n：${params.value[3]}<br/>描述性相关，不代表因果。` },
     grid: { top: 48, left: 90, right: 16, bottom: 44 },
-    xAxis: { type: 'category', data: pollutants.map((item) => labels[item]), axisLabel: { color: '#cbd5e1' }, axisLine: { lineStyle: { color: '#3c5067' } } },
-    yAxis: { type: 'category', data: variables.map((item) => labels[item]), axisLabel: { color: '#cbd5e1' }, axisLine: { lineStyle: { color: '#3c5067' } } },
-    visualMap: { min: -1, max: 1, calculable: true, orient: 'horizontal', left: 'center', bottom: 0, textStyle: { color: '#cbd5e1' }, inRange: { color: ['#2563eb', '#dbeafe', '#fca5a5', '#dc2626'] } },
+    xAxis: { type: 'category', data: pollutants.map((item) => labels[item]), axisLabel: { color: '#62646b' }, axisLine: { lineStyle: { color: '#d0d4dc' } } },
+    yAxis: { type: 'category', data: variables.map((item) => labels[item]), axisLabel: { color: '#62646b' }, axisLine: { lineStyle: { color: '#d0d4dc' } } },
+    visualMap: { min: -1, max: 1, calculable: true, orient: 'horizontal', left: 'center', bottom: 0, textStyle: { color: '#62646b' }, inRange: { color: ['#2563eb', '#dbeafe', '#fca5a5', '#dc2626'] } },
     series: [{ type: 'heatmap', data, label: { show: true, color: '#0f172a', formatter: (params) => params.value[2] }, emphasis: { itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,.45)' } } }],
   })
 }
@@ -788,9 +788,9 @@ function renderCityCarbonChart() {
   if (!chart) return
   chart.setOption({
     ...axisOptions(),
-    title: { text: '苏州市 CO2 年度样例背景', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: '苏州市 CO2 年度样例背景', left: 0, textStyle: { color: '#1d1d1f', fontSize: 15, fontWeight: 600 } },
     xAxis: { ...axisOptions().xAxis, data: cityCarbon.value.map((item) => item.year) },
-    yAxis: { ...axisOptions().yAxis, name: cityCarbon.value[0]?.unit || 'CO2', nameTextStyle: { color: '#9fb3c8' } },
+    yAxis: { ...axisOptions().yAxis, name: cityCarbon.value[0]?.unit || 'CO2', nameTextStyle: { color: '#62646b' } },
     series: [{ name: '苏州市 CO2 样例背景', type: 'bar', data: cityCarbon.value.map((item) => item.co2_emission), color: '#60a5fa' }],
   })
 }
@@ -802,11 +802,11 @@ function renderParkCarbonChart() {
   const byYear = new Map(parkElectricityRecords.value.map((item) => [item.year, item]))
   chart.setOption({
     ...axisOptions(),
-    title: { text: '用电量与购电间接排放代理', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: '用电量与购电间接排放代理', left: 0, textStyle: { color: '#1d1d1f', fontSize: 15, fontWeight: 600 } },
     xAxis: { ...axisOptions().xAxis, data: years },
     yAxis: [
-      { ...axisOptions().yAxis, name: '亿 kWh', nameTextStyle: { color: '#9fb3c8' } },
-      { ...axisOptions().yAxis, name: '万吨 CO2', nameTextStyle: { color: '#9fb3c8' } },
+      { ...axisOptions().yAxis, name: '亿 kWh', nameTextStyle: { color: '#62646b' } },
+      { ...axisOptions().yAxis, name: '万吨 CO2', nameTextStyle: { color: '#62646b' } },
     ],
     series: [
       { name: '全社会用电量', type: 'bar', data: years.map((year) => byYear.get(year)?.total_electricity_100m_kwh ?? null), color: '#60a5fa' },
@@ -824,11 +824,11 @@ function renderIntensityChart() {
   const byYear = new Map(economicIntensityRecords.value.map((item) => [item.year, item]))
   chart.setOption({
     ...axisOptions(),
-    title: { text: '宏观用电与购电代理强度', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: '宏观用电与购电代理强度', left: 0, textStyle: { color: '#1d1d1f', fontSize: 15, fontWeight: 600 } },
     xAxis: { ...axisOptions().xAxis, data: years },
     yAxis: [
-      { ...axisOptions().yAxis, name: 'kWh / 万元', nameTextStyle: { color: '#9fb3c8' } },
-      { ...axisOptions().yAxis, name: 'tCO2 / 万元', nameTextStyle: { color: '#9fb3c8' } },
+      { ...axisOptions().yAxis, name: 'kWh / 万元', nameTextStyle: { color: '#62646b' } },
+      { ...axisOptions().yAxis, name: 'tCO2 / 万元', nameTextStyle: { color: '#62646b' } },
     ],
     series: [
       { name: '每万元 GDP 用电量', type: 'line', connectNulls: false, data: years.map((year) => byYear.get(year)?.total_electricity_kwh_per_10k_gdp ?? null), color: '#60a5fa' },
@@ -845,9 +845,9 @@ function renderCdciChart() {
   const records = cdciRecords.value
   chart.setOption({
     ...axisOptions(),
-    title: { text: 'PRI / EAI / CEI 与实验性 CDCI', left: 0, textStyle: { color: '#fff', fontSize: 15, fontWeight: 600 } },
+    title: { text: 'PRI / EAI / CEI 与实验性 CDCI', left: 0, textStyle: { color: '#1d1d1f', fontSize: 15, fontWeight: 600 } },
     xAxis: { ...axisOptions().xAxis, data: records.map((item) => item.date) },
-    dataZoom: [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 8, textStyle: { color: '#9fb3c8' } }],
+    dataZoom: [{ type: 'inside' }, { type: 'slider', height: 18, bottom: 8, textStyle: { color: '#62646b' } }],
     series: [
       { name: 'PRI（月度）', type: 'line', symbol: 'none', data: records.map((item) => item.pri), color: '#fb7185' },
       { name: 'EAI（年度背景）', type: 'line', symbol: 'none', data: records.map((item) => item.eai), color: '#a78bfa' },
@@ -867,34 +867,34 @@ function displaySnapshotRange(value) {
 </script>
 
 <style scoped>
-.carbon-eye-page { display: grid; gap: 18px; min-width: 0; color: #e6edf7; }
-.carbon-topbar { display: flex; justify-content: space-between; gap: 12px; align-items: center; color: #9fb3c8; font-size: 13px; }
-.back-link { color: #7dd3fc; text-decoration: none; }
-.carbon-header { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr); gap: 24px; align-items: end; padding: 8px 0 14px; border-bottom: 1px solid #26384d; }
-.eyebrow { margin: 0 0 8px; color: #4ade80; font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+.carbon-eye-page { display: grid; gap: 18px; min-width: 0; color: var(--ink); }
+.carbon-topbar { display: flex; justify-content: space-between; gap: 12px; align-items: center; color: var(--muted); font-size: 13px; }
+.back-link { color: var(--blue); text-decoration: none; }
+.carbon-header { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr); gap: 24px; align-items: end; padding: 8px 0 14px; border-bottom: 1px solid var(--border); }
+.eyebrow { margin: 0 0 8px; color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
 h1, h2, h3, p { margin-top: 0; }
 h1 { margin-bottom: 8px; font-size: 30px; line-height: 1.2; letter-spacing: 0; }
 h2 { margin-bottom: 6px; font-size: 20px; line-height: 1.3; letter-spacing: 0; }
 h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
-.carbon-header p, .section-heading > p, .figure-note, .section-note, .experimental-note { color: #a7bdd0; line-height: 1.65; }
-.boundary-banner { border-left: 3px solid #fbbf24; padding: 10px 12px; background: #172637; color: #dceaf6; line-height: 1.6; font-size: 13px; }
-.carbon-state, .carbon-error, .chart-empty { padding: 22px; border: 1px solid #32445b; background: #101b2d; color: #cbd5e1; }
-.carbon-error { border-color: #be4b57; color: #fecdd3; }
+.carbon-header p, .section-heading > p, .figure-note, .section-note, .experimental-note { color: var(--muted); line-height: 1.65; }
+.boundary-banner { border-left: 3px solid var(--border); padding: 10px 12px; background: var(--surface); color: var(--ink); line-height: 1.6; font-size: 13px; }
+.carbon-state, .carbon-error, .chart-empty { padding: 22px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); }
+.carbon-error { border-color: var(--border); color: var(--ink); }
 .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.metric-card { min-height: 132px; display: flex; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid #2c4058; background: #101b2d; }
-.metric-card span { color: #94a9be; font-size: 13px; }
-.metric-card strong { color: #f8fafc; font-size: 25px; line-height: 1.15; overflow-wrap: anywhere; }
-.metric-card p { margin: 0; color: #aac0d4; font-size: 12px; line-height: 1.55; }
-.dashboard-boundary { border: 1px solid #2c4058; background: #101b2d; padding: 11px 14px; }
-.dashboard-boundary summary { color: #cfe5f7; cursor: pointer; font-size: 13px; }
-.dashboard-boundary p { margin: 10px 0 0; color: #9eb4c9; font-size: 13px; line-height: 1.65; }
-.carbon-section { min-width: 0; padding: 20px; border: 1px solid #2a3f57; background: #0e1928; }
+.metric-card { min-height: 132px; display: flex; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid var(--border); background: var(--surface); }
+.metric-card span { color: var(--muted); font-size: 13px; }
+.metric-card strong { color: var(--ink); font-size: 25px; line-height: 1.15; overflow-wrap: anywhere; }
+.metric-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.dashboard-boundary { border: 1px solid var(--border); background: var(--surface); padding: 11px 14px; }
+.dashboard-boundary summary { color: var(--ink); cursor: pointer; font-size: 13px; }
+.dashboard-boundary p { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.carbon-section { min-width: 0; padding: 20px; border: 1px solid var(--border); background: var(--surface); }
 .section-heading { display: flex; justify-content: space-between; gap: 18px; align-items: start; margin-bottom: 12px; }
 .section-heading > div { min-width: 0; }
 .carbon-eye-page .section-heading h2 { margin: 0 0 6px; font-size: 20px; line-height: 1.3; letter-spacing: 0; overflow-wrap: anywhere; word-break: break-word; }
 .section-heading > p { max-width: 48ch; margin-bottom: 0; font-size: 13px; }
-.section-note, .experimental-note { margin: 0 0 14px; padding: 10px 12px; border-left: 3px solid #38bdf8; background: #122238; font-size: 13px; }
-.warning-note { border-left-color: #fbbf24; }
+.section-note, .experimental-note { margin: 0 0 14px; padding: 10px 12px; border-left: 3px solid var(--border); background: var(--surface); font-size: 13px; }
+.warning-note { border-left-color: var(--border); }
 .chart { width: 100%; min-height: 320px; }
 .chart-tall { min-height: 380px; }
 .chart-medium { min-height: 330px; }
@@ -902,59 +902,59 @@ h3 { font-size: 16px; line-height: 1.35; letter-spacing: 0; }
 .compact-section { min-height: 0; }
 .site-layout { display: grid; grid-template-columns: minmax(260px, .7fr) minmax(0, 1.3fr); gap: 18px; }
 .site-overview { display: grid; gap: 12px; align-content: start; }
-.site-map { position: relative; min-height: 260px; border: 1px solid #31506c; background: #152d42; overflow: hidden; }
+.site-map { position: relative; min-height: 260px; border: 1px solid var(--border); background: var(--surface); overflow: hidden; }
 .site-map::before, .site-map::after { content: ''; position: absolute; inset: 12% 8%; border: 1px dashed rgba(125, 211, 252, .28); transform: rotate(-12deg); }
 .site-map::after { inset: 30% 16%; transform: rotate(20deg); border-color: rgba(94, 234, 212, .2); }
-.map-title, .map-scale { position: absolute; z-index: 1; color: #acc6d9; font-size: 12px; }
-.map-title { left: 12px; top: 10px; font-weight: 700; color: #d8ecfb; }
+.map-title, .map-scale { position: absolute; z-index: 1; color: var(--muted); font-size: 12px; }
+.map-title { left: 12px; top: 10px; font-weight: 700; color: var(--ink); }
 .map-scale-north { right: 12px; top: 10px; }
 .map-scale-south { right: 12px; bottom: 10px; }
-.site-marker { position: absolute; z-index: 2; transform: translate(-50%, -50%); width: 34px; height: 34px; border: 2px solid #7dd3fc; border-radius: 50%; background: #132c43; color: #f8fafc; font-size: 12px; font-weight: 800; cursor: pointer; }
-.site-marker:hover, .site-marker.active { border-color: #fbbf24; background: #20455d; box-shadow: 0 0 0 4px rgba(251, 191, 36, .16); }
+.site-marker { position: absolute; z-index: 2; transform: translate(-50%, -50%); width: 34px; height: 34px; border: 2px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--ink); font-size: 12px; font-weight: 800; cursor: pointer; }
+.site-marker:hover, .site-marker.active { border-color: var(--border); background: var(--surface); box-shadow: 0 0 0 4px rgba(251, 191, 36, .16); }
 .site-list { display: grid; gap: 8px; align-content: start; }
-.site-button { display: grid; grid-template-columns: 32px minmax(0, 1fr); text-align: left; gap: 3px 8px; padding: 10px; color: #dceaf6; border: 1px solid #2d435d; background: #132238; cursor: pointer; }
-.site-button:hover, .site-button.active { border-color: #38bdf8; background: #18314c; }
-.site-button strong { grid-row: span 2; color: #5eead4; }
+.site-button { display: grid; grid-template-columns: 32px minmax(0, 1fr); text-align: left; gap: 3px 8px; padding: 10px; color: var(--ink); border: 1px solid var(--border); background: var(--surface); cursor: pointer; }
+.site-button:hover, .site-button.active { border-color: var(--border); background: var(--surface); }
+.site-button strong { grid-row: span 2; color: var(--green); }
 .site-button span, .site-button small { min-width: 0; overflow-wrap: anywhere; }
-.site-button small { color: #9eb4c9; font-size: 11px; }
+.site-button small { color: var(--muted); font-size: 11px; }
 .snapshot-detail { min-width: 0; }
 .snapshot-selected { display: flex; justify-content: space-between; gap: 14px; align-items: end; margin-bottom: 12px; }
-.snapshot-selected span, .snapshot-selected p { color: #9eb4c9; font-size: 12px; }
+.snapshot-selected span, .snapshot-selected p { color: var(--muted); font-size: 12px; }
 .snapshot-selected strong { display: block; margin-top: 4px; }
-.table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid #2a3f57; }
+.table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid var(--border); }
 .data-table { width: 100%; min-width: 700px; border-collapse: collapse; font-size: 12px; }
-.data-table th, .data-table td { padding: 10px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid #263a51; line-height: 1.5; }
-.data-table th { position: sticky; top: 0; background: #14243a; color: #d9e8f5; white-space: nowrap; }
-.data-table td { color: #b8cadd; }
+.data-table th, .data-table td { padding: 10px 11px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); line-height: 1.5; }
+.data-table th { position: sticky; top: 0; background: var(--surface); color: var(--ink); white-space: nowrap; }
+.data-table td { color: var(--muted); }
 .warning-row { cursor: pointer; }
-.warning-row:hover td, .warning-row.active td { background: #19324a; }
-.warning-workbench { margin-top: 14px; padding: 16px; border: 1px solid #3b5d78; background: #122238; }
-.warning-workbench h3 { margin-bottom: 12px; color: #e5f4ff; }
+.warning-row:hover td, .warning-row.active td { background: var(--surface); }
+.warning-workbench { margin-top: 14px; padding: 16px; border: 1px solid var(--border); background: var(--surface); }
+.warning-workbench h3 { margin-bottom: 12px; color: var(--ink); }
 .warning-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
-.warning-detail-grid div { min-width: 0; padding: 10px; border: 1px solid #2a465e; background: #101e31; }
-.warning-detail-grid dt { color: #7dd3fc; font-size: 12px; margin-bottom: 5px; }
-.warning-detail-grid dd { margin: 0; color: #c7d7e5; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.warning-detail-grid div { min-width: 0; padding: 10px; border: 1px solid var(--border); background: var(--surface); }
+.warning-detail-grid dt { color: var(--blue); font-size: 12px; margin-bottom: 5px; }
+.warning-detail-grid dd { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
 .sensitivity-wrap { margin-top: 14px; }
 .industry-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.industry-item { padding: 14px; border: 1px solid #2a3f57; background: #132238; min-width: 0; }
-.industry-item h3 { color: #dff7ea; margin-bottom: 10px; }
-.industry-item p { color: #adc1d3; font-size: 13px; line-height: 1.6; }
-.industry-item b { color: #e6edf7; }
-.industry-item small { color: #7f99b1; line-height: 1.5; }
-.governance-context { padding: 12px; margin-bottom: 12px; border-left: 3px solid #4ade80; background: #132238; }
-.governance-context p, .governance-context small { color: #b5c9d9; line-height: 1.6; }
+.industry-item { padding: 14px; border: 1px solid var(--border); background: var(--surface); min-width: 0; }
+.industry-item h3 { color: var(--ink); margin-bottom: 10px; }
+.industry-item p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+.industry-item b { color: var(--ink); }
+.industry-item small { color: var(--muted); line-height: 1.5; }
+.governance-context { padding: 12px; margin-bottom: 12px; border-left: 3px solid var(--border); background: var(--surface); }
+.governance-context p, .governance-context small { color: var(--muted); line-height: 1.6; }
 .governance-list, .method-list, .boundary-list { display: grid; gap: 10px; padding-left: 18px; margin: 0; }
-.governance-list li { display: grid; gap: 4px; color: #c4d5e4; line-height: 1.55; }
-.governance-list small { color: #879eb3; }
-.method-list li, .boundary-list li { color: #b8cadd; line-height: 1.6; }
+.governance-list li { display: grid; gap: 4px; color: var(--muted); line-height: 1.55; }
+.governance-list small { color: var(--muted); }
+.method-list li, .boundary-list li { color: var(--muted); line-height: 1.6; }
 .source-list { display: grid; gap: 8px; margin-top: 16px; }
-.source-list a, .source-list span { color: #7dd3fc; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
-.source-list span { color: #a7b8c9; }
+.source-list a, .source-list span { color: var(--blue); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.source-list span { color: var(--muted); }
 .source-details { margin-top: 4px; }
-.source-details summary { color: #d9e7f5; cursor: pointer; font-size: 13px; }
+.source-details summary { color: var(--ink); cursor: pointer; font-size: 13px; }
 .source-list-expanded { margin-top: 10px; }
-.boundary-section { border-color: #4c5966; }
-.carbon-footer { padding: 15px 0 4px; color: #9fb3c8; font-size: 13px; text-align: center; }
+.boundary-section { border-color: var(--border); }
+.carbon-footer { padding: 15px 0 4px; color: var(--muted); font-size: 13px; text-align: center; }
 
 @media (max-width: 1100px) {
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

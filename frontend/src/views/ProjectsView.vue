@@ -8,10 +8,12 @@
       </div>
 
       <div class="card-grid two-grid">
+        <article class="content-card project-detail-card"><div class="card-meta"><span>Solar Atlas</span><span>原创3D / NASA资料</span></div><h2>太阳系图谱</h2><p>转动视角，选择八颗行星，暂停并靠近观察。模型与轨道均为压缩示意，不用于天象预测；设备不支持3D时仍可阅读资料。</p><RouterLink class="text-button" to="/solar-system">抬头看看 ↗</RouterLink></article>
+        <article class="content-card project-detail-card"><div class="card-meta"><span>Life Guide</span><span>原文阅读 / CC BY 4.0</span></div><h2>高性价比人生指南</h2><p>按章节、关键词、成本与证据筛选原书条目；完整保留来源和备注，公开标明作者、同步版本和许可。不需要模型API。</p><RouterLink class="text-button" to="/life-guide">打开人生指南 ↗</RouterLink></article>
         <article class="content-card project-detail-card">
-          <div class="card-meta"><span>Original Game</span><span>文字生存 / 免费游玩</span></div>
-          <h2>末世模拟器</h2><p>原创末日世界，六种天赋、四项属性、随机遭遇与四种结局。无需登录，不调用AI；可选本机存档与导出生存日记。</p>
-          <div class="tag-list"><span>30天生存</span><span>选择与后果</span><span>可复现世界种子</span></div>
+          <div class="card-meta"><span>Original Game</span><span>3D 探索 / 剧情生存 / 免费游玩</span></div>
+          <h2>末世模拟器</h2><p>原创低多边形城市，键盘或摇杆移动、碰撞避障、搜集资源与撤离。也可切换三十天剧情，继续原来的天赋与结局。无需登录，不调用AI。</p>
+          <div class="tag-list"><span>实时3D</span><span>键盘与触屏</span><span>旧剧情存档保留</span></div>
           <RouterLink class="text-button" to="/wasteland">走进长夜 →</RouterLink>
         </article>
         <article class="content-card project-detail-card">
