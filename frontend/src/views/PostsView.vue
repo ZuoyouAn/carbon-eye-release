@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElEmpty, ElPagination } from 'element-plus'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { apiRequest, deleteRequest, postJson } from '../api/client'

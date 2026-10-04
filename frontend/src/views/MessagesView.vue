@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElButton, ElSkeleton, ElEmpty, ElPagination } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiRequest, postJson } from '../api/client'

@@ -13,6 +13,29 @@ function responses(scores, context = {}) {
 }
 const low = { mind: 0, body: 0, spirit: 0, vocation: 0 }
 
+test('adaptive follow-ups prioritize missing behavior and include cross-domain evidence', () => {
+  const report = assess(responses({ ...low, body: null }))
+  assert.equal(report.followUps[0].domain, 'body')
+  assert.equal(report.followUps.length, 4)
+  assert.equal(report.followUps.at(-1).domain, 'context')
+  assert.ok(report.evidenceStatus.includes('信息不足'))
+})
+
+test('stress disruption is flagged separately from routine practice without diagnosis', () => {
+  const answers = responses({ mind: 3, body: 3, spirit: 3, vocation: 3 })
+  answers['body-stress'] = 'b0'
+  const report = assess(answers)
+  assert.ok(report.observations.some(item => item.includes('身体') && item.includes('压力')))
+  assert.equal(report.followUps[0].domain, 'body')
+  assert.ok(report.followUps[0].reason.includes('压力'))
+})
+
+test('sophisticated orientation still needs specific practice evidence', () => {
+  const report = assess(responses(low))
+  assert.ok(report.observations.some(item => item.includes('理解复杂观点不等于')))
+  assert.ok(reportMarkdown(report).includes(report.rulesVersion))
+})
+
 test('questionnaire has 24 unique questions and independently measures each domain', () => {
   assert.equal(QUESTIONS.length, 24)
   assert.equal(new Set(QUESTIONS.map(q => q.id)).size, 24)

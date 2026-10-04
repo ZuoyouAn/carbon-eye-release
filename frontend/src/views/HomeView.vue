@@ -2,13 +2,13 @@
   <main>
     <section class="hero-section">
       <div class="hero-copy">
-        <h1>左右</h1>
-        <p class="hero-slogan">team</p>
-        <p class="hero-description">功能：文章、发帖子、看小说、收藏、点赞、论文实现、</p>
+        <p class="eyebrow">ZUOYOU / PERSONAL SPACE</p>
+        <h1>记录热爱，<br>让想法生长。</h1>
+        <p class="hero-description">我是左右。这是我的学习笔记、项目实验与阅读空间，也是一处探索生活与成长的小站。</p>
 
         <div class="hero-actions">
           <RouterLink class="button button-primary" to="/articles">查看文章</RouterLink>
-          <RouterLink class="button button-secondary" to="/posts">去帖子区</RouterLink>
+          <RouterLink class="button button-secondary" to="/human3">探索四维成长地图 →</RouterLink>
         </div>
       </div>
 
@@ -16,24 +16,26 @@
         <div class="profile-head">
           <div class="avatar">左</div>
           <div>
-            <p class="panel-label">左</p>
+            <p class="panel-label">左右 / 持续探索中</p><p class="panel-text">写下来，做出来，再向前一点。</p>
           </div>
         </div>
 
         <div class="stat-grid compact">
           <div>
-            <strong>{{ stats.novels }}</strong>
+            <strong>{{ stats?.novels ?? '—' }}</strong>
             <span>小说</span>
           </div>
           <div>
-            <strong>{{ stats.posts }}</strong>
+            <strong>{{ stats?.posts ?? '—' }}</strong>
             <span>帖子</span>
           </div>
           <div>
-            <strong>{{ stats.articles }}</strong>
+            <strong>{{ stats?.articles ?? '—' }}</strong>
             <span>文章</span>
           </div>
         </div>
+        <p v-if="statsLoading" class="panel-label" role="status">正在读取内容统计…首次唤醒服务可能稍慢。</p>
+        <p v-else-if="statsError" class="panel-label" role="status">统计暂不可用。<button class="text-button" @click="fetchStats">重试</button></p>
 
         <div class="quote-widget">
           <div class="quote-heading">
@@ -81,19 +83,23 @@ import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiRequest } from '../api/client'
 
-const stats = ref({ novels: 0, posts: 0, articles: 0 })
+const stats = ref(null)
+const statsLoading = ref(true)
+const statsError = ref(false)
 const quote = ref(null)
 const quoteLoading = ref(false)
 const quoteError = ref('')
 
 const cards = [
   { index: '01', title: '小说阅读', text: '搜索小说、进入阅读模式、调整字号和保存阅读进度。', to: '/novels' },
-  { index: '02', title: '帖子广场', text: '登录后可以发帖、点赞和评论，适合做小社区雏形。', to: '/posts' },
+  { index: '02', title: '帖子广场', text: '交流想法、收藏与点赞；高权限用户可以发布和评论。', to: '/posts' },
   { index: '03', title: '作品文章', text: '文章支持分类、标签、Markdown、收藏、点赞和评论。', to: '/articles' },
   { index: '04', title: '学习路线', text: '按阶段整理前端、Vue、Python、FastAPI、MySQL 和部署。', to: '/roadmap' },
-  { index: '05', title: '留言板', text: '游客和登录用户都可以留言，管理员可以在后台治理。', to: '/messages' },
+  { index: '05', title: '留言板', text: '读一读大家留下的近况；高权限用户可以发布留言。', to: '/messages' },
   { index: '06', title: '更新日志', text: '记录这个网站从静态页面到全栈项目的每一步。', to: '/changelog' },
   { index: '07', title: '安全计算实验室', text: '基于保密内积协议，演示点线面空间位置关系的安全计算。', to: '/secure-geometry' },
+  { index: '08', title: '四维成长地图', text: '24 道选择题，结合真实经历反思。默认本地处理、免费且无需登录。', to: '/human3' },
+  { index: '09', title: '数字商品 · 筹备中', text: '未来的授权数字产品与卡密交付空间。当前仅为展示，不支持购买。', to: '/store' },
 ]
 
 async function fetchQuote() {
@@ -105,7 +111,7 @@ async function fetchQuote() {
     quote.value = await apiRequest(`/api/yulu/random?yname=fcx${exclude}`)
   } catch (error) {
     quote.value = null
-    quoteError.value = error.message || '暂无语录'
+    quoteError.value = error.status === 404 ? '暂时没有可用语录，稍后再来看看。' : (error.message || '语录暂不可用')
   } finally {
     quoteLoading.value = false
   }
@@ -124,18 +130,19 @@ async function copyQuote() {
   }
 }
 
-onMounted(async () => {
-  fetchQuote()
-
+async function fetchStats() {
+  statsLoading.value = true
+  statsError.value = false
   try {
-    const [novels, posts, articles] = await Promise.all([
-      apiRequest('/api/novels'),
-      apiRequest('/api/posts'),
-      apiRequest('/api/articles'),
-    ])
-    stats.value = { novels: novels.length, posts: posts.total || 0, articles: articles.total || 0 }
+    stats.value = await apiRequest('/api/site-summary')
   } catch {
-    stats.value = { novels: 0, posts: 0, articles: 0 }
+    statsError.value = true
+  } finally {
+    statsLoading.value = false
   }
+}
+onMounted(() => {
+  fetchQuote()
+  fetchStats()
 })
 </script>

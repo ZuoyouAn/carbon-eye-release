@@ -21,6 +21,7 @@ from pydantic import BaseModel
 from sqlalchemy import or_
 from sqlalchemy import inspect
 from sqlalchemy import text
+from sqlalchemy import select, func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -45,6 +46,7 @@ from models import ReadingProgress
 from models import User
 from models import Yulu
 from permissions import ROLE_LABELS, permissions_for
+from human3_ai import make_router as make_human3_router
 from typing import Literal
 from carbon_eye_realtime import get_realtime_aqi, refresh_realtime_aqi_hourly
 from secure_geometry import SecureGeometryError
@@ -354,6 +356,9 @@ def get_publishing_user(current_user: User = Depends(get_current_user)):
     if "publish" not in permissions_for(current_user.role):
         raise HTTPException(status_code=403, detail="当前为低权限账号，请联系管理员提升为高权限后发布内容")
     return current_user
+
+
+app.include_router(make_human3_router(get_db, get_current_user))
 
 
 def revoke_user_tokens(db: Session, user_id: int):
@@ -830,6 +835,17 @@ def read_novels(q: str = "", db: Session = Depends(get_db), authorization: Optio
         query = query.filter(or_(Novel1.xs_name.like(keyword), Novel1.xs_content.like(keyword)))
     novels = query.order_by(Novel1.xs_id.asc()).all()
     return [novel_to_dict(db, novel, user) for novel in novels]
+
+
+@app.get("/api/site-summary")
+def site_summary(db: Session = Depends(get_db)):
+    """Public counts in one query: no bodies, drafts or user-specific joins."""
+    counts = db.execute(select(
+        select(func.count()).select_from(Novel1).scalar_subquery().label("novels"),
+        select(func.count()).select_from(Post).where(Post.is_deleted == False).scalar_subquery().label("posts"),
+        select(func.count()).select_from(Article).where(Article.is_deleted == False, Article.status == "published").scalar_subquery().label("articles"),
+    )).mappings().one()
+    return dict(counts)
 
 
 @app.get("/api/novels/{novel_id}")

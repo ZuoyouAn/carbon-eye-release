@@ -56,6 +56,10 @@ export function assess(answers) {
   const ai = selected('context-ai').value
   const observations = []
   if (gaps.length) observations.push(`在${gaps.map(d => d.name).join('、')}中，你报告了多次尝试，但日常持续性较少。可以先核对：是否把“试过”当成了“已形成习惯”？`)
+  const stressGaps = internal.filter(d => selected(`${d.id}-practice`).value >= 2 && selected(`${d.id}-stress`).value !== null && selected(`${d.id}-stress`).value <= 1)
+  if (stressGaps.length) observations.push(`在${stressGaps.map(d => d.name).join('、')}中，日常实践较多，但压力下较难维持。这是需要核实的情境差异，不代表能力已经丧失；先设计忙碌时可保留的最小习惯。`)
+  const orientationGaps = internal.filter(d => selected(`${d.id}-orientation`).id === 'synthesis' && selected(`${d.id}-practice`).value !== null && selected(`${d.id}-practice`).value <= 1)
+  if (orientationGaps.length) observations.push(`你在${orientationGaps.map(d => d.name).join('、')}中选择了“多方整合”，但日常实践还较少。理解复杂观点不等于已经稳定做到；请用最近一次实际行动核实。`)
   if (energy === 'high') observations.push('你选择工作或学习占用超过八成精力。先核对哪些基本习惯正在被挤占，再增加新的目标。')
   if (integration === 'drain') observations.push('你报告四个领域经常互相挤占。下一周记录一次具体冲突，看看是否可以减少一项投入，保留另一项基本需求。')
   if (ai === 'delegate' || ai === 'dependent') observations.push('你报告较少独立检查 AI 答案，或离开 AI 后难以继续任务。每天保留一段独立完成任务的时间，再对照 AI 的建议。')
@@ -65,8 +69,18 @@ export function assess(answers) {
   else if (candidates.length > 1) focusText = `「${candidates.map(d => d.name).join('、')}」的实践情况接近，暂不指定唯一瓶颈。你可以从最想改变、最容易开始的一项着手。`
   if (archetypeId === 'integrated') focusText = '四个领域都报告了相对稳定且相互支持的实践。下一步是验证它们在忙碌或变化中是否仍能持续。'
   const action = planFocus ? ACTIONS[planFocus.id] : ['连续七天记录精力、重要任务和一次真实交流，不必同时改变所有习惯。', '从记录中选一个最小行动，一周尝试三次。', '只保留确实有效的一项实践，每周复盘一次。', '回看已有实践如何影响其他领域，按实际反馈调整。']
+  const followUps = internal.map(d => {
+    const missing = QUESTIONS.filter(q => q.domain === d.id && q.kind === 'behavior').some(q => selected(q.id).value === null)
+    if (missing) return { domain: d.id, title: d.name, reason: '补充缺少的行为信息', question: `最近四周，在「${d.name}」中选一个记得最清楚的场景：发生了什么、你具体做了什么、结果怎样？没有经历也可以直接说没有。`, priority: 0 }
+    if (stressGaps.includes(d)) return { domain: d.id, title: d.name, reason: '核实压力下的情境差异', question: `最近一次「${d.name}」的习惯在忙碌时中断，是被什么挤掉的？当时最小能保留的行动是什么？`, priority: 1 }
+    if (gaps.includes(d)) return { domain: d.id, title: d.name, reason: '区分尝试与长期实践', question: `在「${d.name}」中，你最近尝试的方法连续做了多久？哪次反馈真正改变了后续做法？`, priority: 2 }
+    return { domain: d.id, title: d.name, reason: '用具体经历验证自报选择', question: `请举一个最近四周「${d.name}」中的实际行动：依据是什么、结果是什么、在哪种情况下不适用？`, priority: 3 }
+  }).sort((a, b) => a.priority - b.priority).slice(0, 3).map(({ priority, ...item }) => item)
+  followUps.push({ domain: 'context', title: '生活联系', reason: '核实四个领域如何相互影响', question: integration === 'support' ? '最近哪一个习惯同时帮助了两个生活领域？发生了什么，能否在下一周再试一次？' : '最近一次时间或精力冲突影响了哪两个领域？如果减少一项投入，什么基本需求可以得到保留？' })
+  const evidenceStatus = internal.some(d => d.band === null) ? '行为信息不足：先补充具体经历，暂不确定模式。' : stressGaps.length || gaps.length || orientationGaps.length ? '有待核实的情境或实践差异：先回答追问，再看分类是否贴近实际。' : '选择题已完整：仍需用具体经历核实，不能等同于深度访谈。'
   return {
-    version: VERSION, sourceUrl: SOURCE_URL,
+    version: VERSION, rulesVersion: 'human3-behavior-rules-v2', sourceUrl: SOURCE_URL,
+    followUps, evidenceStatus,
     archetype: { id: archetypeId, ...ARCHETYPES[archetypeId] },
     // Never return internal numerical scores to the UI or exported report.
     domains: internal.map(({ average, band, ...domain }) => domain),
@@ -93,7 +107,9 @@ export function reportMarkdown(report) {
   lines.push('', '## 行动计划', '')
   report.plan.forEach(p => lines.push(`- ${p.period}：${p.action}`))
   lines.push('', '## 深入反思', '', report.followUp, '', '## 补充回答', '')
+  lines.push(report.evidenceStatus, '')
+  report.followUps.forEach(item => lines.push(`- ${item.title}（${item.reason}）：${item.question}`))
   report.context.forEach(e => lines.push(`- ${e.question} → ${e.answer}`))
-  lines.push('', '## 方法与来源', '', report.limitation, '', `规则版本：${report.version}`, '', `框架灵感来源：Dan Koe HUMAN 3.0，${report.sourceUrl}`, '')
+  lines.push('', '## 方法与来源', '', report.limitation, '', `问卷版本：${report.version}；规则版本：${report.rulesVersion}`, '', `框架灵感来源：Dan Koe HUMAN 3.0，${report.sourceUrl}`, '')
   return lines.join('\n')
 }

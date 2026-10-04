@@ -1,0 +1,2 @@
+<template><main class="content-page"><section class="panel narrow-panel"><p class="eyebrow">404 / LOST & FOUND</p><h1>这里还没有内容。</h1><p class="panel-text">链接可能已失效，也可能是地址拼写有误。已保存的账号和内容不会受影响。</p><div class="hero-actions"><RouterLink class="button button-primary" to="/">回到首页</RouterLink><RouterLink class="button button-secondary" to="/projects">浏览项目</RouterLink></div></section></main></template>
+<script setup>import { RouterLink } from 'vue-router'</script>

@@ -207,7 +207,7 @@
 </template>
 
 <script setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElTabs, ElTabPane, ElButton, ElTable, ElTableColumn, ElPagination } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiRequest, deleteRequest, postJson, putJson } from '../api/client'

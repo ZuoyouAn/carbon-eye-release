@@ -11,22 +11,22 @@
         <article class="content-card project-detail-card">
           <div class="card-meta"><span>Human 3.0</span><span>四维成长 / 自我反思</span></div>
           <h2>四维成长评估</h2>
-          <p>通过 24 道问题了解思维、身体、关系与事业的当前状态，获得初步发展画像与行动计划。无需登录，回答在浏览器内处理。</p>
+          <p>24 道选择题与根据回答调整的追问，区分日常实践与压力下的差异。基础测评免费、无需登录，默认在浏览器内处理；AI补充需另行同意。</p>
           <div class="tag-list"><span>四象限</span><span>固定问卷</span><span>行动计划</span></div>
           <RouterLink class="text-button" to="/human3">开始了解自己</RouterLink>
         </article>
         <article class="content-card project-detail-card">
           <div class="card-meta">
             <span>Project 01</span>
-            <span>本地全栈项目</span>
+            <span>已上线 / 全栈项目</span>
           </div>
           <h2>左右的个人网站</h2>
-          <p>一个从静态页面逐步升级到 Vue + FastAPI + MySQL 的个人网站，包含文章、帖子、小说、留言和后台管理。</p>
+          <p>从静态页面逐步升级的 Vue + FastAPI 个人网站，现使用 Neon PostgreSQL 持久化数据，包含文章、帖子、小说、留言和分级权限管理。</p>
           <div class="tag-list">
             <span>Vue 3</span>
             <span>Vite</span>
             <span>FastAPI</span>
-            <span>MySQL</span>
+            <span>PostgreSQL</span>
             <span>Element Plus</span>
           </div>
           <RouterLink class="text-button" to="/">查看首页</RouterLink>

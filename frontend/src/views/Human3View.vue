@@ -16,7 +16,7 @@
       <div class="human-start-card">
         <p>请选择“实际上怎么做”，不必寻找最理想的答案。可以选择不确定，也可以返回修改。</p>
         <label class="human-check"><input v-model="remember" type="checkbox" @change="changeRemember">在这台设备保存进度，方便稍后继续</label>
-        <p class="human-caption">回答和报告均在浏览器内处理，不会上传。勾选后会保存在此浏览器，可随时清除；共享设备建议不勾选。</p>
+        <p class="human-caption">默认回答和规则报告均在浏览器内处理，不会上传。勾选后保存在此浏览器，可随时清除；共享设备建议不勾选。未来使用 AI 补充分析时，会另行征求上传同意。</p>
         <p v-if="resumeAvailable" class="human-resume">发现已保存的进度：已回答 {{ answeredCount }} / {{ QUESTIONS.length }} 题。</p>
         <div class="human-actions"><button class="human-primary" @click="start">{{ resumeAvailable ? '继续我的评估' : '开始了解自己' }} <span>→</span></button><button v-if="resumeAvailable" class="human-secondary" @click="clearAll">清除已保存的内容</button></div>
       </div>
@@ -44,7 +44,8 @@
       <div class="human-report-columns"><article class="human-report-panel"><p class="human-kicker">01 / NEXT FOCUS</p><h2>先从一个方向开始</h2><p>{{ report.focusText }}</p><p class="human-caption">{{ report.focusBasis }}</p><p v-if="report.strengths.length">可借助的实践基础：{{ report.strengths.join('、') }}。</p></article><article class="human-report-panel"><p class="human-kicker">02 / CONNECTIONS</p><h2>看见领域之间的联系</h2><p>{{ report.dynamics }}</p></article></div>
       <article class="human-report-panel"><p class="human-kicker">03 / A CLOSER LOOK</p><h2>值得进一步核实的地方</h2><ul class="human-observations"><li v-for="observation in report.observations" :key="observation">{{ observation }}</li></ul></article>
       <article class="human-report-panel"><p class="human-kicker">04 / SMALL STEPS</p><h2>{{ report.focus ? `从「${report.focus.name}」开始的行动计划` : '从观察开始的行动计划' }}</h2><div class="human-plan"><div v-for="(step, i) in report.plan" :key="step.period"><span class="human-plan-number">0{{ i + 1 }}</span><h3>{{ step.period }}</h3><p>{{ step.action }}</p></div></div></article>
-      <article class="human-reflection"><p class="human-kicker">ONE MORE QUESTION</p><h2>{{ report.followUp }}</h2><p>找一个具体例子，写给自己，或者与信任的人聊聊。下一步的价值来自行动和反馈。</p><span class="human-pill">深度 AI 访谈将在后续版本开放</span></article>
+      <article class="human-reflection"><p class="human-kicker">GO BEYOND THE CHECKBOX</p><h2>{{ report.followUp }}</h2><p>{{ report.evidenceStatus }}</p><ol><li v-for="item in report.followUps" :key="item.domain"><strong>{{ item.title }} · {{ item.reason }}</strong><p>{{ item.question }}</p></li></ol><p>追问根据本次回答调整，并非固定人格标签。写给自己，或者与信任的人聊聊；下一步的价值来自行动和反馈。</p></article>
+      <article class="human-report-panel"><p class="human-kicker">OPTIONAL / AI REFLECTION</p><h2>AI 补充反思</h2><p v-if="!aiStatus?.enabled">{{ aiStatusError ? '暂时无法确认AI服务状态。' : '当前为免费的本地规则版；AI接口已预留，配置模型密钥后才会开放。' }} 不影响查看、修改和下载报告。</p><template v-else><p>模型服务：{{ aiStatus.provider === 'doubao' ? '豆包 / 火山方舟' : 'DeepSeek' }}。AI只提供补充追问与行动建议，不重新评定人格或等级。</p><label for="human-reflection">可选：补充一个真实经历（最多 1600 字，不要填写姓名、联系方式或健康隐私）</label><textarea id="human-reflection" v-model="reflection" maxlength="1600" placeholder="发生了什么？你做了什么？结果如何？" :disabled="aiLoading"></textarea><label class="human-check"><input v-model="aiConsent" type="checkbox" :disabled="aiLoading">我同意将24道答案及本次补充发至模型服务商</label><p class="human-caption">本站不保存答案及AI文本，仅记录每日调用次数。服务商按其隐私政策处理数据；每天有调用限制，失败也计入次数。请先登录。</p><button class="human-primary" :disabled="!aiConsent || !isLoggedIn || aiLoading" @click="requestReflection">{{ aiLoading ? '正在生成补充反思…' : '发送本次答案，获取补充反思' }}</button><RouterLink v-if="!isLoggedIn" to="/login?redirect=/human3" class="human-secondary">先登录（离开会丢失未保存回答）</RouterLink></template><p v-if="aiError" role="status">{{ aiError }}</p><div v-if="aiResult" class="human-ai-result" role="status"><p class="human-caption">{{ aiResult.disclaimer }}</p><p>{{ aiResult.content }}</p></div></article>
       <details class="human-report-panel"><summary>方法、框架来源与补充回答</summary><p>{{ report.limitation }}</p><p>实践稳定性、参照方式和阶段分别推断；它们不会被合并为“人格等级”。原型只在回答明确符合规则时给出，其他情况保留混合模式或信息不足。</p><ul><li v-for="e in report.context" :key="e.question">{{ e.question }} → {{ e.answer }}</li></ul><p class="human-caption">规则版本：{{ report.version }} · 灵感来源：<a :href="SOURCE_URL" target="_blank" rel="noopener noreferrer">Dan Koe / HUMAN 3.0 ↗</a></p></details>
       <div class="human-actions human-report-bottom"><button class="human-primary" @click="download">下载报告</button><button class="human-secondary" @click="review">修改我的回答</button><button class="human-secondary" @click="clearAll">清除回答和报告</button></div>
       <label class="human-check human-save-report"><input v-model="remember" type="checkbox" @change="changeRemember">在此浏览器保存回答，下次可以重新查看报告</label>
@@ -54,10 +55,12 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { DOMAINS, QUESTIONS, SOURCE_URL, VERSION, validateAnswers } from '../features/human3/questionnaire.js'
 import { assess, reportMarkdown } from '../features/human3/engine.js'
+import { apiRequest } from '../api/client.js'
+import { isLoggedIn } from '../stores/auth.js'
 
 const STORAGE_KEY = 'human3-questionnaire-progress'
 const stage = ref('intro')
@@ -68,6 +71,30 @@ const resumeAvailable = ref(false)
 const report = ref(null)
 const notice = ref('')
 const questionHeading = ref(null)
+const aiStatus = ref(null), aiStatusError = ref(false), aiConsent = ref(false), reflection = ref(''), aiResult = ref(null), aiLoading = ref(false), aiError = ref('')
+let aiController = null
+function resetAI() {
+  aiController?.abort(); aiController = null
+  aiConsent.value = false; reflection.value = ''; aiResult.value = null; aiError.value = ''; aiLoading.value = false
+}
+onUnmounted(resetAI)
+watch(stage, async (value) => {
+  resetAI()
+  if (value !== 'report') return
+  aiStatus.value = null; aiStatusError.value = false
+  try { aiStatus.value = await apiRequest('/api/human3/ai-status') }
+  catch { aiStatusError.value = true }
+})
+async function requestReflection() {
+  if (!aiConsent.value || !isLoggedIn.value || !aiStatus.value?.enabled || aiLoading.value) return
+  const controller = new AbortController(); aiController = controller
+  aiLoading.value = true; aiError.value = ''; aiResult.value = null
+  try {
+    const result = await apiRequest('/api/human3/reflect', { method: 'POST', signal: controller.signal, body: JSON.stringify({ consent: true, answers: answers.value, reflection: reflection.value }) })
+    if (aiController === controller) aiResult.value = result
+  } catch (error) { if (aiController === controller) aiError.value = error.message }
+  finally { if (aiController === controller) { aiLoading.value = false; aiController = null } }
+}
 const current = computed(() => QUESTIONS[index.value])
 const answeredCount = computed(() => Object.keys(answers.value).length)
 const sectionIndex = computed(() => index.value < 20 ? Math.floor(index.value / 5) : 4)
@@ -141,6 +168,7 @@ function previous() {
 function review() { report.value = null; index.value = 0; stage.value = 'questions'; save(); focusQuestion() }
 async function focusQuestion() { await nextTick(); questionHeading.value?.focus() }
 function clearAll() {
+  resetAI()
   answers.value = {}; report.value = null; index.value = 0; stage.value = 'intro'; remember.value = false; resumeAvailable.value = false
   notice.value = '回答、报告与此浏览器中的保存进度已清除。'
   try { localStorage.removeItem(STORAGE_KEY) } catch { notice.value = '当前页面的回答已清除；浏览器阻止了删除保存内容，请在浏览器设置中清除此网站的数据。' }
@@ -221,6 +249,7 @@ function download() {
 .human-plan { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }.human-plan-number { font-size: 24px; color: #99b2dd; }.human-plan h3 { font-size: 15px; }.human-plan p { font-size: 13px !important; }
 .human-reflection { padding: 30px; margin: 30px 0; border-left: 2px solid #b5c1ff; background: #1a2640b0; border-radius: 0 16px 16px 0; }.human-reflection h2 { font-size: 24px; line-height: 1.6; font-weight: 500; }.human-reflection p:not(.human-kicker) { font-size: 14px; line-height: 1.9; color: #aebdd5; }.human-report-bottom { margin-top: 28px; }.human-save-report { margin-top: 24px; color: #afbdd6; }
 .human-notice { background: #243750; border: 1px solid #50729a; padding: 15px; border-radius: 9px; color: #d6e6ff; line-height: 1.7; font-size: 13px; margin-top: 22px; }
+.human-reflection ol { padding-left: 20px; }.human-reflection li { padding: 10px 0; color: #bdcce3; font-size: 14px; }.human-ai-result { padding: 18px; margin-top: 22px; background: #1c2941; border-radius: 12px; }.human-ai-result > p:last-child { white-space: pre-wrap; overflow-wrap: anywhere; }.human-report-panel textarea { margin: 12px 0 20px; }
 button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid #d5dcff; outline-offset: 4px; }
 @media (max-width: 860px) { .human-domain-grid { grid-template-columns: 1fr 1fr; }.human-plan { grid-template-columns: 1fr 1fr; }.human-pattern { grid-template-columns: 1fr; gap: 12px; }.human-report-columns { grid-template-columns: 1fr; gap: 0; } }
 @media (max-width: 540px) { .human-page { width: calc(100% - 28px); padding-top: 24px; }.human-topline { font-size: 11px; flex-direction: column; gap: 13px; }.human-domain-preview { padding: 18px 13px; }.human-domain-preview h2 { font-size: 18px; }.human-start-card { padding: 20px; }.human-steps { gap: 8px; flex-wrap: wrap; justify-content: flex-start; }.human-steps li { font-size: 11px; }.human-question-card { padding: 22px 17px; }.human-option { padding: 14px 11px; gap: 9px; font-size: 13px; }.human-primary, .human-secondary { padding: 12px 15px; font-size: 13px; }.human-pattern { padding: 23px; }.human-report-panel { padding: 22px; }.human-plan { grid-template-columns: 1fr; gap: 12px; }.human-plan > div { border-bottom: 1px solid #34405b; }.human-plan > div:last-child { border: 0; }.human-reflection { padding: 23px; }.human-reflection h2 { font-size: 21px; } }

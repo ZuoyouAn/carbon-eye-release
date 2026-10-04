@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { isAdmin, isLoggedIn, refreshMe } from '../stores/auth'
 import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import NovelView from '../views/NovelView.vue'
-import PostsView from '../views/PostsView.vue'
-import ArticlesView from '../views/ArticlesView.vue'
-import ArticleEditorView from '../views/ArticleEditorView.vue'
-import ProfileView from '../views/ProfileView.vue'
-import AdminView from '../views/AdminView.vue'
-import RoadmapView from '../views/RoadmapView.vue'
-import ProjectsView from '../views/ProjectsView.vue'
-import TimelineView from '../views/TimelineView.vue'
-import MessagesView from '../views/MessagesView.vue'
-import ChangelogView from '../views/ChangelogView.vue'
-import CarbonEyeView from '../views/CarbonEyeView.vue'
-import SecureGeometryView from '../views/SecureGeometryView.vue'
-import SecureGeometryPaperView from '../views/SecureGeometryPaperView.vue'
+const LoginView = () => import('../views/LoginView.vue')
+const RegisterView = () => import('../views/RegisterView.vue')
+const NovelView = () => import('../views/NovelView.vue')
+const PostsView = () => import('../views/PostsView.vue')
+const ArticlesView = () => import('../views/ArticlesView.vue')
+const ArticleEditorView = () => import('../views/ArticleEditorView.vue')
+const ProfileView = () => import('../views/ProfileView.vue')
+const AdminView = () => import('../views/AdminView.vue')
+const RoadmapView = () => import('../views/RoadmapView.vue')
+const ProjectsView = () => import('../views/ProjectsView.vue')
+const TimelineView = () => import('../views/TimelineView.vue')
+const MessagesView = () => import('../views/MessagesView.vue')
+const ChangelogView = () => import('../views/ChangelogView.vue')
+const CarbonEyeView = () => import('../views/CarbonEyeView.vue')
+const SecureGeometryView = () => import('../views/SecureGeometryView.vue')
+const SecureGeometryPaperView = () => import('../views/SecureGeometryPaperView.vue')
 
 const router = createRouter({
   history: createWebHistory(),
@@ -37,16 +37,24 @@ const router = createRouter({
     { path: '/changelog', name: 'changelog', component: ChangelogView },
     { path: '/carbon-eye', name: 'carbon-eye', component: CarbonEyeView },
     { path: '/human3', name: 'human3', component: () => import('../views/Human3View.vue') },
+    { path: '/store', name: 'store', component: () => import('../views/StoreView.vue') },
     { path: '/secure-geometry', name: 'secure-geometry', component: SecureGeometryView },
     { path: '/secure-geometry/paper', name: 'secure-geometry-paper', component: SecureGeometryPaperView },
     { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
     { path: '/admin', name: 'admin', component: AdminView, meta: { requiresAuth: true, requiresAdmin: true } },
     { path: '/admin/articles/new', name: 'article-editor', component: ArticleEditorView, meta: { requiresAuth: true, requiresAdmin: true } },
     { path: '/admin/articles/:id/edit', name: 'article-edit', component: ArticleEditorView, meta: { requiresAuth: true, requiresAdmin: true } },
+    { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('../views/NotFoundView.vue') },
   ],
-  scrollBehavior() {
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition
     return { top: 0 }
   },
+})
+
+router.afterEach((to) => {
+  const titles = { home: '首页', human3: '四维成长测评', store: '数字商品 · 筹备中', projects: '项目', articles: '文章', novels: '小说', posts: '帖子', login: '登录', register: '注册', admin: '管理后台', profile: '个人中心', 'not-found': '页面不存在' }
+  document.title = `${titles[to.name] || '探索'} · 左右的个人网站`
 })
 
 router.beforeEach(async (to) => {

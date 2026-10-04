@@ -8,8 +8,25 @@ export async function apiRequest(path, options = {}) {
     headers.Authorization = `Bearer ${token}`
   }
 
-  const response = await fetch(`${API_BASE}${path}`, { ...options, headers })
-  const data = await response.json().catch(() => ({}))
+  const controller = new AbortController()
+  const externalAbort = () => controller.abort()
+  options.signal?.addEventListener('abort', externalAbort, { once: true })
+  if (options.signal?.aborted) controller.abort()
+  const timeout = setTimeout(() => controller.abort(), 60000)
+  let response, data
+  try {
+    response = await fetch(`${API_BASE}${path}`, { ...options, headers, signal: controller.signal })
+    data = await response.json().catch((error) => {
+      if (error.name === 'AbortError' || response.ok) throw error
+      return {}
+    })
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('请求已取消或超时，请稍后重试。')
+    throw new Error('无法连接服务，请检查网络或稍后重试。')
+  } finally {
+    clearTimeout(timeout)
+    options.signal?.removeEventListener('abort', externalAbort)
+  }
 
   if (!response.ok) {
     if (response.status === 401 && token && !path.startsWith('/api/auth/login')) {
