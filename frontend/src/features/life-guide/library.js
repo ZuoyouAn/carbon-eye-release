@@ -7,9 +7,18 @@ export function ratio(tags) {
 }
 export function filterEntries(chapters, { query = '', chapter = '', evidence = '', benefit = '', money = '', value = '' } = {}) {
   const words = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)
-  return chapters.flatMap(c => c.entries.map(entry => ({ ...entry, chapter: c.number, chapterTitle: c.title, file: c.file, ratio: ratio(entry.tags) }))).filter(entry =>
-    (!chapter || entry.chapter === Number(chapter)) && (!evidence || entry.evidence === evidence) && (!benefit || entry.tags.口径 === benefit) && (!money || entry.tags.钱 === money) && (!value || entry.ratio === value) && words.every(word => entry.markdown.toLocaleLowerCase().includes(word)))
+  return chapters.flatMap(indexChapter).filter(entry =>
+    (!chapter || entry.chapter === Number(chapter)) && (!evidence || entry.evidence === evidence) && (!benefit || entry.tags.口径 === benefit) && (!money || entry.tags.钱 === money) && (!value || entry.ratio === value) && words.every(word => searchText.get(entry).includes(word)))
   // Keep original chapter/entry order. Never rank money against life or freedom.
+}
+const chapterIndex = new WeakMap(), searchText = new WeakMap()
+function indexChapter(chapter) {
+  if (!chapterIndex.has(chapter)) {
+    const entries = chapter.entries.map(entry => ({ ...entry, chapter: chapter.number, chapterTitle: chapter.title, file: chapter.file, ratio: ratio(entry.tags) }))
+    entries.forEach(entry => searchText.set(entry, entry.markdown.toLocaleLowerCase()))
+    chapterIndex.set(chapter, entries)
+  }
+  return chapterIndex.get(chapter)
 }
 export function sourceUrl(commit, file) { return `https://github.com/eternity4719/HowToLiveBetter/blob/${commit}/book/${encodeURIComponent(file)}` }
 export function resolveSourceLinks(markdown, commit, file) {

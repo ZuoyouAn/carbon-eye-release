@@ -38,7 +38,7 @@
 
     <div class="status-strip">
       <span v-if="isLoggedIn" class="signed-user"><UserAvatar :user="authState.user" :size="26" />当前登录：{{ authState.user.username }} / {{ roleLabel(authState.user.role) }}</span>
-      <span v-else>自由探索Space与游戏；登录后可收藏、上传头像及聊天，发布帖子需要高权限。</span>
+      <span v-else>自由探索Space、游戏与阅读；人生指南支持本机收藏，账号收藏、头像及聊天需登录，发布帖子需要高权限。</span>
       <strong v-if="isMuted">你已被禁言，不能发布内容。</strong>
     </div>
 

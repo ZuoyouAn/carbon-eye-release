@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import time
 from selenium import webdriver
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.pointer_input import PointerInput
@@ -24,7 +25,7 @@ for option in ['--headless=new', '--window-size=1440,1100', '--enable-unsafe-swi
 driver = webdriver.Edge(service=Service(str(ROOT / 'outputs/human3/webdriver-cache/msedgedriver/win64/154.0.4258.53/msedgedriver.exe')), options=options)
 checks = []
 def wait(predicate, timeout=35):
-    return WebDriverWait(driver, timeout, poll_frequency=.1).until(predicate)
+    return WebDriverWait(driver, timeout, poll_frequency=.1, ignored_exceptions=(StaleElementReferenceException,)).until(predicate)
 def visible(selector):
     return wait(lambda d: next((e for e in d.find_elements('css selector', selector) if e.is_displayed()), None))
 def button(text):
@@ -91,6 +92,7 @@ try:
     click(button('暂停并靠近它 ↗')); click(button('回到全景'))
     driver.save_screenshot(str(output / 'solar-desktop.png')); checks.append('eight keyboard-accessible planet selectors, deep link, playback, pause and close-up')
     visit('/life-guide', '.guide-card')
+    visible('.guide-meta[data-index-ready="true"]')
     assert '657 / 657' in visible('.guide-meta').text
     assert len(driver.find_elements('css selector', '.guide-card')) == 12
     click(visible('.guide-card summary')); wait(lambda d: '备注' in visible('.guide-original').text and '来源' in visible('.guide-original').text)

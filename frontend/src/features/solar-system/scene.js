@@ -51,6 +51,7 @@ export function createSolarScene(container, select) {
     canvas, render,
     update(seconds) { time = seconds; render() },
     labels(visible) { showLabels = visible; render() },
+    highlight(ids = []) { orbitLines.forEach((line, i) => { const active = ids.includes(PLANETS[i].id); line.material.color.set(active ? '#387dc4' : '#bdc8d6'); line.material.opacity = active ? 1 : .65 }); render() },
     reset() { overview = true; resetOverview(); render() },
     focus(id) { const object = objects.find(item => item.userData.id === id); if (object) { overview = false; controls.target.copy(object.position); camera.position.copy(object.position).add(new THREE.Vector3(0, 8, 10)); controls.update(); render() } },
     dispose() { disposed = true; observer.disconnect(); controls.removeEventListener('change', render); controls.dispose(); canvas.removeEventListener('pointerdown', pointerDown); canvas.removeEventListener('pointerup', pointerUp); geometries.forEach(g => g.dispose()); materials.forEach(m => m.dispose()); labels.forEach(({ node }) => node.remove()); renderer.dispose(); renderer.forceContextLoss(); canvas.remove() },
