@@ -52,7 +52,7 @@
             <button type="button" class="mini-button" :disabled="quoteLoading" @click="fetchQuote">
               换一句
             </button>
-            <button type="button" class="mini-button" :disabled="!quote" @click="copyQuote">
+            <button type="button" class="mini-button" :disabled="!quote || quoteLoading || Boolean(quoteError)" @click="copyQuote">
               复制
             </button>
           </div>
@@ -80,15 +80,16 @@
 <script setup>
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
+import { useReadRequest } from '../composables/useReadRequest.js'
 import { RouterLink } from 'vue-router'
 import { apiRequest } from '../api/client'
 
 const stats = ref(null)
-const statsLoading = ref(true)
-const statsError = ref(false)
 const quote = ref(null)
-const quoteLoading = ref(false)
-const quoteError = ref('')
+const statsRead = useReadRequest(data => { stats.value = data })
+const quoteRead = useReadRequest(data => { quote.value = data })
+const statsLoading = statsRead.loading, statsError = statsRead.error
+const quoteLoading = quoteRead.loading, quoteError = quoteRead.error
 
 const cards = [
   { index: '↗', title: 'Space 聊天室', text: '进入公共大厅、加入小群，或向朋友发起双方同意的私聊。', to: '/chat' },
@@ -104,19 +105,12 @@ const cards = [
   { index: '09', title: '数字商品 · 筹备中', text: '未来的授权数字产品与卡密交付空间。当前仅为展示，不支持购买。', to: '/store' },
 ]
 
-async function fetchQuote() {
-  quoteLoading.value = true
-  quoteError.value = ''
-
-  try {
-    const exclude = quote.value?.id ? `&exclude_id=${quote.value.id}` : ''
-    quote.value = await apiRequest(`/api/yulu/random?yname=fcx${exclude}`)
-  } catch (error) {
-    quote.value = null
-    quoteError.value = error.status === 404 ? '暂时没有可用语录，稍后再来看看。' : (error.message || '语录暂不可用')
-  } finally {
-    quoteLoading.value = false
-  }
+function fetchQuote() {
+  const exclude = quote.value?.id ? `&exclude_id=${quote.value.id}` : ''
+  return quoteRead.run(async signal => {
+    try { return await apiRequest(`/api/yulu/random?yname=fcx${exclude}`, { signal }) }
+    catch (error) { if (error.status === 404) error.message = '暂时没有可用语录，稍后再来看看。'; throw error }
+  })
 }
 
 async function copyQuote() {
@@ -132,16 +126,8 @@ async function copyQuote() {
   }
 }
 
-async function fetchStats() {
-  statsLoading.value = true
-  statsError.value = false
-  try {
-    stats.value = await apiRequest('/api/site-summary')
-  } catch {
-    statsError.value = true
-  } finally {
-    statsLoading.value = false
-  }
+function fetchStats() {
+  return statsRead.run(signal => apiRequest('/api/site-summary', { signal }))
 }
 onMounted(() => {
   fetchQuote()

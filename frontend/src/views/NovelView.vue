@@ -8,15 +8,17 @@
         <p>支持搜索、收藏、阅读模式、字号调整和阅读进度保存。阅读数据基于 novel1 的 xs_id。</p>
       </div>
 
-      <div v-if="!selectedNovel" class="toolbar">
-        <input v-model="keyword" type="search" placeholder="搜索小说名字或内容">
-        <button type="button" @click="fetchNovels">搜索</button>
-      </div>
+      <form v-if="!isDetail" class="toolbar" @submit.prevent="fetchNovels">
+        <input v-model="keyword" type="search" aria-label="搜索小说" placeholder="搜索小说名字或内容">
+        <button type="submit">搜索</button>
+      </form>
 
       <p v-if="message" class="message">{{ message }}</p>
-      <p v-if="loading" class="state-text">正在读取小说...</p>
+      <p v-if="loading" class="state-text" role="status">正在读取小说...</p>
+      <div v-if="readError" class="request-error" role="alert"><p>{{ readError }}</p><button class="button button-secondary" @click="retryRead">重新读取</button><RouterLink v-if="isDetail" class="back-button" to="/novels">返回小说列表</RouterLink></div>
+      <p v-if="!isDetail && !loading && !readError && !novels.length" class="state-text">没有匹配的小说，可以换个关键词。</p>
 
-      <div v-if="!selectedNovel" class="card-grid two-grid">
+      <div v-if="!isDetail && !readError" class="card-grid two-grid">
         <article v-for="novel in novels" :key="novel.id" class="list-card">
           <span class="number-badge">{{ novel.id.toString().padStart(2, '0') }}</span>
           <div class="list-card-main">
@@ -29,7 +31,7 @@
         </article>
       </div>
 
-      <div v-else class="reader-layout">
+      <div v-else-if="isDetail && selectedNovel" class="reader-layout">
         <div class="reader-tools">
           <RouterLink class="button button-secondary" to="/novels">返回列表</RouterLink>
           <button class="button button-secondary" type="button" :disabled="!prevNovel" @click="goNovel(prevNovel)">上一篇</button>
@@ -68,6 +70,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
+import { useReadRequest } from '../composables/useReadRequest.js'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { apiRequest, deleteRequest, postJson, putJson } from '../api/client'
 import { isLoggedIn } from '../stores/auth'
@@ -77,9 +80,16 @@ const router = useRouter()
 const novels = ref([])
 const selectedNovel = ref(null)
 const keyword = ref('')
-const loading = ref(false)
 const message = ref('')
 const reader = ref({ progress: 0, font_size: 18, theme: 'dark' })
+const isDetail = computed(() => Boolean(route.params.id))
+const listRead = useReadRequest(data => { novels.value = data })
+const detailRead = useReadRequest(data => {
+  selectedNovel.value = data.novel
+  reader.value = { progress: data.novel.progress || 0, font_size: data.novel.font_size || 18, theme: data.novel.theme || 'dark' }
+})
+const loading = computed(() => (isDetail.value ? detailRead : listRead).loading.value)
+const readError = computed(() => (isDetail.value ? detailRead : listRead).error.value)
 
 const currentIndex = computed(() => novels.value.findIndex((item) => item.id === selectedNovel.value?.id))
 const prevNovel = computed(() => (currentIndex.value > 0 ? novels.value[currentIndex.value - 1] : null))
@@ -87,44 +97,26 @@ const nextNovel = computed(() => (currentIndex.value >= 0 && currentIndex.value 
 
 onMounted(fetchNovels)
 
-watch(() => route.params.id, async (id) => {
-  if (!id) {
-    selectedNovel.value = null
-    return
-  }
-  await fetchNovelDetail(id)
+watch(() => route.params.id, (id) => {
+  selectedNovel.value = null; message.value = ''
+  if (id) fetchNovelDetail(id)
+  else detailRead.cancel()
 }, { immediate: true })
 
-async function fetchNovels() {
-  loading.value = true
+function fetchNovels() {
   message.value = ''
-  try {
-    const q = keyword.value ? `?q=${encodeURIComponent(keyword.value)}` : ''
-    novels.value = await apiRequest(`/api/novels${q}`)
-  } catch (error) {
-    message.value = error.message
-  } finally {
-    loading.value = false
-  }
+  const params = new URLSearchParams({ include_content: 'false' })
+  if (keyword.value) params.set('q', keyword.value)
+  return listRead.run(signal => apiRequest(`/api/novels?${params}`, { signal }))
 }
 
-async function fetchNovelDetail(id) {
+function fetchNovelDetail(id) {
+  if (String(route.params.id) !== String(id)) return
   message.value = ''
-  try {
-    if (!novels.value.length) {
-      await fetchNovels()
-    }
-    const data = await apiRequest(`/api/novels/${id}`)
-    selectedNovel.value = data.novel
-    reader.value = {
-      progress: data.novel.progress || 0,
-      font_size: data.novel.font_size || 18,
-      theme: data.novel.theme || 'dark',
-    }
-  } catch (error) {
-    message.value = error.message
-  }
+  return detailRead.run(signal => apiRequest(`/api/novels/${encodeURIComponent(id)}`, { signal }))
 }
+
+function retryRead() { return isDetail.value ? fetchNovelDetail(route.params.id) : fetchNovels() }
 
 function goNovel(novel) {
   if (novel) {

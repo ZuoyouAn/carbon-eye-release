@@ -23,7 +23,7 @@ from sqlalchemy import inspect
 from sqlalchemy import text
 from sqlalchemy import select, func
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, load_only
 
 from database import Base
 from database import SessionLocal
@@ -427,14 +427,14 @@ def ensure_novel_exists(db: Session, novel_id: int):
     return novel
 
 
-def novel_to_dict(db: Session, novel: Novel1, user: Optional[User] = None):
+def novel_to_dict(db: Session, novel: Novel1, user: Optional[User] = None, include_content: bool = True):
     favorite_count = db.query(NovelFavorite).filter(NovelFavorite.novel_id == novel.xs_id).count()
     is_favorited = bool(user and db.query(NovelFavorite).filter(NovelFavorite.novel_id == novel.xs_id, NovelFavorite.user_id == user.id).first())
     progress = db.query(ReadingProgress).filter(ReadingProgress.novel_id == novel.xs_id, ReadingProgress.user_id == user.id).first() if user else None
     return {
         "id": novel.xs_id,
         "name": novel.xs_name,
-        "content": novel.xs_content,
+        "content": novel.xs_content if include_content else "",
         "favorite_count": favorite_count,
         "is_favorited": is_favorited,
         "progress": progress.progress if progress else 0,
@@ -830,14 +830,16 @@ def calculate_secure_geometry_api(data: SecureGeometryRequest):
 
 
 @app.get("/api/novels")
-def read_novels(q: str = "", db: Session = Depends(get_db), authorization: Optional[str] = Header(default=None)):
+def read_novels(q: str = "", include_content: bool = True, db: Session = Depends(get_db), authorization: Optional[str] = Header(default=None)):
     user = optional_user_from_header(db, authorization)
     query = db.query(Novel1)
+    if not include_content:
+        query = query.options(load_only(Novel1.xs_id, Novel1.xs_name))
     if q.strip():
         keyword = f"%{q.strip()}%"
         query = query.filter(or_(Novel1.xs_name.like(keyword), Novel1.xs_content.like(keyword)))
     novels = query.order_by(Novel1.xs_id.asc()).all()
-    return [novel_to_dict(db, novel, user) for novel in novels]
+    return [novel_to_dict(db, novel, user, include_content=include_content) for novel in novels]
 
 
 @app.get("/api/site-summary")

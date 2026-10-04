@@ -8,25 +8,26 @@
         <p>文章支持 Markdown、分类、标签、搜索、点赞、收藏和评论。</p>
       </div>
 
-      <div v-if="!selectedArticle" class="toolbar filter-toolbar">
-        <input v-model="filters.q" type="search" placeholder="搜索标题、摘要或正文">
-        <select v-model="filters.category">
+      <form v-if="!isDetail" class="toolbar filter-toolbar" @submit.prevent="fetchArticles(1)">
+        <input v-model="filters.q" type="search" aria-label="搜索文章" placeholder="搜索标题、摘要或正文">
+        <select v-model="filters.category" aria-label="文章分类">
           <option value="">全部分类</option>
           <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
         </select>
-        <input v-model="filters.tag" type="text" placeholder="标签，例如 Vue">
-        <select v-model="filters.sort">
+        <input v-model="filters.tag" type="text" aria-label="文章标签" placeholder="标签，例如 Vue">
+        <select v-model="filters.sort" aria-label="文章排序">
           <option value="latest">最新</option>
           <option value="oldest">最早</option>
         </select>
-        <button type="button" @click="fetchArticles(1)">筛选</button>
+        <button type="submit">筛选</button>
         <RouterLink v-if="isAdmin" class="button button-primary" to="/admin/articles/new">发布文章</RouterLink>
-      </div>
+      </form>
 
-      <p v-if="loading" class="state-text">正在读取文章...</p>
+      <p v-if="loading" class="state-text" role="status">正在读取文章...</p>
+      <div v-if="readError" class="request-error" role="alert"><p>{{ readError }}</p><button class="button button-secondary" @click="retryRead">重新读取</button><RouterLink v-if="isDetail" class="back-button" to="/articles">返回文章列表</RouterLink></div>
 
-      <el-empty v-if="!selectedArticle && !loading && !articles.length" description="暂无文章" />
-      <div v-if="!selectedArticle && articles.length" class="card-grid">
+      <el-empty v-if="!isDetail && !loading && !readError && !articles.length" description="暂无文章" />
+      <div v-if="!isDetail && articles.length && !readError" class="card-grid">
         <article v-for="article in articles" :key="article.id" class="content-card">
           <div class="card-meta">
             <span>{{ article.category }}</span>
@@ -50,7 +51,7 @@
       </div>
 
       <el-pagination
-        v-if="!selectedArticle"
+        v-if="!isDetail && !readError"
         class="el-pager"
         background
         layout="prev, pager, next"
@@ -60,7 +61,7 @@
         @current-change="changePage"
       />
 
-      <article v-else class="detail-panel-inner">
+      <article v-else-if="isDetail && selectedArticle" class="detail-panel-inner">
         <div class="card-meta">
           <span>{{ selectedArticle.category }}</span>
           <span>{{ selectedArticle.created_at }}</span>
@@ -108,7 +109,8 @@ import { ElMessage, ElEmpty, ElPagination } from 'element-plus'
 import 'element-plus/es/components/empty/style/css'
 import 'element-plus/es/components/pagination/style/css'
 import { renderMarkdown } from '../utils/markdown'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useReadRequest } from '../composables/useReadRequest.js'
 import { RouterLink, useRoute } from 'vue-router'
 import { apiRequest, deleteRequest, postJson } from '../api/client'
 import { canPublish, isAdmin, isLoggedIn, isMuted } from '../stores/auth'
@@ -118,11 +120,16 @@ const articles = ref([])
 const categories = ref([])
 const selectedArticle = ref(null)
 const comments = ref([])
-const loading = ref(false)
 const message = ref('')
 const filters = ref({ q: '', category: '', tag: '', sort: 'latest' })
 const page = ref({ page: 1, page_size: 9, total: 0, pages: 1 })
 const commentForm = ref({ content: '' })
+const isDetail = computed(() => Boolean(route.params.id))
+const listRead = useReadRequest(data => { articles.value = data.items; page.value = data })
+const detailRead = useReadRequest(data => { selectedArticle.value = data.article; comments.value = data.comments })
+const categoryRead = useReadRequest(data => { categories.value = data })
+const loading = computed(() => (isDetail.value ? detailRead : listRead).loading.value)
+const readError = computed(() => (isDetail.value ? detailRead : listRead).error.value)
 
 const publishTip = computed(() => {
   if (!isLoggedIn.value) return '请先登录后再评论。'
@@ -133,63 +140,40 @@ const publishTip = computed(() => {
 
 const renderedArticle = computed(() => renderMarkdown(selectedArticle.value?.content || ''))
 
-onMounted(async () => {
-  await Promise.all([fetchCategories(), fetchArticles()])
-})
-
-watch(() => route.params.id, async (id) => {
-  if (!id) {
-    selectedArticle.value = null
-    comments.value = []
-    return
-  }
-  await fetchArticleDetail(id)
+watch(() => route.params.id, (id) => {
+  selectedArticle.value = null; comments.value = []; commentForm.value = { content: '' }
+  if (id) { listRead.cancel(); categoryRead.cancel(); fetchArticleDetail(id) }
+  else { detailRead.cancel(); fetchCategories(); fetchArticles() }
 }, { immediate: true })
 
-async function fetchCategories() {
-  try {
-    categories.value = await apiRequest('/api/articles/categories')
-  } catch {
-    categories.value = []
-  }
+function fetchCategories() {
+  return categoryRead.run(signal => apiRequest('/api/articles/categories', { signal }))
 }
 
-async function fetchArticles(nextPage = page.value.page) {
-  loading.value = true
-  message.value = ''
-  try {
-    const params = new URLSearchParams({ page: nextPage, page_size: page.value.page_size, sort: filters.value.sort })
-    if (filters.value.q) params.set('q', filters.value.q)
-    if (filters.value.category) params.set('category', filters.value.category)
-    if (filters.value.tag) params.set('tag', filters.value.tag)
-    const data = await apiRequest(`/api/articles?${params.toString()}`)
-    articles.value = data.items
-    page.value = data
-  } catch (error) {
-    ElMessage.error(error.message)
-  } finally {
-    loading.value = false
-  }
+function fetchArticles(nextPage = page.value.page) {
+  if (isDetail.value) return
+  const params = new URLSearchParams({ page: nextPage, page_size: page.value.page_size, sort: filters.value.sort })
+  if (filters.value.q) params.set('q', filters.value.q)
+  if (filters.value.category) params.set('category', filters.value.category)
+  if (filters.value.tag) params.set('tag', filters.value.tag)
+  return listRead.run(signal => apiRequest(`/api/articles?${params.toString()}`, { signal }))
 }
 
-async function fetchArticleDetail(id) {
-  message.value = ''
-  try {
-    const data = await apiRequest(`/api/articles/${id}`)
-    selectedArticle.value = data.article
-    comments.value = data.comments
-  } catch (error) {
-    ElMessage.error(error.message)
-  }
+function fetchArticleDetail(id) {
+  if (String(route.params.id) !== String(id)) return
+  return detailRead.run(signal => apiRequest(`/api/articles/${encodeURIComponent(id)}`, { signal }))
 }
+
+function retryRead() { return isDetail.value ? fetchArticleDetail(route.params.id) : fetchArticles() }
 
 async function createComment() {
+  const id = selectedArticle.value?.id
+  if (!id) return
   message.value = ''
   try {
-    const data = await postJson(`/api/articles/${selectedArticle.value.id}/comments`, commentForm.value)
+    const data = await postJson(`/api/articles/${id}/comments`, commentForm.value)
     ElMessage.success(data.message)
-    commentForm.value = { content: '' }
-    await fetchArticleDetail(selectedArticle.value.id)
+    if (String(route.params.id) === String(id)) { commentForm.value = { content: '' }; await fetchArticleDetail(id) }
   } catch (error) {
     ElMessage.error(error.message)
   }
