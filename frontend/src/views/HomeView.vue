@@ -63,7 +63,7 @@
 
     <section class="section">
       <div class="home-featured">
-        <article class="showcase-card green" v-reveal><p class="eyebrow">SPACE ARCADE · 3D</p><h2>世界安静之后，<br>仍有路可走。</h2><p>走进原创低多边形城市。移动、探索、搜寻，点亮最后一座信标。</p><RouterLink class="text-button" to="/wasteland">开启末世探索 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">⌁</span></article>
+        <article class="showcase-card green" v-reveal><p class="eyebrow">SPACE ARCADE · BASE SURVIVAL</p><h2>白天，把家建好。<br>夜晚，让灯亮着。</h2><p>采集木材，搭建围墙与炮塔，安排供电和补给。守住三夜，等到救援。</p><RouterLink class="text-button" to="/wasteland">建立余烬营地 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">⌁</span></article>
         <article class="showcase-card" v-reveal><p class="eyebrow">HUMAN 3.0 · REFLECTION</p><h2>更了解自己，<br>从一次停顿开始。</h2><p>四个生活维度，二十四道问题。不是一个标签，而是下一步行动的起点。</p><RouterLink class="text-button" to="/human3">探索成长地图 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">◌</span></article>
       </div>
       <div class="section-heading">
@@ -100,7 +100,9 @@ const cards = [
   { index: '◉', title: '太阳系图谱', text: '拖动视角，靠近八颗行星。在一张浅色 3D 图谱里，重新发现宇宙。', to: '/solar-system' },
   { index: '↗', title: '高性价比人生指南', text: '34 节原文，按关键词、成本和证据查阅；保留完整来源与适用条件。', to: '/life-guide' },
   { index: '↗', title: 'Space 聊天室', text: '进入公共大厅、加入小群，或向朋友发起双方同意的私聊。', to: '/chat' },
-  { index: '3D', title: '末世模拟器', text: '移动探索、搜集资源、修复信标；也可以继续原来的三十天剧情。', to: '/wasteland' },
+  { index: '3D', title: '末世模拟器', text: '采集建造、供电与补给、抵御夜袭。城市探索与原来的三十天剧情也保留。', to: '/wasteland' },
+  { index: '↔', title: 'PDF / Word 转换', text: '文件在浏览器内转换，先核对预览，再下载。扫描件可选图片保真模式。', to: '/document-tools' },
+  { index: '01', title: '密码算法实验室', text: '输入示例，观察 AES、SHA、RSA 等算法的真实计算轨迹与原理图。', to: '/crypto-lab' },
   { index: '01', title: '小说阅读', text: '搜索小说、进入阅读模式、调整字号和保存阅读进度。', to: '/novels' },
   { index: '02', title: '帖子广场', text: '交流想法、收藏与点赞；高权限用户可以发布和评论。', to: '/posts' },
   { index: '03', title: '作品文章', text: '文章支持分类、标签、Markdown、收藏、点赞和评论。', to: '/articles' },

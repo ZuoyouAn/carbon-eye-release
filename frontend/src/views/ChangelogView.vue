@@ -29,6 +29,7 @@
 import { RouterLink } from 'vue-router'
 
 const logs = [
+  { version: 'v6', date: '2026-10-05', title: '建一座营地，看懂一次运算', text: '末世游戏新主玩法改为余烬营地：采集、五类建造、供电、补给生产、维修、三夜防卫及黎明升级，保留城市探索和旧剧情。新增浏览器本地 PDF / Word 转换，预览后导出，明确扫描件与排版限制；新增七类密码算法实验，显示真实矩阵、寄存器、模幂轨迹、单步播放和原理流程图。文件与实验输入不上传，不新增收费服务。', tags: ['Base Survival', 'Local Conversion', 'Crypto Visualization', 'Privacy'] },
   { version: 'v5.2', date: '2026-10-05', title: '看得清，也玩得顺', text: '全站正文、标签与输入字号放大，窄屏导航同步调整。末世探索加入固定北向战术地图、下一目标、就近拾取、健康体力条、五分钟练习模式和场景展开；太阳系加入原创程序化表面、俯视与跟随观察、轨道开关、示意时间拖动及标签避让。参考站未找到站点级复用许可，未复制其业务代码或素材。', tags: ['Readability', 'Game Navigation', 'Planet Surfaces', 'Camera Controls'] },
   { version: 'v5.1', date: '2026-10-05', title: '从探索，到持续阅读', text: '太阳系新增十个历史航天任务档案、目标筛选和图谱标记，每项附 NASA 来源，不冒充实时轨迹。人生指南逐章展示并复用内存索引，保留失败章节重试；支持条目分享、筛选链接、可选本机收藏与继续阅读，默认不保存记录。', tags: ['Mission Archive', 'Progressive Reading', 'Local Privacy'] },
   { version: 'v5', date: '2026-10-05', title: '浅色 Space：探索城市、宇宙与生活', text: '整体界面升级为浅色留白与轻动效；末世模拟器加入原创低多边形3D城市，可键盘和摇杆探索，保留三十天剧情与旧存档。新增原创太阳系图谱与人生指南原文检索，明确示意比例、来源和开放许可；不新增付费服务。', tags: ['Light Design', 'Three.js', 'Solar Atlas', 'Life Guide'] },

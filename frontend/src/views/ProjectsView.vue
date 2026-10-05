@@ -8,11 +8,13 @@
       </div>
 
       <div class="card-grid two-grid">
+        <article class="content-card project-detail-card"><div class="card-meta"><span>Document Studio</span><span>本机转换 / 免费</span></div><h2>PDF / Word 转换</h2><p>PDF 提取为可编辑 DOCX，或将页面图片嵌入 Word；DOCX 根据安全预览重新排版为图像 PDF。文件不上传，转换边界在页面明确说明。</p><RouterLink class="text-button" to="/document-tools">打开转换工作台 ↗</RouterLink></article>
+        <article class="content-card project-detail-card"><div class="card-meta"><span>Crypto Lab</span><span>真实计算 / 原理可视化</span></div><h2>密码算法实验室</h2><p>AES-128 状态矩阵、SHA-256 64 轮寄存器、RSA 与 DH 模幂，以及三种古典/位运算演示。输入后可单步、播放、拖动步骤并对照原理图。仅用于教学，不处理真实秘密。</p><RouterLink class="text-button" to="/crypto-lab">看见每一步计算 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Solar Atlas</span><span>原创3D / NASA资料</span></div><h2>太阳系图谱</h2><p>转动视角，选择八颗行星，暂停并靠近观察。模型与轨道均为压缩示意，不用于天象预测；设备不支持3D时仍可阅读资料。</p><RouterLink class="text-button" to="/solar-system">抬头看看 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Life Guide</span><span>原文阅读 / CC BY 4.0</span></div><h2>高性价比人生指南</h2><p>按章节、关键词、成本与证据筛选原书条目；完整保留来源和备注，公开标明作者、同步版本和许可。不需要模型API。</p><RouterLink class="text-button" to="/life-guide">打开人生指南 ↗</RouterLink></article>
         <article class="content-card project-detail-card">
           <div class="card-meta"><span>Original Game</span><span>3D 探索 / 剧情生存 / 免费游玩</span></div>
-          <h2>末世模拟器</h2><p>原创低多边形城市，键盘或摇杆移动、碰撞避障、搜集资源与撤离。也可切换三十天剧情，继续原来的天赋与结局。无需登录，不调用AI。</p>
+          <h2>末世模拟器</h2><p>新主玩法余烬营地：采集资源、搭建围墙与炮塔、处理供电和补给，守住三个夜晚。城市探索和三十天剧情仍可切换。无需登录，不调用AI。</p>
           <div class="tag-list"><span>实时3D</span><span>键盘与触屏</span><span>旧剧情存档保留</span></div>
           <RouterLink class="text-button" to="/wasteland">走进长夜 →</RouterLink>
         </article>

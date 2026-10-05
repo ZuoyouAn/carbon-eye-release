@@ -20,6 +20,8 @@
         <details class="nav-more"><summary>更多</summary><div>
         <RouterLink to="/solar-system">太阳系图谱</RouterLink>
         <RouterLink to="/life-guide">人生指南</RouterLink>
+        <RouterLink to="/document-tools">PDF / Word 转换</RouterLink>
+        <RouterLink to="/crypto-lab">密码算法实验室</RouterLink>
         <RouterLink to="/store">数字商品</RouterLink>
         <RouterLink to="/roadmap">学习路线</RouterLink>
         <RouterLink to="/timeline">时间线</RouterLink>

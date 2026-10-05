@@ -60,7 +60,7 @@ try:
     assert driver.execute_script("return getComputedStyle(document.body).backgroundColor") == 'rgb(245, 245, 247)'
     assert driver.find_elements('css selector', '.feature-card[href="/solar-system"]') and driver.find_elements('css selector', '.feature-card[href="/life-guide"]')
     driver.save_screenshot(str(output / 'home-desktop.png')); checks.append('light homepage and discoverable new pages')
-    visit('/wasteland', '.expedition-stage canvas')
+    visit('/wasteland?mode=exploration', '.expedition-stage canvas')
     assert len(driver.find_elements('css selector', '.expedition-stage canvas')) == 1
     click(button('开始探索')); wait(lambda d: visible('.expedition-stage').get_attribute('data-status') == 'playing')
     click(visible('button[aria-label="向左旋转视角"]'))
@@ -106,7 +106,7 @@ try:
     wait(lambda d: visible('.guide-intro') and all('第 13 节' in e.text for e in d.find_elements('css selector', '.guide-entry-meta')))
     driver.save_screenshot(str(output / 'guide-desktop.png')); checks.append('full-text search and chapter filters preserve original numbering and chapter introduction')
     driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {'width': 390, 'height': 844, 'deviceScaleFactor': 1, 'mobile': True})
-    for path, selector, image in [('/', '.hero-copy h1', 'home'), ('/solar-system', '.solar-stage canvas', 'solar'), ('/life-guide', '.guide-card', 'guide'), ('/wasteland', '.expedition-stage canvas', 'game')]:
+    for path, selector, image in [('/', '.hero-copy h1', 'home'), ('/solar-system', '.solar-stage canvas', 'solar'), ('/life-guide', '.guide-card', 'guide'), ('/wasteland?mode=exploration', '.expedition-stage canvas', 'game')]:
         visit(path, selector); overflow(); driver.save_screenshot(str(output / (image + '-mobile.png')))
     checks.append('four new/light pages fit 390-pixel mobile viewport')
     click(button('开始探索'))
@@ -128,7 +128,7 @@ try:
     source = "const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl2'?null:original.call(this,type,...args)};"
     driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': source})
     visit('/solar-system', '.solar-error'); click(visible('.solar-planet-list button:nth-child(1)')); assert visible('.solar-information h2').text == '水星'
-    visit('/wasteland', '.expedition-overlay a'); assert visible('.expedition-overlay a').get_attribute('href').endswith('/wasteland?mode=story')
+    visit('/wasteland?mode=exploration', '.expedition-overlay a'); assert visible('.expedition-overlay a').get_attribute('href').endswith('/wasteland?mode=story')
     checks.append('reduced motion disables decoration; WebGL2 failure keeps text atlas and story fallback usable')
     print(json.dumps({'status': 'passed', 'checks': checks, 'count': len(checks), 'screenshots': str(output)}, ensure_ascii=False))
 finally:

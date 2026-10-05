@@ -42,6 +42,8 @@ const router = createRouter({
     { path: '/wasteland', name: 'wasteland', component: () => import('../views/WastelandView.vue') },
     { path: '/solar-system', name: 'solar-system', component: () => import('../views/SolarSystemView.vue') },
     { path: '/life-guide', name: 'life-guide', component: () => import('../views/LifeGuideView.vue') },
+    { path: '/document-tools', name: 'document-tools', component: () => import('../views/DocumentToolsView.vue') },
+    { path: '/crypto-lab', name: 'crypto-lab', component: () => import('../views/CryptoLabView.vue') },
     { path: '/secure-geometry', name: 'secure-geometry', component: SecureGeometryView },
     { path: '/secure-geometry/paper', name: 'secure-geometry-paper', component: SecureGeometryPaperView },
     { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
@@ -59,7 +61,7 @@ const router = createRouter({
 
 router.afterEach((to) => {
   const titles = { home: '首页', human3: '四维成长测评', store: '数字商品 · 筹备中', projects: '项目', articles: '文章', novels: '小说', posts: '帖子', login: '登录', register: '注册', admin: '管理后台', profile: '个人中心', 'not-found': '页面不存在' }
-  const extras = { chat: '聊天室', wasteland: '末世模拟器', 'solar-system': '太阳系图谱', 'life-guide': '高性价比人生指南' }
+  const extras = { chat: '聊天室', wasteland: '末世模拟器', 'solar-system': '太阳系图谱', 'life-guide': '高性价比人生指南', 'document-tools': '文档转换', 'crypto-lab': '密码算法实验室' }
   document.title = `${extras[to.name] || titles[to.name] || '探索'} · 左右的Space`
 })
 

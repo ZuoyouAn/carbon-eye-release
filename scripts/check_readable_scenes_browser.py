@@ -55,7 +55,7 @@ try:
     font('.guide-card>p', 16); font('.guide-tags span', 14); font('.guide-search input', 16)
     checks.append('original book summaries, labels and search use enlarged text')
 
-    visit('/wasteland', '.expedition-stage canvas'); font('.expedition-brief p', 14)
+    visit('/wasteland?mode=exploration', '.expedition-stage canvas'); font('.expedition-brief p', 14)
     Select(element('.expedition-difficulty select')).select_by_value('practice')
     click(button('开始探索')); wait(lambda d: element('.expedition-stage').get_attribute('data-difficulty') == 'practice')
     assert element('.expedition-hud strong').text.startswith('4:') or element('.expedition-hud strong').text == '5:00'
@@ -118,11 +118,11 @@ try:
 
     for width in [390, 320]:
         driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {'width': width, 'height': 844, 'deviceScaleFactor': 1, 'mobile': True})
-        for path, selector in [('/', '.hero-description'), ('/life-guide', '.guide-card'), ('/solar-system', '.solar-stage canvas'), ('/wasteland', '.expedition-stage canvas'), ('/human3', '.human-page'), ('/store', '.store-page'), ('/chat', '.auth-page')]:
+        for path, selector in [('/', '.hero-description'), ('/life-guide', '.guide-card'), ('/solar-system', '.solar-stage canvas'), ('/wasteland?mode=exploration', '.expedition-stage canvas'), ('/human3', '.human-page'), ('/store', '.store-page'), ('/chat', '.auth-page')]:
             if path == '/chat':
                 continue
             visit(path, selector); overflow()
-        visit('/wasteland', '.expedition-stage canvas'); click(button('开始探索')); click(button('放大场景')); overflow()
+        visit('/wasteland?mode=exploration', '.expedition-stage canvas'); click(button('开始探索')); click(button('放大场景')); overflow()
         camera = element('.expedition-camera'); expand = element('.expedition-expand')
         assert driver.execute_script('const a=arguments[0].getBoundingClientRect(),b=arguments[1].getBoundingClientRect();return !(a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top)', camera, expand), 'game camera overlaps expand button'
         click(button('收起场景')); click(button('暂停'))
