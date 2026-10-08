@@ -26,6 +26,7 @@ export function createSwarm(profession = 'ranger', difficulty = 'normal', endles
     status: 'playing', profession, difficulty, endless: Boolean(endless), random: seed >>> 0, elapsed: 0, ids: 1,
     player: { x: 0, y: 0, hp: def.hp, maxHp: def.hp, speed: 220, damage: def.damage, interval: def.interval, range: profession === 'guardian' ? 115 : 460, armor: 0, multi: 1, pierce: profession === 'mage' ? 1 : 0, magnet: 155, invulnerable: 0, dash: 0, dashCooldown: 0, skillCooldown: 0, shotCooldown: 0, facing: 0 },
     level: 1, xp: 0, nextXp: 5, kills: 0, bosses: 0, bossWave: 0, spawnCooldown: .4,
+    animation: { stride: 0, moving: false, attack: 0, skill: 0, hurt: 0, trail: 0 },
     enemies: [], bullets: [], gems: [], effects: [], choices: [], branch: '', upgrades: {}, note: '移动收集星尘；经验满后选择强化。',
   }
 }
@@ -65,18 +66,20 @@ export function chooseSwarmUpgrade(s, id) {
     if (id === 'armor') p.armor = Math.min(24, p.armor + 3)
     if (id === 'reach') { p.range = Math.min(750, p.range + 35); p.pierce = Math.min(8, p.pierce + 1) }
   }
+  effect(s, p.x, p.y, 75, '#64aaa7', .65, 'level')
   s.choices = []; s.note = `获得 ${choice.name}。`; offer(s); return true
 }
 function hit(s, en, damage) {
   if (en.hp <= 0) return
-  en.hp -= damage; en.flash = .09
+  en.hp -= damage; en.flash = .18
+  effect(s, en.x, en.y, en.radius, '#e3b878', .24, 'impact')
   effect(s, en.x, en.y - 22, Math.round(damage), '#526f85', .45, 'damage')
   if (s.branch === 'frost') en.slow = 2.2
   if (en.hp <= 0) {
     s.kills++; if (en.type === 'boss') { s.bosses++; s.player.hp = Math.min(s.player.maxHp, s.player.hp + 30) }
     if (s.gems.length >= SWARM_LIMITS.gems) { const old = s.gems.shift(); s.xp += old.value }
     s.gems.push({ id: s.ids++, x: en.x, y: en.y, value: en.type === 'boss' ? 12 : en.type === 'tank' ? 2 : 1 })
-    effect(s, en.x, en.y, en.radius + 10, '#87c9b9', .22)
+    effect(s, en.x, en.y, en.radius + 10, '#87c9b9', .42, 'burst')
   }
 }
 function projectile(s, angle, damage = s.player.damage) {
@@ -89,18 +92,21 @@ function attack(s, aim) {
   if (!targets.length && !aim) return
   p.facing = aim ? Math.atan2(aim.y, aim.x) : Math.atan2(targets[0].y - p.y, targets[0].x - p.x)
   if (s.profession === 'guardian') {
-    targets.forEach(en => hit(s, en, p.damage)); effect(s, p.x, p.y, p.range, '#d6a264', .25)
+    targets.forEach(en => hit(s, en, p.damage)); effect(s, p.x, p.y, p.range, '#d6a264', .32, 'slash', p.facing)
   } else for (let i = 0; i < p.multi; i++) projectile(s, p.facing + (i - (p.multi - 1) / 2) * .14)
+  s.animation.attack = .24
+  if (s.profession !== 'guardian') effect(s, p.x + Math.cos(p.facing) * 26, p.y + Math.sin(p.facing) * 26, 12, s.profession === 'mage' ? '#ad8cda' : '#72c5d4', .18, 'impact')
   p.shotCooldown = p.interval
 }
 export function swarmSkill(s) {
   const p = s.player
   if (s.status !== 'playing' || s.choices.length || p.skillCooldown > 0) return false
-  p.skillCooldown = 9
+  p.skillCooldown = 9; s.animation.skill = .6
+  effect(s, p.x, p.y, s.profession === 'guardian' ? 210 : s.profession === 'mage' ? 280 : 135, s.profession === 'guardian' ? '#d3a264' : s.profession === 'mage' ? '#9d89d0' : '#55a5bc', .6, 'nova')
   if (s.profession === 'ranger') { for (let i = 0; i < 14; i++) projectile(s, i * Math.PI / 7, p.damage * 1.8) }
   else {
     const radius = s.profession === 'guardian' ? 210 : 280
-    s.enemies.filter(e => distance(e, p) <= radius).forEach(en => { hit(s, en, p.damage * 2.4); en.slow = 3 })
+    s.enemies.filter(e => distance(e, p) <= radius).forEach(en => { hit(s, en, p.damage * 2.4); en.slow = 3; if (s.profession === 'guardian') { const d = Math.max(1, distance(en, p)); en.knockX = (en.x - p.x) / d; en.knockY = (en.y - p.y) / d; en.knock = .3 } })
     effect(s, p.x, p.y, radius, s.profession === 'guardian' ? '#e6b96e' : '#8fb3ef', .5)
     if (s.profession === 'guardian') p.invulnerable = 1.4
   }
@@ -130,11 +136,15 @@ export function stepSwarm(s, input = {}, seconds = 0) {
   const dt = Math.min(seconds, .05), p = s.player
   s.elapsed += dt
   for (const key of ['invulnerable', 'dash', 'dashCooldown', 'skillCooldown', 'shotCooldown']) p[key] = Math.max(0, p[key] - dt)
+  for (const key of ['attack', 'skill', 'hurt', 'trail']) s.animation[key] = Math.max(0, s.animation[key] - dt)
   let x = Number.isFinite(input.x) ? clamp(input.x, -1, 1) : 0, y = Number.isFinite(input.y) ? clamp(input.y, -1, 1) : 0
   const length = Math.max(1, Math.hypot(x, y)); x /= length; y /= length
+  s.animation.moving = Math.hypot(x, y) > .01
+  if (s.animation.moving) s.animation.stride += dt * (p.dash > 0 ? 24 : 12)
   if (input.dash && !p.dashCooldown) { p.dash = .22; p.dashCooldown = 3; p.invulnerable = .4 }
   const velocity = p.dash > 0 ? 760 : p.speed
   p.x = clamp(p.x + x * velocity * dt, -4000, 4000); p.y = clamp(p.y + y * velocity * dt, -4000, 4000)
+  if (p.dash > 0 && s.animation.moving && !s.animation.trail) { effect(s, p.x, p.y, 18, '#74b4c7', .22, 'trail', p.facing); s.animation.trail = .045 }
   if (input.skill) swarmSkill(s)
   const aim = input.aim && Number.isFinite(input.aim.x) && Number.isFinite(input.aim.y) && Math.hypot(input.aim.x, input.aim.y) > .01 ? input.aim : null
   if (!p.shotCooldown && (input.auto !== false || input.fire)) attack(s, aim)
@@ -150,12 +160,13 @@ export function stepSwarm(s, input = {}, seconds = 0) {
     if (en.hp <= 0) continue
     en.slow = Math.max(0, en.slow - dt); en.flash = Math.max(0, en.flash - dt)
     const d = distance(en, p), speed = en.speed * (en.slow > 0 ? .35 : 1) * (s.difficulty === 'practice' ? .72 : 1)
-    if (d > en.radius + 12) { en.x += (p.x - en.x) / d * speed * dt; en.y += (p.y - en.y) / d * speed * dt }
-    if (d < en.radius + 17 && !p.invulnerable) { p.hp = Math.max(0, p.hp - Math.max(2, (en.type === 'boss' ? 27 : 13) - p.armor) * (s.difficulty === 'practice' ? .65 : 1)); p.invulnerable = .7 }
+    if (en.knock > 0) { en.x += en.knockX * 420 * dt; en.y += en.knockY * 420 * dt; en.knock = Math.max(0, en.knock - dt) }
+    else if (d > en.radius + 12 && !en.charge) { en.x += (p.x - en.x) / d * speed * dt; en.y += (p.y - en.y) / d * speed * dt }
+    if (distance(en, p) < en.radius + 17 && !p.invulnerable) { p.hp = Math.max(0, p.hp - Math.max(2, (en.type === 'boss' ? 27 : 13) - p.armor) * (s.difficulty === 'practice' ? .65 : 1)); p.invulnerable = .7; s.animation.hurt = .35 }
     if (en.type === 'boss') {
       en.pulseCooldown -= dt
       if (en.pulseCooldown <= 0 && !en.charge) { en.charge = 1.1; en.pulseCooldown = 7 }
-      if (en.charge > 0) { en.charge = Math.max(0, en.charge - dt); if (!en.charge) { effect(s, en.x, en.y, 150, '#d17d73', .4); if (distance(en, p) < 150 && !p.invulnerable) { p.hp = Math.max(0, p.hp - 32); p.invulnerable = .7 } } }
+      if (en.charge > 0) { en.charge = Math.max(0, en.charge - dt); if (!en.charge) { effect(s, en.x, en.y, 150, '#d17d73', .4, 'nova'); if (distance(en, p) < 150 && !p.invulnerable) { p.hp = Math.max(0, p.hp - 32); p.invulnerable = .7; s.animation.hurt = .35 } } }
     }
   }
   for (const bullet of s.bullets) {
@@ -175,7 +186,7 @@ export function stepSwarm(s, input = {}, seconds = 0) {
   for (const gem of s.gems) {
     const d = distance(gem, p)
     if (d < p.magnet && d > 14) { const move = Math.min(d, (360 + p.magnet) * dt); gem.x += (p.x - gem.x) / d * move; gem.y += (p.y - gem.y) / d * move }
-    if (d <= 18) { s.xp += gem.value; gem.value = 0 }
+    if (d <= 18) { s.xp += gem.value; gem.value = 0; effect(s, p.x, p.y, 24, '#70babb', .24, 'pickup') }
   }
   s.gems = s.gems.filter(g => g.value > 0 && distance(g, p) < 1600)
   s.effects.forEach(e => { e.life -= dt }); s.effects = s.effects.filter(e => e.life > 0)

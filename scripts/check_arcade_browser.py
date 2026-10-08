@@ -44,6 +44,7 @@ try:
     while not attr('branch') and time.monotonic()<deadline:
         choices=driver.find_elements('css selector','.arc-choices button')
         if choices:
+            assert all(c.find_element('css selector','em').text for c in choices), 'upgrade cards must preview real numerical effects'
             frozen=attr('time');time.sleep(.18);assert attr('time')==frozen
             preferred=next((c for c in choices if c.get_attribute('data-upgrade') in ['bastion','damage','vitality','haste']),choices[0]);click(preferred)
         elif attr('phase') in ['lost','won']:raise AssertionError('journey ended before branch')

@@ -1,0 +1,9 @@
+.swarm-stage { background: #edf2ee; border-color: #d4e2dd; }
+.swarm-upgrades button { position: relative; border: 1px solid #d4e4df; border-radius: 18px; padding: 18px 20px; background: linear-gradient(135deg,#fff,#f1f7f4); text-align: left; transition: border-color .18s, box-shadow .18s; }
+.swarm-upgrades button:hover, .swarm-upgrades button:focus-visible { border-color: #509b97; box-shadow: 0 5px 20px #438b8620; }
+.swarm-upgrades small { color: #557e7b; font-size: 14px; letter-spacing: .04em; }
+.swarm-upgrades strong { font-size: 20px; }
+.swarm-upgrades em { font-style: normal; font-size: 14px; color: #316c68; padding-top: 8px; border-top: 1px solid #dceae3; }
+.swarm-wave { border-left: 3px solid #80b7b1; padding: 10px 12px; background: #f1f7f4; border-radius: 0 10px 10px 0; font-size: 15px; }
+@media (max-width: 600px) { .swarm-upgrades button { padding: 14px 16px; } .swarm-upgrades strong { font-size: 18px; } }
+@media (prefers-reduced-motion: reduce) { .swarm-upgrades button { transition: none; } }
