@@ -63,7 +63,7 @@
 
     <section class="section">
       <div class="home-featured">
-        <article class="showcase-card green" v-reveal><p class="eyebrow">SPACE ARCADE · BASE SURVIVAL</p><h2>白天，把家建好。<br>夜晚，让灯亮着。</h2><p>采集木材，搭建围墙与炮塔，安排供电和补给。守住三夜，等到救援。</p><RouterLink class="text-button" to="/wasteland">建立余烬营地 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">⌁</span></article>
+        <article class="showcase-card green" v-reveal><p class="eyebrow">SPACE ARCADE · THREE WORLDS</p><h2>选一个世界。<br>走一条自己的路。</h2><p>选职业抵御敌潮，围绕暖炉建设聚落，或走进 3D 余烬营地。三款免费单机游戏。</p><RouterLink class="text-button" to="/games">打开游戏大厅 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">✧</span></article>
         <article class="showcase-card" v-reveal><p class="eyebrow">HUMAN 3.0 · REFLECTION</p><h2>更了解自己，<br>从一次停顿开始。</h2><p>四个生活维度，二十四道问题。不是一个标签，而是下一步行动的起点。</p><RouterLink class="text-button" to="/human3">探索成长地图 ↗</RouterLink><span class="showcase-symbol" aria-hidden="true">◌</span></article>
       </div>
       <div class="section-heading">
@@ -97,6 +97,8 @@ const statsLoading = statsRead.loading, statsError = statsRead.error
 const quoteLoading = quoteRead.loading, quoteError = quoteRead.error
 
 const cards = [
+  { index: '✧', title: '星潮幸存者', text: '三职业、六条进阶路线，四面敌潮中拾取经验、构筑自己的战斗方式。', to: '/games/swarm' },
+  { index: '♨', title: '寒境火种', text: '供暖、分工、建造与远征。在五场暴风雪中，让你的冰原聚落活下来。', to: '/games/winter' },
   { index: '◉', title: '太阳系图谱', text: '拖动视角，靠近八颗行星。在一张浅色 3D 图谱里，重新发现宇宙。', to: '/solar-system' },
   { index: '↗', title: '高性价比人生指南', text: '34 节原文，按关键词、成本和证据查阅；保留完整来源与适用条件。', to: '/life-guide' },
   { index: '↗', title: 'Space 聊天室', text: '进入公共大厅、加入小群，或向朋友发起双方同意的私聊。', to: '/chat' },

@@ -45,4 +45,4 @@ jobs:
       - name: Check homepage asset budgets
         run: node scripts/check-bundle.mjs
       - name: Test assessment, game, chat, read requests and permissions
-        run: node --test src/features/human3/engine.test.js src/features/wasteland/*.test.js src/features/solar-system/*.test.js src/features/life-guide/*.test.js src/features/crypto/*.test.js src/features/documents/*.test.js src/features/chat/history.test.js src/utils/permissions.test.js src/utils/latestRead.test.js src/api/client.test.js
+        run: node --test src/features/human3/engine.test.js src/features/wasteland/*.test.js src/features/arcade/*.test.js src/features/solar-system/*.test.js src/features/life-guide/*.test.js src/features/crypto/*.test.js src/features/documents/*.test.js src/features/chat/history.test.js src/utils/permissions.test.js src/utils/latestRead.test.js src/api/client.test.js

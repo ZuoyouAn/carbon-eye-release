@@ -8,6 +8,8 @@
       </div>
 
       <div class="card-grid two-grid">
+        <article class="content-card project-detail-card"><div class="card-meta"><span>Starfall</span><span>原创敌潮 / 免费单机</span></div><h2>星潮幸存者</h2><p>选择游侠、守卫或术士，移动躲避、收集经验，在三选一强化与六条职业进阶中形成构筑。支持键盘、鼠标和触屏，三分钟撤离或无尽挑战。</p><RouterLink class="text-button" to="/games/swarm">走进星潮 ↗</RouterLink></article>
+        <article class="content-card project-detail-card"><div class="card-meta"><span>Frost Ember</span><span>原创冬日聚落 / 免费单机</span></div><h2>寒境火种</h2><p>围绕暖炉建造住宅与生产设施，分配居民，研究保温、派出远征。真实消耗燃料和食物，暴风雪与配给会影响居民健康。五天救援或无尽寒冬。</p><RouterLink class="text-button" to="/games/winter">点亮火种 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Document Studio</span><span>本机转换 / 免费</span></div><h2>PDF / Word 转换</h2><p>PDF 提取为可编辑 DOCX，或将页面图片嵌入 Word；DOCX 根据安全预览重新排版为图像 PDF。文件不上传，转换边界在页面明确说明。</p><RouterLink class="text-button" to="/document-tools">打开转换工作台 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Crypto Lab</span><span>真实计算 / 原理可视化</span></div><h2>密码算法实验室</h2><p>AES-128 状态矩阵、SHA-256 64 轮寄存器、RSA 与 DH 模幂，以及三种古典/位运算演示。输入后可单步、播放、拖动步骤并对照原理图。仅用于教学，不处理真实秘密。</p><RouterLink class="text-button" to="/crypto-lab">看见每一步计算 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Solar Atlas</span><span>原创3D / NASA资料</span></div><h2>太阳系图谱</h2><p>转动视角，选择八颗行星，暂停并靠近观察。模型与轨道均为压缩示意，不用于天象预测；设备不支持3D时仍可阅读资料。</p><RouterLink class="text-button" to="/solar-system">抬头看看 ↗</RouterLink></article>

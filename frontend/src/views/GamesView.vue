@@ -1,0 +1,18 @@
+<template>
+  <main class="content-page"><header class="arc-heading"><div><p class="section-kicker">SPACE ARCADE / A PLACE TO PLAY</p><h1>今天，去哪个世界？</h1><p>战斗、建设、探索。三款原创单机游戏，各自有自己的规则与节奏。</p></div></header>
+    <section class="games-grid" aria-label="可玩游戏"><article v-for="game in games" :key="game.to" class="game-cover" :class="game.id"><div class="game-art" aria-hidden="true"><span class="game-orbit"></span><span class="game-object">{{game.symbol}}</span><i></i><i></i><i></i></div><div class="game-copy"><p class="section-kicker">{{game.kicker}}</p><h2>{{game.title}}</h2><p>{{game.description}}</p><div class="arc-route-pills"><span v-for="tag in game.tags" :key="tag">{{tag}}</span></div><RouterLink class="button button-primary" :to="game.to">{{game.action}} →</RouterLink></div></article></section>
+    <section class="arc-card games-details"><h2>每局，都可以走另一条路。</h2><p>星潮幸存者适合短时战斗：三职业、六进阶、三选一升级。寒境火种适合规划经营：围绕暖炉建设，在岗位与补给之间做取舍。余烬营地保留 3D 基地生存、城市探索与原来的三十天剧情。</p><p>全部免费，无需登录，不调用大模型 API。新游戏进度不自动保存，离开页面前请先结束本局；切换标签或失去焦点会自动暂停。</p></section>
+  </main>
+</template>
+<script setup>
+import { RouterLink } from 'vue-router'
+import '../features/arcade/arcade.css'
+const games=[
+  {id:'swarm',title:'星潮幸存者',symbol:'✧',kicker:'STARFALL / SURVIVE & EVOLVE',description:'四面敌潮，选职业、捡经验、选择进阶路线。绕开异兽的红圈，让你的构筑成形。',tags:['三职业 / 六进阶','键盘与摇杆','三分钟 / 无尽'],to:'/games/swarm',action:'选择你的职业'},
+  {id:'winter',title:'寒境火种',symbol:'♨',kicker:'FROST EMBER / BUILD & CARE',description:'建房、分工、供暖、远征。暴风雪逐日逼近，居民的健康取决于你的每一个决定。',tags:['供暖与居民分工','五天 / 无尽寒冬','建造与研究'],to:'/games/winter',action:'点亮冰原火种'},
+  {id:'camp',title:'余烬营地',symbol:'⌁',kicker:'EMBER CAMP / THREE NIGHTS',description:'在浅色 3D 废墟中采集建造，保护炮塔、电力与补给，守住三个夜晚。',tags:['3D 建造生存','城市探索','三十天剧情'],to:'/wasteland',action:'走进你的营地'},
+]
+</script>
+<style scoped>
+.games-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin:12px 0 30px}.game-cover{overflow:hidden;border:1px solid #dbe4ec;background:#fff;border-radius:28px;display:flex;flex-direction:column}.game-art{height:230px;position:relative;overflow:hidden;background:#e5efe7;display:grid;place-items:center}.winter .game-art{background:#e5f0f7}.camp .game-art{background:#f0eade}.game-object{width:105px;height:105px;border-radius:28px;background:#ffffffb8;box-shadow:0 15px 30px #65897c1c;display:grid;place-items:center;font-size:68px;color:#498686;transform:rotate(-12deg)}.winter .game-object{color:#cc8b49;transform:rotate(8deg)}.camp .game-object{color:#7d936d}.game-orbit{position:absolute;width:225px;height:140px;border-radius:50%;border:1px solid #a8c9ba;transform:rotate(-28deg)}.winter .game-orbit{border-color:#aacbde}.camp .game-orbit{border-color:#c9bda4}.game-art i{position:absolute;width:18px;height:18px;background:#a5c7b3;border-radius:6px;left:20%;top:28%;transform:rotate(20deg)}.game-art i:nth-last-child(2){left:75%;top:63%;width:25px;height:25px;background:#bfd4c4}.game-art i:last-child{left:65%;top:18%;width:11px;height:11px;background:#d5b785}.game-copy{padding:26px;display:flex;flex-direction:column;flex:1}.game-copy h2{font-size:28px;line-height:1.5;margin:12px 0}.game-copy>p:not(.section-kicker){font-size:16px;line-height:1.9;color:#607487}.game-copy .button{margin-top:auto;align-self:flex-start}.arc-route-pills{margin:16px 0 25px}.games-details{margin-top:30px}@media(max-width:950px){.games-grid{grid-template-columns:1fr}.game-cover{display:grid;grid-template-columns:220px 1fr}.game-art{height:100%;min-height:260px}.game-copy .button{margin-top:16px}}@media(max-width:600px){.game-cover{display:flex}.game-art{height:205px;min-height:205px}.game-copy{padding:22px}}
+</style>
