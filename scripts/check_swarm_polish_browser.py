@@ -26,6 +26,9 @@ def pixels():return driver.execute_script("return document.querySelector('.swarm
 try:
     for job in ['ranger','guardian','mage']:
         driver.get(site+'/games/swarm');wait.until(lambda d:d.find_elements('css selector','.swarm-stage canvas'))
+        wait.until(lambda d:stage().get_attribute('data-art')=='ready')
+        assert len(driver.find_elements('css selector','.swarm-portrait'))==3
+        if job=='ranger':stage().screenshot(str(out/'profession-selection.png'))
         click(driver.find_element('css selector',f'[data-profession={job}]'))
         Select(driver.find_elements('css selector','.arc-overlay select')[1]).select_by_value('practice')
         click(button('进入敌潮'));driver.execute_script('arguments[0].focus({preventScroll:true})',stage())
@@ -44,6 +47,14 @@ try:
     stage().screenshot(str(out/'mage-mobile.png'));click(driver.find_element('css selector','.arc-stage-actions a'))
     wait.until(lambda d:d.find_elements('css selector','.games-grid'));assert not driver.find_elements('css selector','.arc-stage canvas')
     checks.append('320px layout and leaving the route releases animated canvas')
+    driver.execute_cdp_cmd('Network.enable',{})
+    driver.execute_cdp_cmd('Network.setBlockedURLs',{'urls':['*game-art/*']})
+    driver.get(site+'/games/swarm');wait.until(lambda d:d.find_elements('css selector','.swarm-stage canvas'))
+    wait.until(lambda d:stage().get_attribute('data-art')=='fallback')
+    click(button('进入敌潮'));driver.execute_script('arguments[0].focus({preventScroll:true})',stage())
+    ActionChains(driver).key_down('d').pause(.25).key_up('d').perform();assert float(stage().get_attribute('data-x'))>20
+    click(button('暂停'));frozen=clock();time.sleep(.2);assert clock()==frozen
+    checks.append('blocked art requests retain playable fallback with working movement and pause')
     report={'status':'passed','checks':checks,'count':len(checks),'cloud_writes':False}
     (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8');print(json.dumps(report,ensure_ascii=False))
 finally:driver.quit()

@@ -1,4 +1,30 @@
 .swarm-stage { background: #edf2ee; border-color: #d4e2dd; }
+.swarm-page .arc-heading h1 { letter-spacing: -.055em; color: #254c48; }
+.swarm-page .section-kicker { color: #567e70; letter-spacing: .14em; }
+.swarm-page .arc-layout { grid-template-columns: minmax(0,1fr) 280px; }
+.swarm-stage { height: 730px; box-shadow: 0 20px 60px #536e6415, inset 0 0 0 1px #fff; border: 1px solid #c8d4c6; }
+.swarm-stage .arc-hud>div { background: #fffdf3e8; border-color: #efe8d7; box-shadow: 0 4px 18px #46615010; }
+.swarm-stage .arc-hud strong { color: #3f6458; }
+.swarm-stage .arc-overlay { background: #e7ece694; backdrop-filter: blur(7px); }
+.swarm-stage .arc-overlay>div { max-width: 660px; background: linear-gradient(145deg,#fffef9f5,#f4f6edfa); border-color: #fff; box-shadow: 0 24px 70px #3a5e4826; }
+.swarm-stage .arc-overlay h2 { color: #30554a; letter-spacing: -.04em; }
+.swarm-stage .arc-professions button { background: linear-gradient(155deg,#fcfbf3,#e5eee6); border-color: #d6dfcc; gap: 5px; position: relative; overflow: hidden; }
+.swarm-stage .arc-professions button[aria-pressed=true] { border: 2px solid #648e70; background: linear-gradient(155deg,#fffef3,#d9e9dc); box-shadow: 0 6px 20px #71896420; }
+.swarm-portrait { display: block; width: 112px; max-width: 100%; height: 150px; justify-self: center; background-repeat: no-repeat; background-size: 400% 200%; }
+.swarm-stage .arc-professions strong { color: #365d4d; font-size: 18px; }
+.swarm-stage .button-primary { background: #3a6e58; border-color: #3a6e58; box-shadow: 0 6px 18px #3a6e5824; }
+.swarm-stage .arc-overlay .button-primary { position: sticky; bottom: 0; width: 100%; margin-top: 12px; z-index: 1; }
+.swarm-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.swarm-stage .swarm-options label { margin: 6px 0; }
+.swarm-stage .arc-overlay .section-kicker { margin-top: 0; }
+.swarm-stage .arc-overlay h2 { margin: 10px 0; }
+.swarm-page .arc-card { border-color: #d9e1d4; box-shadow: 0 8px 30px #4d6c5710; }
+.swarm-page .arc-stats div { background: #f2f5ec; }
+.swarm-stage .arc-touch button { background: #fffdf3ee; border-color: #d0daca; color: #426953; box-shadow: 0 4px 14px #36543d14; }
+.swarm-stage .arc-stick { background: #fbfcf2b8; border-color: #e4ead7; box-shadow: 0 4px 18px #49684418; }
+@media (max-width: 1000px) { .swarm-page .arc-layout { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .swarm-stage { height: 700px; } .swarm-portrait { width: 75px; height: 100px; } .swarm-stage .arc-overlay>div { padding: 18px; } .swarm-options { grid-template-columns: 1fr; gap: 4px; } }
+@media (max-width: 350px) { .swarm-stage { height: 730px; } .swarm-portrait { width: 60px; height: 80px; } }
 .swarm-upgrades button { position: relative; border: 1px solid #d4e4df; border-radius: 18px; padding: 18px 20px; background: linear-gradient(135deg,#fff,#f1f7f4); text-align: left; transition: border-color .18s, box-shadow .18s; }
 .swarm-upgrades button:hover, .swarm-upgrades button:focus-visible { border-color: #509b97; box-shadow: 0 5px 20px #438b8620; }
 .swarm-upgrades small { color: #557e7b; font-size: 14px; letter-spacing: .04em; }

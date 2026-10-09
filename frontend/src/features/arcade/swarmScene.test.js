@@ -18,6 +18,12 @@ test('upright original professions, creatures and every effect render on desktop
     assert.ok(calls.length>100);assert.deepEqual(s,before,'painting must not mutate gameplay or random state')
   }
 })
+test('painted renderer uses local atlas cutouts without changing physics or pause state',()=>{
+  const s=createSwarm('mage'),image={naturalWidth:1536,naturalHeight:1024}
+  s.enemies=[{id:1,type:'tank',x:50,y:0,hp:80,maxHp:100,radius:22,flash:0,slow:0}]
+  const before=structuredClone(s),{c,calls}=recordingContext();paintSwarm(c,390,700,s,false,image)
+  assert.equal(calls.filter(call=>call[0]==='drawImage').length,2);assert.deepEqual(s,before)
+})
 test('walking, weapon recoil and dash trails use simulation time and freeze for upgrades',()=>{
   const s=createSwarm();stepSwarm(s,{x:1,dash:true,fire:true,aim:{x:1,y:0}},.05)
   assert.ok(s.animation.stride>0);assert.ok(s.animation.attack>0);assert.ok(s.effects.some(e=>e.kind==='trail'))
