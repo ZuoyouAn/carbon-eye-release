@@ -8,6 +8,7 @@
       </div>
 
       <div class="card-grid two-grid">
+        <article class="content-card project-detail-card"><div class="card-meta"><span>GhostTrack</span><span>公开信息 / 原理说明</span></div><h2>GhostTrack 公开信息查询</h2><p>IP 地理归属、号码规则解析与公开用户名页面核对。区分估计区域、离线号段元数据和 HTTP 响应，展示来源与结果边界。</p><RouterLink class="text-button" to="/ghosttrack">打开查询工作台 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Starfall</span><span>原创敌潮 / 免费单机</span></div><h2>星潮幸存者</h2><p>选择游侠、守卫或术士，移动躲避、收集经验，在三选一强化与六条职业进阶中形成构筑。支持键盘、鼠标和触屏，三分钟撤离或无尽挑战。</p><RouterLink class="text-button" to="/games/swarm">走进星潮 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Frost Ember</span><span>原创冬日聚落 / 免费单机</span></div><h2>寒境火种</h2><p>围绕暖炉建造住宅与生产设施，分配居民，研究保温、派出远征。真实消耗燃料和食物，暴风雪与配给会影响居民健康。五天救援或无尽寒冬。</p><RouterLink class="text-button" to="/games/winter">点亮火种 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Document Studio</span><span>本机转换 / 免费</span></div><h2>PDF / Word 转换</h2><p>PDF 提取为可编辑 DOCX，或将页面图片嵌入 Word；DOCX 根据安全预览重新排版为图像 PDF。文件不上传，转换边界在页面明确说明。</p><RouterLink class="text-button" to="/document-tools">打开转换工作台 ↗</RouterLink></article>

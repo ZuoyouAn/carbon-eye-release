@@ -165,7 +165,10 @@ class SecureGeometryRequest(BaseModel):
     bob: dict[str, Any]
 
 
+from ghosttrack_api import router as ghosttrack_router
+
 app = FastAPI(title="左右的Space API")
+app.include_router(ghosttrack_router)
 
 
 def carbon_eye_cors_origins() -> list[str]:

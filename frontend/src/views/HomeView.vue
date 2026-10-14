@@ -97,6 +97,7 @@ const statsLoading = statsRead.loading, statsError = statsRead.error
 const quoteLoading = quoteRead.loading, quoteError = quoteRead.error
 
 const cards = [
+  { index: '◎', title: 'GhostTrack 公开信息查询', text: '查询 IP 归属、离线解析号码、核对公开用户名，并理解每类线索的原理与限制。', to: '/ghosttrack' },
   { index: '✧', title: '星潮幸存者', text: '三职业、六条进阶路线，四面敌潮中拾取经验、构筑自己的战斗方式。', to: '/games/swarm' },
   { index: '♨', title: '寒境火种', text: '供暖、分工、建造与远征。在五场暴风雪中，让你的冰原聚落活下来。', to: '/games/winter' },
   { index: '◉', title: '太阳系图谱', text: '拖动视角，靠近八颗行星。在一张浅色 3D 图谱里，重新发现宇宙。', to: '/solar-system' },

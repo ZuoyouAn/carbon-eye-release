@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>GhostTrack · 公开信息查询</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script></head>
+<body>
+<main>
+  <header><div class="eyebrow">GHOSTTRACK / PUBLIC INFORMATION</div><h1>读懂公开线索。</h1><p class="intro">查询 IP 归属、了解号码规则、核对公开用户名。<br>每个结果都有来源，每条线索都有边界。</p><span class="pill" id="health" role="status">正在连接查询服务…</span> <button type="button" class="text-button" id="retry-health">重新连接</button></header>
+  <div class="workspace">
+    <section class="panel query-panel" aria-labelledby="query-title">
+      <div class="section-top"><span class="eyebrow">01 / 查询工作台</span><span class="small">一次一个查询</span></div>
+      <h2 id="query-title">从一条线索开始</h2>
+      <div class="tabs" role="group" aria-label="选择查询类型"><button type="button" data-kind="ip" aria-pressed="true">IP 归属</button><button type="button" data-kind="phone" aria-pressed="false">号码解析</button><button type="button" data-kind="username" aria-pressed="false">用户名</button></div>
+      <p id="hint" class="muted"></p>
+      <form id="query-form"><label for="value" id="value-label">公网 IP 地址</label><input id="value" name="value" autocomplete="off" spellcheck="false" maxlength="100" required placeholder="例如 1.1.1.1"><div id="region-row" hidden><label for="region">未带 + 国家码时使用的地区</label><select id="region"><option value="CN">中国 CN</option><option value="US">美国 US</option><option value="GB">英国 GB</option><option value="ID">印度尼西亚 ID</option><option value="JP">日本 JP</option><option value="HK">中国香港 HK</option><option value="TW">中国台湾 TW</option><option value="SG">新加坡 SG</option><option value="DE">德国 DE</option><option value="FR">法国 FR</option><option value="IN">印度 IN</option><option value="AU">澳大利亚 AU</option></select></div><div class="actions"><button id="submit" class="primary">查询公开信息 ↗</button><button type="button" id="my-ip" class="secondary">填入我的出口 IP</button></div></form>
+      <p class="privacy" id="privacy"></p><p class="error" id="error" role="alert" hidden></p>
+    </section>
+    <section class="panel result-panel" aria-labelledby="result-title" aria-busy="false"><div class="section-top"><span class="eyebrow">02 / 查询结果</span><button type="button" class="text-button" id="clear">清空</button></div><h2 id="result-title">等待一条线索</h2><div id="result" aria-live="polite"><div class="empty"><span class="orbit" aria-hidden="true">◎</span><p>结果会出现在这里。</p><small>先选择类型，再输入需要查询的内容。</small></div></div><button type="button" id="export" class="secondary" hidden>下载本次结果 JSON</button></section>
+  </div>
+  <section class="principles" aria-labelledby="principles-title"><div class="eyebrow">HOW IT WORKS</div><h2 id="principles-title">理解结果，比得到结果更重要。</h2><div class="principle-grid"><article><span class="number">01</span><h3>IP → 地理数据库</h3><p>验证公网 IPv4 / IPv6 后，用 HTTPS 请求 ipwho.is，读取地区、ASN、运营组织、时区和估计坐标。地图保留小数精度。</p><p class="muted">坐标通常指网络出口或运营商节点。VPN、代理、移动网络和数据库更新会影响结果，不能据此确定个人住址。</p></article><article><span class="number">02</span><h3>号码 → 号段元数据</h3><p>使用 phonenumbers（Google libphonenumber 的 Python 实现）离线解析国家码、号码类型、地区、运营商与格式，核对长度和编号规则。</p><p class="muted">“有效”只表示符合编号计划，不代表号码已分配或正在使用。没有机主姓名或 GPS；携号转网也会使运营商字段失准。</p></article><article><span class="number">03</span><h3>用户名 → 公开页面响应</h3><p>将用户名填入 19 个固定平台的个人页地址，最多 6 个并发请求，读取 HTTP 状态。每个请求有超时，不跟随跳转。</p><p class="muted">200 仅表示页面可访问；平台可能返回登录页或软 404。不同平台的同名账号不一定属于同一个人，需打开页面人工核对。</p></article></div>
+  <details><summary>网页版本相对原项目改进了什么？</summary><p>保留原始 GhostTR.py，独立提供 JSON API 和中文界面；IP 改用 HTTPS，修复原脚本把地图坐标转成整数的问题；号码默认地区改为 CN 并可选；用户名查询去重并移除过时平台，将跳转、限制、超时与未找到分开显示。加上输入校验、超时、并发上限和每分钟查询限制。</p><p>查询值与结果仅保留在当前页面内存，不写入数据库或浏览器存储。清空或离开页面后丢弃。IP 查询会把输入地址发送给 ipwho.is；用户名会发送给所列平台；号码只在运行后端的机器解析。外部平台及服务器基础设施可能保留自己的访问日志。仅查询你有权核对的信息。</p></details></section>
+  <footer><span>基于 <a href="https://github.com/HunxByts/GhostTrack" target="_blank" rel="noopener noreferrer">HunxByts / GhostTrack</a> · 独立网页适配</span><a href="https://github.com/daviddrysdale/python-phonenumbers" target="_blank" rel="noopener noreferrer">号码解析来源 ↗</a></footer>
+</main></body></html>
