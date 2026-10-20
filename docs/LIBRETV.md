@@ -12,7 +12,9 @@ LibreTV 作为独立 Next.js 应用置于 `apps/libretv`，不在原 Vue 应用�
 
 部署说明、对应源码与许可见 [apps/libretv/SPACE-DEPLOYMENT.md](../apps/libretv/SPACE-DEPLOYMENT.md) 和其目录内 LICENSE。
 
-不会复制 REA/LibreTV 的真实 `.env.local`、node_modules、.next 或测试缓存。初始不预置影视/直播源。
+不会复制 REA/LibreTV 的完整真实 `.env.local`、node_modules、.next 或测试缓存。初始部署没有预置源；后续按用户要求，只将非凡、暴风、魔都、量子 4 个普通影视源复制到 Render `DEFAULT_SOURCES`，不修改其他环境变量，也不向仓库提交本机环境文件。未默认加入成人内容或用途未确认的其余源；未添加直播订阅。
+
+默认源发布记录：部署 `dep-dbbob6favr4c73898q10` 已 live，线上 `/api/status` 返回 4 个源，源接口以测试关键词探活均成功；新浏览器首次导入后自动勾选。探活仅验证接口响应，不代表所有影片可播放；已手动取消勾选的源不会在刷新时强制重选。
 
 为保留主站工作区已有未提交改动，本次代码在 `myATS/tmp/libretv-release` 隔离 Git 工作目录中准备；不撤销或发布原工作区中的 GhostTrack 删除改动。后续编辑前应先比对线上 main 与原工作目录。
 

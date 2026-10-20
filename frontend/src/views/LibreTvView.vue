@@ -19,8 +19,8 @@
     </section>
     <section class="panel cinema-guide">
       <div><p class="eyebrow">QUICK START</p><h2>第一次使用</h2></div>
-      <ol><li>打开 LibreTV，用管理员提供的独立访问密码验证。</li><li>进入设置 → 源管理，添加你有权使用的点播接口或 M3U 直播订阅。</li><li>勾选点播源后搜索；或进入直播页选择频道。可调整主题、倍速、字幕及连播设置。</li></ol>
-      <p>不会迁移本机私密配置或预置未经授权的影视源。无数据源时搜索为空属于正常现象；数据源失效、区域限制和编码不支持也会影响播放。</p>
+      <ol><li>打开 LibreTV，用管理员提供的独立访问密码验证。</li><li>已预置非凡、暴风、魔都、量子 4 个普通影视源，首次加载会自动勾选；可以直接输入片名搜索。</li><li>如需补充有权使用的点播接口或 M3U 直播订阅，进入设置 → 源管理。你手动取消的源不会被反复勾回。</li></ol>
+      <p>只同步普通影视源地址，不迁移本机密码或私密配置。请只观看有权访问的内容；接口探活正常不保证所有影片可播，数据源失效、区域限制和编码不支持也会影响播放。</p>
     </section>
     <section class="panel cinema-guide"><h2>数据与开源</h2><p>历史、收藏与观看进度存于影音服务域名下的本机浏览器，不与本站账号云同步。搜索和部分播放请求经过服务端代理，直连播放或封面仍可能访问第三方服务；不要在源地址中填写敏感凭据，也不要公开发布含私密地址的源列表。</p><p>LibreTV 使用 AGPL-3.0-or-later。本站提供的是独立应用入口，不托管影视内容，也不保证所有第三方源可用。</p><div class="cinema-links"><a :href="sourceUrl" target="_blank" rel="noopener noreferrer">本部署完整源码 ↗</a><a href="https://github.com/LibreSpark/LibreTV" target="_blank" rel="noopener noreferrer">上游 LibreTV ↗</a></div></section>
   </main>
