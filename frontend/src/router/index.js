@@ -32,6 +32,7 @@ const router = createRouter({
     { path: '/articles/:id', name: 'article-detail', component: ArticlesView },
     { path: '/roadmap', name: 'roadmap', component: RoadmapView },
     { path: '/projects', name: 'projects', component: ProjectsView },
+    { path: '/libretv', name: 'libretv', component: () => import('../views/LibreTvView.vue') },
     { path: '/timeline', name: 'timeline', component: TimelineView },
     { path: '/messages', name: 'messages', component: MessagesView },
     { path: '/changelog', name: 'changelog', component: ChangelogView },
@@ -54,6 +55,7 @@ const router = createRouter({
     { path: '/admin', name: 'admin', component: AdminView, meta: { requiresAuth: true, requiresAdmin: true } },
     { path: '/admin/articles/new', name: 'article-editor', component: ArticleEditorView, meta: { requiresAuth: true, requiresAdmin: true } },
     { path: '/admin/articles/:id/edit', name: 'article-edit', component: ArticleEditorView, meta: { requiresAuth: true, requiresAdmin: true } },
+    { path: '/tv', redirect: '/libretv' },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('../views/NotFoundView.vue') },
   ],
   scrollBehavior(to, from, savedPosition) {
@@ -67,7 +69,7 @@ router.afterEach((to) => {
   const titles = { home: '首页', human3: '四维成长测评', store: '数字商品 · 筹备中', projects: '项目', articles: '文章', novels: '小说', posts: '帖子', login: '登录', register: '注册', admin: '管理后台', profile: '个人中心', 'not-found': '页面不存在' }
   const extras = { ghosttrack: 'GhostTrack 公开信息查询', chat: '聊天室', wasteland: '末世模拟器', 'solar-system': '太阳系图谱', 'life-guide': '高性价比人生指南', 'document-tools': '文档转换', 'crypto-lab': '密码算法实验室' }
   const games = { games: '游戏大厅', 'swarm-game': '星潮幸存者', 'winter-game': '寒境火种' }
-  document.title = `${games[to.name] || extras[to.name] || titles[to.name] || '探索'} · 左右的Space`
+  document.title = `${to.name === 'libretv' ? '影音空间 · LibreTV' : games[to.name] || extras[to.name] || titles[to.name] || '探索'} · 左右的Space`
 })
 
 router.beforeEach(async (to) => {

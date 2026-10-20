@@ -34,6 +34,10 @@ novel1数据库对接说明.txt
 # Local tooling and deployment state
 .npm-cache/
 .netlify/
+apps/libretv/.next/
+apps/libretv/.npm-cache/
+apps/libretv/next-env.d.ts
+apps/libretv/tsconfig.tsbuildinfo
 .idea/
 node_modules/
 dist/
