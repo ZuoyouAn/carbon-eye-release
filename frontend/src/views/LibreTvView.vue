@@ -6,9 +6,11 @@
       <h1>给自己一点<br />好好观看的时间。</h1>
       <p class="cinema-lead">影视搜索、直播与续播记录，收进一个独立的影音空间。保留 LibreTV 的完整播放器，不挤在小窗里。</p>
       <div class="cinema-actions">
-        <a class="cinema-primary" :href="serviceUrl" target="_blank" rel="noopener noreferrer">打开 LibreTV <span aria-hidden="true">↗</span></a>
-        <a class="text-button" :href="`${serviceUrl}/live`" target="_blank" rel="noopener noreferrer">进入直播 / IPTV ↗</a>
+        <a v-if="deploymentReady" class="cinema-primary" :href="serviceUrl" target="_blank" rel="noopener noreferrer">打开 LibreTV <span aria-hidden="true">↗</span></a>
+        <button v-else class="cinema-primary" type="button" disabled>等待服务部署</button>
+        <a v-if="deploymentReady" class="text-button" :href="`${serviceUrl}/live`" target="_blank" rel="noopener noreferrer">进入直播 / IPTV ↗</a>
       </div>
+      <p v-if="!deploymentReady" class="cinema-note" role="status">独立影音服务正在维护，暂时不能在线搜索或播放。请稍后重试。</p>
       <p class="cinema-note">将在新标签页打开独立服务，需要影音访问密码；与本站账号登录分开。免费实例休眠后，首次打开可能需要等待约一分钟。</p>
       <div class="cinema-art" aria-hidden="true"><div class="cinema-screen"><span>SPACE</span><i>▶</i><small>YOUR LITTLE CINEMA</small></div><div class="cinema-glow"></div></div>
     </section>
@@ -26,6 +28,8 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
+// Switch only after the independent service is live and public login is verified.
+const deploymentReady = true
 const serviceUrl = 'https://zuoyou-space-libretv.onrender.com'
 const sourceUrl = 'https://github.com/ZuoyouAn/carbon-eye-release/tree/main/apps/libretv'
 const features = [
@@ -40,4 +44,5 @@ const features = [
 </style>
 <style scoped>
 .cinema-hero > .eyebrow { display: block; margin-top: 28px; }
+.cinema-primary:disabled { opacity: .6; cursor: not-allowed; border: 0; font: inherit; }
 </style>
