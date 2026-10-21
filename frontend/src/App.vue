@@ -51,7 +51,7 @@
         <component :is="Component" />
       </Transition>
     </RouterView></div>
-    <footer class="site-footer"><span>左右的Space · 记录学习，连接生活。</span><div><RouterLink to="/human3">四维成长地图</RouterLink><RouterLink to="/store">数字商品 · 筹备中</RouterLink><RouterLink to="/changelog">更新记录</RouterLink></div></footer>
+    <footer class="site-footer"><span>左右的Space · 记录学习，连接生活。</span><div><RouterLink to="/human3">四维成长地图</RouterLink><RouterLink to="/store">数字商品 · 筹备中</RouterLink><RouterLink to="/changelog">更新记录</RouterLink></div><AnalyticsPrivacy /></footer>
   </div>
 </template>
 
@@ -61,9 +61,14 @@ import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { authState, isAdmin, isLoggedIn, isMuted, logout, refreshMe } from './stores/auth'
 import { roleLabel } from './utils/permissions'
 import UserAvatar from './components/UserAvatar.vue'
+import AnalyticsPrivacy from './components/AnalyticsPrivacy.vue'
+import { API_BASE } from './api/client'
+import { createPageTracker } from '../../shared/traffic-tracker.mjs'
 
 const router = useRouter()
 const menuOpen = ref(false)
+const tracker = createPageTracker({ site: 'space', endpoint: `${API_BASE}/api/analytics/collect`, enabled: import.meta.env.PROD, ignore: () => !authState.ready || isAdmin.value })
+watch(() => [router.currentRoute.value.path, authState.ready, isAdmin.value], ([path]) => tracker.track(path), { immediate: true })
 watch(() => router.currentRoute.value.fullPath, () => {
   menuOpen.value = false
   document.querySelector('.nav-more')?.removeAttribute('open')
@@ -74,7 +79,7 @@ onMounted(() => {
   window.addEventListener('auth-invalidated', handleInvalidated)
 })
 
-onUnmounted(() => window.removeEventListener('auth-invalidated', handleInvalidated))
+onUnmounted(() => { window.removeEventListener('auth-invalidated', handleInvalidated); tracker.stop() })
 
 function handleInvalidated() {
   if (router.currentRoute.value.meta.requiresAuth) {

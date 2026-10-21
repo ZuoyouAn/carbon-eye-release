@@ -2,6 +2,7 @@
 
 import { Header } from '@/components/header';
 import { SiteFooter } from '@/components/site-footer';
+import { AnalyticsPreference } from '@/components/traffic-tracker';
 
 export default function AboutPage() {
   return (
@@ -35,6 +36,7 @@ export default function AboutPage() {
           </p>
         </section>
 
+        <AnalyticsPreference />
         <section>
           <h2 className="text-base font-semibold text-content mb-2.5">免责声明</h2>
           <p className="text-sm text-faint leading-relaxed">

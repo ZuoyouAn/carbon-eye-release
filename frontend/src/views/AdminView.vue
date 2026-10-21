@@ -8,7 +8,7 @@
         <p>管理账号、内容及权限。新注册默认低权限；调整权限后，用户需要重新登录。</p>
       </div>
 
-      <div v-if="dashboard" class="stat-grid">
+      <div v-if="dashboard && activeTab !== 'analytics'" class="stat-grid">
         <div><strong>{{ dashboard.users }}</strong><span>用户</span></div>
         <div><strong>{{ dashboard.muted_users }}</strong><span>禁言</span></div>
         <div><strong>{{ dashboard.articles }}</strong><span>文章</span></div>
@@ -17,12 +17,13 @@
         <div><strong>{{ dashboard.messages }}</strong><span>留言</span></div>
       </div>
 
-      <div class="admin-actions">
+      <div v-if="activeTab !== 'analytics'" class="admin-actions">
         <RouterLink class="button button-primary" to="/admin/articles/new">写新文章</RouterLink>
         <RouterLink class="button button-secondary" to="/messages">查看留言板</RouterLink>
       </div>
 
       <el-tabs v-model="activeTab" class="admin-tabs" @tab-change="loadCurrentTab">
+        <el-tab-pane label="访问统计" name="analytics"><AnalyticsPanel v-if="activeTab === 'analytics'" /></el-tab-pane>
         <el-tab-pane label="用户" name="users">
           <form class="form-stack publish-box" @submit.prevent="createUser">
             <h2>创建账号</h2>
@@ -220,8 +221,9 @@ import { RouterLink } from 'vue-router'
 import { apiRequest, deleteRequest, postJson, putJson } from '../api/client'
 import { authState } from '../stores/auth'
 import { ROLE_OPTIONS, roleLabel } from '../utils/permissions'
+import AnalyticsPanel from '../components/AnalyticsPanel.vue'
 
-const activeTab = ref('users')
+const activeTab = ref('analytics')
 const dashboard = ref(null)
 const users = ref([])
 const articles = ref(emptyPage())
@@ -253,7 +255,7 @@ async function confirmAction(text) {
 }
 
 async function loadAdmin() {
-  await Promise.all([fetchDashboard(), fetchUsers()])
+  if (activeTab.value !== 'analytics') await fetchDashboard()
 }
 
 async function loadCurrentTab() {
