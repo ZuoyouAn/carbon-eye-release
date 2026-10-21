@@ -42,7 +42,16 @@ export async function POST(req: Request) {
     const body = await readBody(req);
     const action = body.action;
     let result: unknown;
-    if (action === 'create') { rateJoin(req); result = cinemaStore.create(body.name, body.nickname); }
+    if (action === 'create') {
+      rateJoin(req);
+      // Validate before allocation: failed sources must not leave empty rooms.
+      if (body.media !== undefined) {
+        const media = validateMedia(body.media);
+        const allowed = await checkUpstreamAllowed(media.url);
+        if (!allowed.ok) throw new CinemaError(400, allowed.reason);
+      }
+      result = cinemaStore.create(body.name, body.nickname, body.media);
+    }
     else {
       if (typeof body.roomId !== 'string' || !/^[a-f0-9]{16}$/.test(body.roomId)) throw new CinemaError(400, '房间码为 16 位字母数字');
       if (action === 'join') { rateJoin(req); result = cinemaStore.join(body.roomId, body.nickname); }

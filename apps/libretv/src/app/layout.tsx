@@ -4,11 +4,11 @@ import { Providers } from '@/components/providers';
 
 export const metadata: Metadata = {
   title: {
-    default: '左右大人服务',
-    template: '%s · 左右大人服务',
+    default: '左右视频站',
+    template: '%s · 左右视频站',
   },
   description:
-    '左右的Space独立影音空间。添加有权使用的视频源后，搜索、播放与保存本机观看进度。',
+    '影视搜索、直播与异地同步放映厅。',
   manifest: '/manifest.webmanifest',
   // 图标与门户站（LibreTV-portal）同一套：同一张 artwork 导出的多尺寸 + 根目录 favicon.ico 兜底。
   // 只声明单张 512 时，抓取端只能拿大图缩放，小尺寸下易糊、看起来「没填满」。
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0b101a',
+  themeColor: '#f6f7f9',
   width: 'device-width',
   initialScale: 1,
 };

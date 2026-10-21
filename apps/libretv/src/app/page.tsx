@@ -16,6 +16,8 @@ import { useToast } from '@/components/toast';
 import { EmptyState } from '@/components/states';
 import { Icon } from '@/components/icon';
 import { SiteFooter } from '@/components/site-footer';
+import { useAuth } from '@/components/auth';
+import { launchCinema, resolveCinemaSelection } from '@/lib/cinema-client';
 
 /**
  * 首页：搜索（URL ?s= 驱动，可后退/分享）+ 豆瓣推荐。
@@ -36,6 +38,23 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { verified, openLogin } = useAuth();
+  const [cinemaPending, setCinemaPending] = useState<string | null>(null);
+  const cinemaAbort = useRef<AbortController | null>(null);
+  useEffect(() => () => cinemaAbort.current?.abort(), []);
+  async function startCinema(items: SearchResultItem[]) {
+    if (!verified) { openLogin(); return; }
+    if (cinemaAbort.current || !items[0]) return;
+    const controller = new AbortController(); cinemaAbort.current = controller;
+    setCinemaPending(items[0].name);
+    try {
+      const selection = await resolveCinemaSelection(items, item => resolveSource(useAppStore.getState(), item.sourceKey, { url: item.sourceUrl, name: item.sourceName }), api.detail, controller.signal);
+      await launchCinema(selection, controller.signal);
+      router.push('/cinema');
+    } catch (error) {
+      if (!controller.signal.aborted) toast(error instanceof Error ? error.message : '放映厅启动失败', 'error');
+    } finally { cinemaAbort.current = null; setCinemaPending(null); }
+  }
   const urlQuery = searchParams.get('s') || '';
   // 精确订阅所需字段（对齐 live 页的做法）：搜索流式期间逐源写健康度、
   // 打开设置抽屉/历史面板等无关 store 变化，都不应触发首页整树重渲染
@@ -184,11 +203,10 @@ function HomeContent() {
         <section className={cn('flex flex-col items-center', urlQuery ? 'mb-6' : 'mt-8 mb-8')}>
           {!urlQuery && (
             <header className="text-center mb-6">
-              <h1 className="text-3xl sm:text-5xl font-bold brand-gradient">左右大人服务</h1>
-              <div className="flex justify-center gap-5 text-sm text-accent mt-5"><a href="/cinema">一起看 · 放映厅 →</a><a href="/ai-drama">发现 AI 短剧 →</a></div>
+              <h1 className="text-3xl sm:text-5xl font-bold brand-gradient">左右视频站</h1>
             </header>
           )}
-          {urlQuery && <h1 className="sr-only">左右大人服务 · 视频搜索</h1>}
+          {urlQuery && <h1 className="sr-only">左右视频站 · 视频搜索</h1>}
           {/* 定位容器比胶囊宽一圈：浮层按它的宽度对齐，接缝处不会与胶囊边框错位 1px */}
           <div ref={searchHistory.containerRef} className="relative w-full max-w-2xl">
             <form
@@ -337,6 +355,9 @@ function HomeContent() {
                       key={group.key}
                       group={group}
                       onOpen={(item) => setDetailItem(item)}
+                      onCinema={items => void startCinema(items)}
+                      cinemaBusy={cinemaPending === group.name}
+                      cinemaDisabled={cinemaPending !== null}
                     />
                   ))}
                 </div>

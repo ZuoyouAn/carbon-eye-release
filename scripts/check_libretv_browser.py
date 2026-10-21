@@ -30,8 +30,8 @@ def main():
     driver.set_page_load_timeout(90)
     try:
         driver.get(args.website.rstrip('/') + '/libretv')
-        WebDriverWait(driver, 30).until(lambda d: '给自己一点' in d.find_element('tag name', 'body').text)
-        assert '左右大人服务' in driver.title
+        WebDriverWait(driver, 30).until(lambda d: '左右视频站' in d.find_element('tag name', 'body').text)
+        assert '左右视频站' in driver.title
         action = driver.find_element('css selector', '.cinema-primary')
         if action.tag_name == 'a':
             assert action.get_attribute('href').startswith('https://')

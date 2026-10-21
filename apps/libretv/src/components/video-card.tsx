@@ -67,9 +67,15 @@ export function aggregateResults(list: SearchResultItem[]): AggregatedGroup[] {
 export function AggregatedCard({
   group,
   onOpen,
+  onCinema,
+  cinemaBusy = false,
+  cinemaDisabled = false,
 }: {
   group: AggregatedGroup;
   onOpen: (item: SearchResultItem) => void;
+  onCinema?: (items: SearchResultItem[]) => void;
+  cinemaBusy?: boolean;
+  cinemaDisabled?: boolean;
 }) {
   const imageProxyMode = useAppStore((s) => s.imageProxyMode);
   const customImageProxy = useAppStore((s) => s.customImageProxy);
@@ -162,6 +168,12 @@ export function AggregatedCard({
         </div>
       </div>
 
+      {onCinema && <div className="border-t border-line px-3 py-2 flex items-center justify-between gap-2">
+        <span className="text-xs text-muted">一起看</span>
+        <button type="button" className="btn-primary btn-sm" aria-label={`用${group.name}启动放映厅`}
+          aria-busy={cinemaBusy} disabled={cinemaDisabled}
+          onClick={() => onCinema(group.items)}>{cinemaBusy ? '正在开场…' : '放映厅'}</button>
+      </div>}
       {multi && expanded && (
         <div className="border-t border-line p-2.5 animate-fade-in">
           <p className="text-[10px] text-faint mb-1.5">选择来源播放</p>
@@ -194,6 +206,10 @@ export function AggregatedCard({
               </button>
             ))}
           </div>
+          {onCinema && <div className="flex flex-wrap gap-2 mt-2" aria-label="指定放映来源">
+            {group.items.map(item => <button key={`${item.sourceKey}_${item.vodId}`} type="button" className="btn-ghost btn-sm"
+              disabled={cinemaDisabled} onClick={() => onCinema([item])}>{item.sourceName} · 放映厅</button>)}
+          </div>}
         </div>
       )}
     </div>

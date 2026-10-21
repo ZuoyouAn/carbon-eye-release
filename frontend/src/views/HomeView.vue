@@ -97,7 +97,7 @@ const statsLoading = statsRead.loading, statsError = statsRead.error
 const quoteLoading = quoteRead.loading, quoteError = quoteRead.error
 
 const cards = [
-  { index: '▶', title: '左右大人服务', text: '影视搜索、AI短剧发现、异地放映厅与直播。一起看、一起聊，房主掌握播放进度。', to: '/libretv' },
+  { index: '▶', title: '左右视频站', text: '影视搜索、直播与同步放映厅。搜索影片，一键邀请朋友一起看。', to: '/libretv' },
   { index: '◎', title: 'GhostTrack 公开信息查询', text: '查询 IP 归属、离线解析号码、核对公开用户名，并理解每类线索的原理与限制。', to: '/ghosttrack' },
   { index: '✧', title: '星潮幸存者', text: '三职业、六条进阶路线，四面敌潮中拾取经验、构筑自己的战斗方式。', to: '/games/swarm' },
   { index: '♨', title: '寒境火种', text: '供暖、分工、建造与远征。在五场暴风雪中，让你的冰原聚落活下来。', to: '/games/winter' },

@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: '左右大人服务',
-    short_name: '左右大人服务',
-    description: '影视搜索、AI短剧发现与异地同步放映厅',
+    name: '左右视频站',
+    short_name: '左右视频站',
+    description: '影视搜索、直播与异地同步放映厅',
     start_url: '/',
     display: 'standalone',
     background_color: '#f6f7f9',

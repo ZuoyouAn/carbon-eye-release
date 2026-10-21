@@ -30,6 +30,8 @@ import {
   db,
 } from '@/lib/db';
 import { cn } from '@/lib/utils';
+import { launchCinema } from '@/lib/cinema-client';
+import { useToast } from '@/components/toast';
 
 /**
  * 播放页（唯一入口，替代旧版 watch.html → player.html 跳转链）。
@@ -49,6 +51,10 @@ function WatchContent() {
   const router = useRouter();
   const store = useAppStore();
   const { verified } = useAuth();
+  const { toast } = useToast();
+  const [cinemaLoading, setCinemaLoading] = useState(false);
+  const cinemaAbort = useRef<AbortController | null>(null);
+  useEffect(() => () => cinemaAbort.current?.abort(), []);
 
   const sourceKey = searchParams.get('source') || '';
   const vodId = searchParams.get('id') || '';
@@ -208,10 +214,15 @@ function WatchContent() {
             </p>
           </div>
           <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
-            <button className="btn-ghost btn-sm" disabled={!currentUrl} onClick={() => {
-              sessionStorage.setItem('space-cinema-pick', JSON.stringify({ url: currentUrl, title: videoTitle + (episodes.length > 1 ? ` · 第${currentIndex + 1}集` : '') }));
-              router.push('/cinema');
-            }}>一起看</button>
+            <button className="btn-ghost btn-sm" disabled={!currentUrl || cinemaLoading} onClick={async () => {
+              if (cinemaAbort.current) return;
+              const controller = new AbortController(); cinemaAbort.current = controller; setCinemaLoading(true);
+              try {
+                await launchCinema({ title: videoTitle, episodes: episodes.length ? episodes : [currentUrl], index: episodes.length ? currentIndex : 0 }, controller.signal);
+                router.push('/cinema');
+              } catch (error) { if (!controller.signal.aborted) toast(error instanceof Error ? error.message : '放映厅启动失败', 'error'); }
+              finally { cinemaAbort.current = null; setCinemaLoading(false); }
+            }}>{cinemaLoading ? '正在开场…' : '放映厅'}</button>
             <button
               className="btn-ghost btn-sm"
               onClick={() => {

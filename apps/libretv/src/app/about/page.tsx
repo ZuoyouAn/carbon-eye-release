@@ -9,15 +9,14 @@ export default function AboutPage() {
       <Header />
       <main className="flex-1 max-w-2xl w-full mx-auto px-4 py-10 space-y-8">
         <section>
-          <h1 className="text-xl font-bold text-content mb-3">关于左右大人服务</h1>
+          <h1 className="text-xl font-bold text-content mb-3">关于左右视频站</h1>
           <p className="text-sm text-muted leading-relaxed">
-            左右大人服务基于开源 LibreTV，提供影视搜索、AI短剧发现和异地同步放映厅。输入片名即可在多个点播源中聚合搜索，
-            无需注册、无内嵌广告、不存储任何视频文件。所有播放内容均来自第三方公开接口。
+            基于 LibreTV，提供影视搜索、播放、直播和同步放映厅。
           </p>
         </section>
 
         <section>
-          <h2 className="text-base font-semibold text-content mb-2.5">快捷键</h2>
+          <h2 className="text-base font-semibold text-content mb-2.5">单人播放快捷键</h2>
           <ul className="text-sm text-muted space-y-1.5 list-disc list-inside">
             <li><code className="text-accent">空格</code> 播放 / 暂停</li>
             <li><code className="text-accent">←</code> / <code className="text-accent">→</code> 快退 / 快进 5 秒</li>
@@ -31,8 +30,8 @@ export default function AboutPage() {
         <section>
           <h2 className="text-base font-semibold text-content mb-2.5">隐私与数据</h2>
           <p className="text-sm text-muted leading-relaxed">
-            你的搜索历史、观看进度等数据仅保存在本设备浏览器中（IndexedDB），不会上传到服务器。
-            搜索请求由服务端代理转发，搜索关键词和源地址会发送给服务端及对应数据源；直连播放与封面仍可能向第三方暴露网络信息。源列表的「发布为链接」功能会公开上传所选配置，请勿发布私密地址或凭据。
+            历史与单人观看进度保存在本机浏览器。搜索和代理请求会发送到服务器及数据源。
+            放映厅的播放地址、昵称和评论会提供给房间成员，重启或休眠后清除。请勿填写敏感地址或公开发布私密源配置。
           </p>
         </section>
 
@@ -40,7 +39,7 @@ export default function AboutPage() {
           <h2 className="text-base font-semibold text-content mb-2.5">免责声明</h2>
           <p className="text-sm text-faint leading-relaxed">
             本项目不存储、不制作任何视频内容，仅提供第三方公开接口的聚合与播放能力。
-            请尊重版权，所有内容的合法性由对应数据源负责。
+            请仅使用有权访问的内容；第三方源不保证始终可用。
           </p>
         </section>
       </main>

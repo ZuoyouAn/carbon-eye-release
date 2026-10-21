@@ -12,7 +12,42 @@ from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.edge.service import Service
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
+
+
+# Only search/detail responses are deterministic fixtures. Authentication, room
+# creation, role enforcement, comments and the actual CC0 video use the real app.
+SEARCH_FIXTURE = r"""
+(() => {
+  const realFetch = window.fetch.bind(window);
+  const movie = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
+  const sources = ['bad','good'].map(key => ({key:'fixture_'+key,name:'测试'+key,url:'https://example.com/'+key}));
+  window.fetch = async (input, init) => {
+    const u = new URL(typeof input === 'string' ? input : input.url, location.origin);
+    if (u.origin !== location.origin) return realFetch(input, init);
+    if (u.pathname === '/api/status') {
+      const r=await realFetch(input,init), data=await r.json();
+      return Response.json({...data,defaultSources:sources,defaultSubscriptions:[],defaultRecommendSource:'douban'});
+    }
+    if (u.pathname === '/api/douban') return Response.json({items:[]});
+    if (u.pathname === '/api/search') {
+      const change = JSON.parse(init.body).wd.includes('换片');
+      const list = (change ? [sources[1]] : sources).map((s,i)=>({sourceKey:s.key,sourceName:s.name,
+        sourceUrl:s.url,vodId:change?'3':String(i+1),name:change?'CC0 Flower 第二场':'CC0 Flower',remarks:'CC0 测试样本'}));
+      const data={list,failures:[]};
+      return u.searchParams.has('stream') ? new Response(JSON.stringify({type:'done',...data})+'\n',
+        {headers:{'Content-Type':'application/x-ndjson'}}) : Response.json(data);
+    }
+    if (u.pathname === '/api/detail') {
+      if(u.searchParams.get('id')==='1') return Response.json({error:'测试源不可用'},{status:404});
+      return Response.json({episodes:[movie,movie+'?episode=2'],videoInfo:{title:'CC0 Flower',sourceKey:'fixture_good',sourceName:'测试good'}});
+    }
+    return realFetch(input,init);
+  };
+})();
+"""
 
 
 def button(driver, text):
@@ -65,32 +100,43 @@ def main():
             drivers.append(driver)
             driver.set_page_load_timeout(90)
             driver.set_script_timeout(30)
+            driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source':SEARCH_FIXTURE})
             driver.get(args.tv + '/cinema')
             authenticated = driver.execute_async_script("""const done=arguments[1];
               fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},
               body:JSON.stringify({password:arguments[0]})}).then(r=>done(r.status)).catch(()=>done(0));""", password)
             assert authenticated == 200, 'Access verification failed'
             driver.refresh()
-            WebDriverWait(driver, 30).until(lambda d: '创建你的放映厅' in d.find_element('tag name', 'body').text)
-            WebDriverWait(driver, 30).until(lambda d: '创建、加入与观看前都需' not in d.find_element('tag name', 'body').text)
+            WebDriverWait(driver, 30).until(lambda d: '选一部影片' in d.find_element('tag name', 'body').text)
+            WebDriverWait(driver, 30).until(lambda d: '请先验证访问密码' not in d.find_element('tag name', 'body').text)
         host, guest = drivers
-        host.find_element('css selector', 'input[placeholder="朋友们怎么称呼你"]').send_keys('测试房主')
-        button(host, '创建放映厅').click()
+        host.get(args.tv)
+        search = WebDriverWait(host, 20).until(lambda d: d.find_element('css selector', 'input[aria-label="搜索影片"]'))
+        search.send_keys('同步测试', Keys.ENTER)
+        launch = WebDriverWait(host, 20).until(lambda d: d.find_element('css selector','button[aria-label="用CC0 Flower启动放映厅"]'))
+        host.save_screenshot(str(output / 'search-cinema-button.png'))
+        launch.click()
         WebDriverWait(host, 20).until(lambda d: d.find_elements('css selector', '.cinema-room-heading'))
         room_host = member(host)
-        guest.find_element('css selector', 'input[placeholder="朋友们怎么称呼你"]').send_keys('测试观众')
-        guest.find_element('css selector', 'input[placeholder="输入朋友发来的 16 位房间码"]').send_keys(room_host['roomId'])
+        assert '第1集' in host.find_element('css selector', '.cinema-room-heading').text
+        assert not host.find_element('css selector', 'input[placeholder="MP4 / M3U8 直链"]').is_displayed()
+        results['search_button_auto_creates_media_room_with_source_fallback'] = True
+        guest.find_element('css selector', 'input[placeholder="你的昵称"]').send_keys('测试观众')
+        guest.find_element('css selector', 'input[placeholder="16 位房间码"]').send_keys(room_host['roomId'])
         button(guest, '加入放映厅').click()
         WebDriverWait(guest, 20).until(lambda d: '你是观众' in d.find_element('tag name', 'body').text)
         room_guest = member(guest)
         assert media_state(host)['controls'] and not media_state(guest)['controls']
         results['create_join_and_host_only_controls'] = True
 
-        host.find_element('css selector', 'input[placeholder="今晚一起看的影片"]').send_keys('CC0 Flower 同步测试')
-        host.find_element('css selector', 'input[placeholder^="你有权使用的 MP4"]').send_keys('https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4')
-        button(host, '载入影片并暂停等待').click()
         for driver in drivers:
             WebDriverWait(driver, 45).until(lambda d: media_state(d).get('ready', 0) >= 2)
+        Select(host.find_element('css selector','select[aria-label="切换集数"]')).select_by_value('1')
+        WebDriverWait(guest, 15).until(lambda d: '第2集' in d.find_element('css selector','.cinema-room-heading').text)
+        for driver in drivers:
+            WebDriverWait(driver, 30).until(lambda d: media_state(d).get('ready', 0) >= 2)
+        assert not guest.find_elements('css selector','select[aria-label="切换集数"]')
+        results['host_episode_selection_syncs_to_guests'] = True
         host.execute_script("document.querySelector('video').muted=true; document.querySelector('video').play()")
         WebDriverWait(guest, 15).until(lambda d: not media_state(d)['paused'] and media_state(d)['time'] > .15)
         results['actual_playback'] = True
@@ -123,6 +169,14 @@ def main():
         WebDriverWait(guest, 20).until(lambda d: '你是观众' in d.find_element('tag name', 'body').text)
         assert member(guest)['memberToken'] == room_guest['memberToken']
         results['refresh_retains_role'] = True
+        host.get(args.tv + '/?s=换片')
+        replacement = WebDriverWait(host, 20).until(lambda d: d.find_element('css selector','button[aria-label="用CC0 Flower 第二场启动放映厅"]'))
+        replacement.click()
+        WebDriverWait(host, 20).until(lambda d: d.find_elements('css selector','.cinema-room-heading'))
+        assert member(host)['roomId'] == room_host['roomId']
+        WebDriverWait(guest, 15).until(lambda d: '第二场' in d.find_element('css selector','.cinema-room-heading').text)
+        assert member(guest)['memberToken'] == room_guest['memberToken']
+        results['search_reuses_host_room_without_disconnect'] = True
         for driver in drivers:
             driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride', {'width':390,'height':900,'deviceScaleFactor':1,'mobile':True})
             assert driver.execute_script('return document.documentElement.scrollWidth<=innerWidth+1'), 'Mobile overflow'
@@ -134,13 +188,14 @@ def main():
         room_host = None
         assert api(guest, {'action':'sync', **room_guest})['status'] == 410
         results['host_ends_room'] = True
-        guest.get(args.tv + '/ai-drama')
-        WebDriverWait(guest, 20).until(lambda d: 'AI短剧' in d.find_element('tag name','body').text)
-        assert '左右大人服务' in guest.title
+        guest.get(args.tv)
+        WebDriverWait(guest, 20).until(lambda d: '左右视频站' in d.title)
         assert guest.execute_script('return document.documentElement.scrollWidth<=innerWidth+1')
-        assert guest.find_elements('css selector', 'a[href*="search.bilibili.com"]')
-        guest.save_screenshot(str(output / 'ai-drama-mobile.png'))
-        results['ai_discovery_and_branding'] = True
+        assert not guest.find_elements('css selector', 'a[href="/ai-drama"]')
+        removed = guest.execute_async_script("fetch('/ai-drama').then(r=>arguments[0](r.status))")
+        assert removed == 404
+        guest.save_screenshot(str(output / 'video-station-mobile.png'))
+        results['new_brand_and_ai_page_removed'] = True
         print(json.dumps(results, ensure_ascii=False))
     except Exception:
         for index, driver in enumerate(drivers):

@@ -63,11 +63,12 @@ export class CinemaStore {
     room.members.set(digest(token), { nickname: label(nickname, host ? '房主' : '观众', 20), host, seen: this.now(), lastCommand: -Infinity, messages: [] });
     return { roomId: room.id, memberToken: token, role: host ? 'host' : 'guest' };
   }
-  create(name: unknown, nickname: unknown) {
+  create(name: unknown, nickname: unknown, initialMedia?: unknown) {
+    const media = initialMedia === undefined ? null : validateMedia(initialMedia);
     this.sweep();
     if (this.rooms.size >= 20) throw new CinemaError(429, '当前放映厅已满，请稍后再试');
     const id = randomBytes(8).toString('hex');
-    const room: Room = { id, name: label(name, '一起看一部电影', 40), created: this.now(), touched: this.now(), members: new Map(), media: null, position: 0, playing: false, rate: 1, anchor: this.now(), revision: 0, sequence: 0, lastSequence: -1, messages: [] };
+    const room: Room = { id, name: label(name, '放映厅', 40), created: this.now(), touched: this.now(), members: new Map(), media, position: 0, playing: false, rate: 1, anchor: this.now(), revision: media ? 1 : 0, sequence: 0, lastSequence: -1, messages: [] };
     const session = this.addMember(room, nickname, true); this.rooms.set(id, room);
     return { session, snapshot: this.sync(id, session.memberToken) };
   }

@@ -15,6 +15,15 @@ async function create() {
   return (await res.json()) as { session: CinemaSession; snapshot: CinemaSnapshot };
 }
 describe('cinema route guard', () => {
+  it('atomically creates a media-loaded room from a search selection', async () => {
+    const response = await POST(req({ action: 'create', name: '影片', media: { url: 'https://example.com/a.mp4', title: '第一集' } }));
+    expect(response.status).toBe(200);
+    const result = await response.json();
+    expect(result.snapshot.playback).toMatchObject({ playing: false, position: 0, media: { title: '第一集' } });
+  });
+  it('applies the same private-address restriction to initial media', async () => {
+    expect((await POST(req({ action: 'create', media: { url: 'http://127.0.0.1/a.mp4' } }))).status).toBe(400);
+  });
   it('requires the site password session', async () => { expect((await POST(req({ action: 'create' }, {}, false))).status).toBe(401); });
   it('rejects cross-origin browser requests', async () => {
     expect((await POST(req({ action: 'create' }, { origin: 'https://evil.test' }))).status).toBe(403);

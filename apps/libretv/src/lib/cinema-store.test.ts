@@ -17,6 +17,16 @@ function fixture() {
 const media = { url: 'https://example.com/demo.mp4', title: '合法测试视频' };
 
 describe('cinema server authority', () => {
+  it('creates a media-loaded room at zero, paused, in one operation', () => {
+    const store = new CinemaStore();
+    const result = store.create('影片', '房主', media);
+    expect(result.snapshot.playback).toMatchObject({ media, position: 0, playing: false, revision: 1 });
+  });
+  it('does not allocate a room when its initial media is invalid', () => {
+    const store = new CinemaStore();
+    for (let i = 0; i < 25; i++) expect(() => store.create('错误', '房主', { url: 'javascript:alert(1)' })).toThrow();
+    expect(store.create('有效', '房主', media).snapshot.playback.media).toEqual(media);
+  });
   it('issues independent opaque credentials and roles; invitation code is not a token', () => {
     const f = fixture();
     expect(f.host.role).toBe('host'); expect(f.guest.role).toBe('guest');

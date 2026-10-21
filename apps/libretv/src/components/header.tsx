@@ -40,8 +40,9 @@ export function Header({ showSearch = false }: { showSearch?: boolean }) {
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur border-b border-line">
         <div className="max-w-6xl mx-auto px-3 min-h-14 py-2 flex flex-wrap sm:flex-nowrap items-center gap-2">
           <a href="https://carbon-eye-sip.netlify.app/libretv" className="text-xs text-muted hover:text-accent shrink-0" aria-label="返回左右的Space">← Space</a>
-          <Link href="/" aria-label="左右大人服务首页" className="flex items-center shrink-0">
+          <Link href="/" aria-label="左右视频站首页" className="flex items-center shrink-0 gap-2">
             <span className="w-8 h-8 rounded-xl bg-accent text-on-accent flex items-center justify-center font-semibold" aria-hidden="true">左</span>
+            <span className="hidden md:inline text-sm font-semibold">左右视频站</span>
           </Link>
 
           {showSearch && (
@@ -98,7 +99,6 @@ export function Header({ showSearch = false }: { showSearch?: boolean }) {
 
           <nav className="flex flex-wrap items-center justify-end gap-0.5 ml-auto">
             <HeaderLink href="/cinema" active={pathname === '/cinema'}>放映厅</HeaderLink>
-            <HeaderLink href="/ai-drama" active={pathname === '/ai-drama'}>AI短剧</HeaderLink>
             <HeaderLink href="/live" active={pathname === '/live'}>
               直播
             </HeaderLink>
