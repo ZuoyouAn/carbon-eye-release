@@ -12,7 +12,6 @@ from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.edge.service import Service
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -29,6 +28,7 @@ SEARCH_FIXTURE = r"""
     if (u.origin !== location.origin) return realFetch(input, init);
     if (u.pathname === '/api/status') {
       const r=await realFetch(input,init), data=await r.json();
+      window.__cinemaPresetResponseReady = true;
       return Response.json({...data,defaultSources:sources,defaultSubscriptions:[],defaultRecommendSource:'douban'});
     }
     if (u.pathname === '/api/douban') return Response.json({items:[]});
@@ -111,8 +111,12 @@ def main():
             WebDriverWait(driver, 30).until(lambda d: '请先验证访问密码' not in d.find_element('tag name', 'body').text)
         host, guest = drivers
         host.get(args.tv)
+        # A public round trip can finish after the input becomes interactive.
+        # Wait for preset hydration, not merely for the server-rendered form.
+        WebDriverWait(host, 30).until(lambda d: d.execute_script("return window.__cinemaPresetResponseReady && (JSON.parse(localStorage.getItem('libretv-settings')||'{}').state?.selectedKeys||[]).includes('fixture_good')"))
         search = WebDriverWait(host, 20).until(lambda d: d.find_element('css selector', 'input[aria-label="搜索影片"]'))
-        search.send_keys('同步测试', Keys.ENTER)
+        search.send_keys('同步测试')
+        button(host, '搜索').click()
         launch = WebDriverWait(host, 20).until(lambda d: d.find_element('css selector','button[aria-label="用CC0 Flower启动放映厅"]'))
         host.save_screenshot(str(output / 'search-cinema-button.png'))
         launch.click()
@@ -202,6 +206,7 @@ def main():
             try:
                 driver.save_screenshot(str(output / f'failure-{index}.png'))
                 print(json.dumps({'browser':index,'media':media_state(driver)}, ensure_ascii=False))
+                print(json.dumps(driver.execute_script("return {path:location.pathname,hasSearch:!!new URLSearchParams(location.search).get('s'),selected:(JSON.parse(localStorage.getItem('libretv-settings')||'{}').state?.selectedKeys||[]).length,alerts:[...document.querySelectorAll('[role=alert]')].map(e=>e.textContent)}"),ensure_ascii=False))
             except Exception:
                 pass
         raise
