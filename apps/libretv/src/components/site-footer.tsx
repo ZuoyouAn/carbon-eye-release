@@ -98,7 +98,7 @@ export function SiteFooter() {
           rel="noopener noreferrer"
           className="group relative inline-block cursor-help hover:text-accent"
         >
-          LibreTV{version ? ` v${version}` : ''}
+          左右大人服务 · 基于 LibreTV{version ? ` v${version}` : ''}
           {version && <UpdateTip update={upstreamUpdate} />}
         </a>
         {' · '}

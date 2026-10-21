@@ -8,7 +8,7 @@
       </div>
 
       <div class="card-grid two-grid">
-        <article class="content-card project-detail-card"><div class="card-meta"><span>Space Cinema</span><span>LibreTV / AGPL-3.0</span></div><h2>影音空间 · LibreTV</h2><p>保留聚合搜索、HLS 播放器、直播 IPTV、源管理与本机续播记录，作为独立应用接入 Space。需要影音访问密码及有权使用的数据源。</p><RouterLink class="text-button" to="/libretv">打开影音空间 ↗</RouterLink></article>
+        <article class="content-card project-detail-card"><div class="card-meta"><span>Space Cinema</span><span>基于 LibreTV / AGPL-3.0</span></div><h2>左右大人服务</h2><p>影视搜索、AI短剧发现与异地放映厅。最多 8 人同步观看和评论，只有房主控制进度；保留播放器、直播及源管理。</p><RouterLink class="text-button" to="/libretv">打开左右大人服务 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>GhostTrack</span><span>公开信息 / 原理说明</span></div><h2>GhostTrack 公开信息查询</h2><p>IP 地理归属、号码规则解析与公开用户名页面核对。区分估计区域、离线号段元数据和 HTTP 响应，展示来源与结果边界。</p><RouterLink class="text-button" to="/ghosttrack">打开查询工作台 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Starfall</span><span>原创敌潮 / 免费单机</span></div><h2>星潮幸存者</h2><p>选择游侠、守卫或术士，移动躲避、收集经验，在三选一强化与六条职业进阶中形成构筑。支持键盘、鼠标和触屏，三分钟撤离或无尽挑战。</p><RouterLink class="text-button" to="/games/swarm">走进星潮 ↗</RouterLink></article>
         <article class="content-card project-detail-card"><div class="card-meta"><span>Frost Ember</span><span>原创冬日聚落 / 免费单机</span></div><h2>寒境火种</h2><p>围绕暖炉建造住宅与生产设施，分配居民，研究保温、派出远征。真实消耗燃料和食物，暴风雪与配给会影响居民健康。五天救援或无尽寒冬。</p><RouterLink class="text-button" to="/games/winter">点亮火种 ↗</RouterLink></article>

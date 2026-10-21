@@ -197,17 +197,21 @@ function WatchContent() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur border-b border-line">
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 min-h-14 py-2 flex flex-wrap sm:flex-nowrap items-center gap-3">
           <BackButton />
           <HomeButton />
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <h1 className="text-sm font-medium text-content truncate">{videoTitle}</h1>
             <p className="text-xs text-faint">
               {source.name}
               {episodes.length > 0 && ` · 第 ${currentIndex + 1}/${episodes.length} 集`}
             </p>
           </div>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
+            <button className="btn-ghost btn-sm" disabled={!currentUrl} onClick={() => {
+              sessionStorage.setItem('space-cinema-pick', JSON.stringify({ url: currentUrl, title: videoTitle + (episodes.length > 1 ? ` · 第${currentIndex + 1}集` : '') }));
+              router.push('/cinema');
+            }}>一起看</button>
             <button
               className="btn-ghost btn-sm"
               onClick={() => {

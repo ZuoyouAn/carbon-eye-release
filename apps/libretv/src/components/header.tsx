@@ -38,11 +38,10 @@ export function Header({ showSearch = false }: { showSearch?: boolean }) {
   return (
     <>
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur border-b border-line">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-3">
+        <div className="max-w-6xl mx-auto px-3 min-h-14 py-2 flex flex-wrap sm:flex-nowrap items-center gap-2">
           <a href="https://carbon-eye-sip.netlify.app/libretv" className="text-xs text-muted hover:text-accent shrink-0" aria-label="返回左右的Space">← Space</a>
-          <Link href="/" aria-label="LibreTV 首页" className="flex items-center shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/icon-512.png" alt="LibreTV" className="w-7 h-7 rounded-lg" />
+          <Link href="/" aria-label="左右大人服务首页" className="flex items-center shrink-0">
+            <span className="w-8 h-8 rounded-xl bg-accent text-on-accent flex items-center justify-center font-semibold" aria-hidden="true">左</span>
           </Link>
 
           {showSearch && (
@@ -97,7 +96,9 @@ export function Header({ showSearch = false }: { showSearch?: boolean }) {
 
           <div className="flex-1 sm:hidden" />
 
-          <nav className="flex items-center gap-1 ml-auto">
+          <nav className="flex flex-wrap items-center justify-end gap-0.5 ml-auto">
+            <HeaderLink href="/cinema" active={pathname === '/cinema'}>放映厅</HeaderLink>
+            <HeaderLink href="/ai-drama" active={pathname === '/ai-drama'}>AI短剧</HeaderLink>
             <HeaderLink href="/live" active={pathname === '/live'}>
               直播
             </HeaderLink>
@@ -129,7 +130,7 @@ function HeaderLink({ href, active, children }: { href: string; active: boolean;
     <Link
       href={href}
       className={cn(
-        'px-2.5 py-1.5 rounded-md text-sm transition-colors',
+        'px-2 sm:px-2.5 py-1.5 rounded-md text-sm whitespace-nowrap transition-colors',
         active ? 'text-content bg-hover' : 'text-muted hover:text-content'
       )}
     >

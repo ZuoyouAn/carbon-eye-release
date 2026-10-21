@@ -1,4 +1,6 @@
-# LibreTV
+# 左右大人服务
+
+本目录是基于 LibreTV 的 AGPL-3.0-or-later 修改版；界面使用「左右大人服务」品牌，上游署名、许可及兼容格式保留。本站部署说明见 [SPACE-DEPLOYMENT.md](./SPACE-DEPLOYMENT.md)，新增放映厅与 AI短剧搜索说明见 [SPACE-CINEMA.md](./SPACE-CINEMA.md)。下文保留上游功能与部署文档；上游演示地址不是本部署。
 
 LibreTV Next.js 迁移版：免费在线视频聚合搜索与观看平台。基于 Next.js 15（App Router）+ TypeScript + Tailwind CSS，播放内核为 ArtPlayer + hls.js，支持亮暗双主题。
 

@@ -4,8 +4,8 @@ import { Providers } from '@/components/providers';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Space 影音 · LibreTV',
-    template: '%s - LibreTV',
+    default: '左右大人服务',
+    template: '%s · 左右大人服务',
   },
   description:
     '左右的Space独立影音空间。添加有权使用的视频源后，搜索、播放与保存本机观看进度。',
